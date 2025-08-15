@@ -1,0 +1,140 @@
+# XDiscordUltimate Messages Configuration
+# Use & for color codes
+
+# General messages
+general:
+  reload-success: "&aConfiguration reloaded successfully!"
+  reload-failed: "&cFailed to reload configuration. Check console for errors."
+  no-console: "&cThis command cannot be executed from console!"
+  player-only: "&cThis command can only be executed by players!"
+
+# Error messages
+errors:
+  no-permission: "&cYou don't have permission to use this command!"
+  player-not-found: "&cPlayer &e%player% &cnot found!"
+  invalid-usage: "&cInvalid usage! Use: &e%usage%"
+  feature-disabled: "&cThis feature is currently disabled!"
+  discord-not-linked: "&cYour account is not linked with Discord! Use &e/verify"
+  already-linked: "&cYour account is already linked with Discord!"
+  verification-required: "&cYou must verify your Discord account to play on this server!"
+  command-error: "&cAn error occurred while executing this command!"
+
+# Verification messages
+verification:
+  instructions: "&bPlease visit the following link to verify your Discord account:"
+  link-generated: "&a%link%"
+  click-to-verify: "&e&lCLICK HERE TO VERIFY"
+  success: "&aYour Discord account has been successfully linked!"
+  failed: "&cVerification failed! Please try again."
+  timeout: "&cVerification timed out. Please use &e/verify &cagain."
+  already-verified: "&aYour account is already verified!"
+  kick-message: "&cYou must verify your Discord account within %minutes% minutes to play!"
+  waiting: "&eWaiting for Discord verification..."
+
+# Support/Ticket messages
+support:
+  ticket-created: "&aSupport ticket created! Check Discord for updates."
+  ticket-closed: "&aYour support ticket has been closed."
+  ticket-already-open: "&cYou already have an open support ticket!"
+  ticket-not-found: "&cTicket not found!"
+  ticket-response: "&bSupport response: &f%message%"
+  no-message: "&cPlease provide a message for your support ticket!"
+
+# Embed messages
+embed:
+  sent-successfully: "&aEmbed sent successfully to Discord!"
+  invalid-channel: "&cInvalid Discord channel!"
+  no-webhook: "&cNo webhook configured for this channel!"
+  creation-failed: "&cFailed to create embed. Check your syntax!"
+  gui-opened: "&aEmbed builder GUI opened!"
+
+# Announcement messages
+announcement:
+  sent: "&aAnnouncement sent to Discord and all players!"
+  no-message: "&cPlease provide an announcement message!"
+  format: "&6&l[ANNOUNCEMENT] &e%message%"
+
+# Report messages
+report:
+  success: "&aPlayer &e%player% &ahas been reported for: &f%reason%"
+  no-reason: "&cPlease provide a reason for the report!"
+  self-report: "&cYou cannot report yourself!"
+  cooldown: "&cPlease wait before reporting another player!"
+
+# Server control messages
+server-control:
+  restart-scheduled: "&cServer restart scheduled in &e%time% &cseconds!"
+  restart-cancelled: "&aServer restart cancelled."
+  stopping: "&cServer is shutting down..."
+  kicked-player: "&aKicked player &e%player%"
+  tps-info: "&bCurrent TPS: &e%tps%"
+  player-list: "&bOnline players (&e%count%&b): &f%players%"
+
+# Discord console messages
+discord-console:
+  executed: "&aCommand executed from Discord console."
+  no-command: "&cPlease provide a command to execute!"
+  blacklisted: "&cThis command is blacklisted!"
+
+# Cross-server messages
+cross-server:
+  message-sent: "&aMessage sent to &e%player% &aon &e%server%"
+  player-offline: "&cPlayer &e%player% &cis not online on any server!"
+  server-offline: "&cServer &e%server% &cis not available!"
+
+# Leaderboard messages
+leaderboard:
+  updated: "&aLeaderboards updated!"
+  no-data: "&cNo leaderboard data available."
+  header: "&6&l=== %stat% Leaderboard ==="
+  entry: "&e#%position% &7- &b%player% &7- &f%value%"
+
+# Mini-game messages
+minigames:
+  poll-created: "&aA new poll has been created in Discord!"
+  vote-recorded: "&aYour vote has been recorded!"
+  event-started: "&6&l%event% &6has started!"
+  event-ended: "&e%event% &ehas ended!"
+  reward-given: "&aYou received a reward for Discord activity!"
+
+# Moderation messages
+moderation:
+  banned: "&cPlayer &e%player% &chas been banned for: &f%reason%"
+  unbanned: "&aPlayer &e%player% &ahas been unbanned."
+  kicked: "&ePlayer &e%player% &ehas been kicked for: &f%reason%"
+  warned: "&ePlayer &e%player% &ehas been warned for: &f%reason%"
+  muted: "&cPlayer &e%player% &chas been muted for: &f%reason%"
+  unmuted: "&aPlayer &e%player% &ahas been unmuted."
+  sync-complete: "&aModeration sync completed with Discord."
+
+# Voice channel messages
+voice:
+  joined-vc: "&aYou joined voice channel: &e%channel%"
+  left-vc: "&eYou left the voice channel."
+  vc-created: "&aTemporary voice channel created!"
+  proximity-enabled: "&aProximity voice chat enabled."
+  proximity-disabled: "&eProximity voice chat disabled."
+
+# Admin alert messages
+alerts:
+  tps-low: "&c&lWARNING: &cServer TPS has dropped to &e%tps%"
+  ram-high: "&c&lWARNING: &cRAM usage is at &e%usage%%"
+  player-cheat: "&c&lALERT: &e%player% &ctriggered anti-cheat: &f%violation%"
+  server-lag: "&c&lWARNING: &cServer is experiencing lag!"
+
+# Command descriptions (for help)
+commands:
+  verify: "Link your Discord account"
+  support: "Create a support ticket"
+  embed: "Send a Discord embed"
+  announce: "Make an announcement"
+  discordconsole: "Execute bot commands"
+  report: "Report a player"
+  xdiscord: "Main plugin command"
+
+# Help messages
+help:
+  header: "&b&l=== XDiscordUltimate Help ==="
+  footer: "&7Use &e/xdiscord help <command> &7for more info"
+  command-format: "&e/%command% &7- &f%description%"
+  no-commands: "&cYou don't have access to any commands!"

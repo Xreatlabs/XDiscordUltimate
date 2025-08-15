@@ -1,15 +1,13 @@
 plugins {
     id 'java'
-    id 'com.github.johnrengelman.shadow' version '7.1.2'
+    id 'com.github.johnrengelman.shadow' version '4.0.4'
 }
 
 group = 'com.xreatlabs.xdiscordultimate'
 version = '1.0.0'
 
-java {
-    sourceCompatibility = JavaVersion.VERSION_1_8
-    targetCompatibility = JavaVersion.VERSION_1_8
-}
+sourceCompatibility = JavaVersion.VERSION_1_8
+targetCompatibility = JavaVersion.VERSION_1_8
 
 repositories {
     mavenCentral()
@@ -23,43 +21,51 @@ repositories {
 }
 
 dependencies {
-    compileOnly 'org.spigotmc:spigot-api:1.16.5-R0.1-SNAPSHOT'
+    compileOnly 'org.spigotmc:spigot-api:1.20.4-R0.1-SNAPSHOT'
     compileOnly 'net.luckperms:api:5.4'
-    compileOnly 'me.clip:placeholderapi:2.11.3'
+    compileOnly 'me.clip:placeholderapi:2.11.5'
     
     // Libby for runtime dependency management
     implementation 'net.byteflux:libby-bukkit:1.3.1'
     
     // All other dependencies as compileOnly for runtime loading
     compileOnly 'net.dv8tion:JDA:5.0.0-beta.18'
-    compileOnly 'com.squareup.okhttp3:okhttp:4.10.0'
+    compileOnly 'com.squareup.okhttp3:okhttp:4.12.0'
     compileOnly 'com.google.code.gson:gson:2.10.1'
-    compileOnly 'com.zaxxer:HikariCP:5.0.1'
-    compileOnly 'org.xerial:sqlite-jdbc:3.42.0.0'
-    compileOnly 'com.mysql:mysql-connector-j:8.0.33'
-    compileOnly 'org.postgresql:postgresql:42.6.0'
+    compileOnly 'com.zaxxer:HikariCP:5.1.0'
+    compileOnly 'org.xerial:sqlite-jdbc:3.44.1.0'
+    compileOnly 'com.mysql:mysql-connector-j:8.2.0'
+    compileOnly 'org.postgresql:postgresql:42.7.1'
     compileOnly 'org.slf4j:slf4j-api:2.0.9'
-    compileOnly 'ch.qos.logback:logback-classic:1.4.11'
-    compileOnly 'org.apache.logging.log4j:log4j-core:2.17.1'
-    compileOnly 'org.apache.logging.log4j:log4j-api:2.17.1'
+    compileOnly 'ch.qos.logback:logback-classic:1.4.14'
+    compileOnly 'org.apache.logging.log4j:log4j-core:2.22.1'
+    compileOnly 'org.apache.logging.log4j:log4j-api:2.22.1'
 }
 
 tasks.withType(JavaCompile) {
     options.encoding = 'UTF-8'
+    options.compilerArgs += ['-Xlint:unchecked', '-Xlint:deprecation']
 }
 
 shadowJar {
-    archiveBaseName.set('XDiscordUltimate')
-    archiveClassifier.set('')
-    archiveVersion.set(version)
+    baseName = 'XDiscordUltimate'
+    classifier = ''
+    version = version
     
     // Only relocate Libby to avoid conflicts
     relocate 'net.byteflux.libby', 'com.xreatlabs.xdiscordultimate.libs.libby'
+    
+    // Exclude unnecessary files
+    exclude 'META-INF/*.DSA'
+    exclude 'META-INF/*.RSA'
+    exclude 'META-INF/*.SF'
+    exclude 'META-INF/maven/**'
+    exclude 'META-INF/versions/**'
 }
 
 jar {
-    archiveBaseName.set('XDiscordUltimate')
-    archiveVersion.set(version)
+    baseName = 'XDiscordUltimate'
+    version = version
 }
 
 build.dependsOn shadowJar

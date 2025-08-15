@@ -221,41 +221,68 @@ public class DatabaseManager {
      * Get a database connection
      */
     public Connection getConnection() throws SQLException {
-        if (dataSource == null) {
-            throw new SQLException("Database not initialized!");
+        if (dataSource == null || dataSource.isClosed()) {
+            throw new SQLException("Database connection pool is not available");
         }
-        return dataSource.getConnection();
+        
+        Connection connection = dataSource.getConnection();
+        if (connection == null) {
+            throw new SQLException("Failed to get database connection from pool");
+        }
+        
+        return connection;
     }
-    
+
     /**
-     * Execute an async database operation
+     * Execute a database operation with proper error handling
      */
-    public <T> CompletableFuture<T> executeAsync(DatabaseOperation<T> operation) {
-        return CompletableFuture.supplyAsync(() -> {
-            try {
-                return operation.execute();
-            } catch (SQLException e) {
-                plugin.getLogger().log(Level.SEVERE, "Database operation failed", e);
-                throw new RuntimeException(e);
+    public <T> T executeOperation(DatabaseOperation<T> operation) {
+        try (Connection conn = getConnection()) {
+            return operation.execute();
+        } catch (SQLException e) {
+            plugin.getLogger().severe("Database operation failed: " + e.getMessage());
+            if (plugin.getConfigManager().isDebugEnabled()) {
+                e.printStackTrace();
             }
-        });
+            return null;
+        }
+    }
+
+    /**
+     * Check database connection health
+     */
+    public boolean isHealthy() {
+        try (Connection conn = getConnection()) {
+            return conn != null && !conn.isClosed() && conn.isValid(5);
+        } catch (SQLException e) {
+            plugin.getLogger().warning("Database health check failed: " + e.getMessage());
+            return false;
+        }
+    }
+
+    /**
+     * Close the database connection
+     */
+    public void close() {
+        if (dataSource != null && !dataSource.isClosed()) {
+            try {
+                dataSource.close();
+                plugin.getLogger().info("Database connection closed.");
+            } catch (Exception e) {
+                plugin.getLogger().severe("Error closing database connection: " + e.getMessage());
+            }
+        }
     }
     
     /**
      * Link a Discord account with Minecraft
      */
     public CompletableFuture<Boolean> linkAccount(UUID minecraftUuid, String discordId, 
-                                                  String minecraftName, String discordName) {
-        return executeAsync(() -> {
+                                                    String minecraftName, String discordName) {
+        return CompletableFuture.supplyAsync(() -> {
             String sql = "INSERT INTO verified_users (minecraft_uuid, discord_id, minecraft_name, discord_name) " +
                         "VALUES (?, ?, ?, ?) ON CONFLICT(minecraft_uuid) DO UPDATE SET " +
                         "discord_id = ?, discord_name = ?, verified_at = CURRENT_TIMESTAMP";
-            
-            // SQLite uses different syntax
-            if (type.equals("sqlite")) {
-                sql = "INSERT OR REPLACE INTO verified_users (minecraft_uuid, discord_id, minecraft_name, discord_name) " +
-                     "VALUES (?, ?, ?, ?)";
-            }
             
             try (Connection conn = getConnection();
                  PreparedStatement stmt = conn.prepareStatement(sql)) {
@@ -265,12 +292,19 @@ public class DatabaseManager {
                 stmt.setString(3, minecraftName);
                 stmt.setString(4, discordName);
                 
-                if (!type.equals("sqlite")) {
+                if (type.equals("sqlite")) {
+                    stmt.setString(5, discordId);
+                    stmt.setString(6, discordName);
+                } else {
                     stmt.setString(5, discordId);
                     stmt.setString(6, discordName);
                 }
                 
                 return stmt.executeUpdate() > 0;
+                
+            } catch (SQLException e) {
+                plugin.getLogger().severe("Failed to link account: " + e.getMessage());
+                return false;
             }
         });
     }
@@ -279,7 +313,7 @@ public class DatabaseManager {
      * Get Discord ID from Minecraft UUID
      */
     public CompletableFuture<String> getDiscordId(UUID minecraftUuid) {
-        return executeAsync(() -> {
+        return CompletableFuture.supplyAsync(() -> {
             String sql = "SELECT discord_id FROM verified_users WHERE minecraft_uuid = ?";
             
             try (Connection conn = getConnection();
@@ -292,7 +326,11 @@ public class DatabaseManager {
                         return rs.getString("discord_id");
                     }
                 }
+                
+            } catch (SQLException e) {
+                plugin.getLogger().severe("Failed to get Discord ID: " + e.getMessage());
             }
+            
             return null;
         });
     }
@@ -301,7 +339,7 @@ public class DatabaseManager {
      * Get Minecraft UUID from Discord ID
      */
     public CompletableFuture<UUID> getMinecraftUuid(String discordId) {
-        return executeAsync(() -> {
+        return CompletableFuture.supplyAsync(() -> {
             String sql = "SELECT minecraft_uuid FROM verified_users WHERE discord_id = ?";
             
             try (Connection conn = getConnection();
@@ -314,7 +352,11 @@ public class DatabaseManager {
                         return UUID.fromString(rs.getString("minecraft_uuid"));
                     }
                 }
+                
+            } catch (SQLException e) {
+                plugin.getLogger().severe("Failed to get Minecraft UUID: " + e.getMessage());
             }
+            
             return null;
         });
     }
@@ -323,7 +365,7 @@ public class DatabaseManager {
      * Check if a Discord user is linked to a Minecraft account
      */
     public CompletableFuture<Boolean> isDiscordLinked(String discordId) {
-        return executeAsync(() -> {
+        return CompletableFuture.supplyAsync(() -> {
             String sql = "SELECT 1 FROM verified_users WHERE discord_id = ?";
             
             try (Connection conn = getConnection();
@@ -334,6 +376,10 @@ public class DatabaseManager {
                 try (ResultSet rs = stmt.executeQuery()) {
                     return rs.next();
                 }
+                
+            } catch (SQLException e) {
+                plugin.getLogger().severe("Failed to check Discord link: " + e.getMessage());
+                return false;
             }
         });
     }
@@ -342,7 +388,7 @@ public class DatabaseManager {
      * Create a support ticket
      */
     public CompletableFuture<Integer> createTicket(UUID playerUuid, String subject) {
-        return executeAsync(() -> {
+        return CompletableFuture.supplyAsync(() -> {
             String sql = "INSERT INTO tickets (minecraft_uuid, subject) VALUES (?, ?)";
             
             try (Connection conn = getConnection();
@@ -358,18 +404,22 @@ public class DatabaseManager {
                         return rs.getInt(1);
                     }
                 }
+                
+            } catch (SQLException e) {
+                plugin.getLogger().severe("Failed to create ticket: " + e.getMessage());
             }
+            
             return -1;
         });
     }
     
     /**
-     * Log a moderation action
+     * Log moderation action
      */
     public CompletableFuture<Void> logModerationAction(String actionType, UUID targetUuid, 
-                                                       UUID moderatorUuid, String reason, 
-                                                       Timestamp expiresAt) {
-        return executeAsync(() -> {
+                                                         UUID moderatorUuid, String reason, 
+                                                         Timestamp expiresAt) {
+        return CompletableFuture.supplyAsync(() -> {
             String sql = "INSERT INTO moderation_logs (action_type, target_uuid, moderator_uuid, reason, expires_at) " +
                         "VALUES (?, ?, ?, ?, ?)";
             
@@ -383,7 +433,11 @@ public class DatabaseManager {
                 stmt.setTimestamp(5, expiresAt);
                 
                 stmt.executeUpdate();
+                
+            } catch (SQLException e) {
+                plugin.getLogger().severe("Failed to log moderation action: " + e.getMessage());
             }
+            
             return null;
         });
     }
@@ -392,14 +446,9 @@ public class DatabaseManager {
      * Update player statistics
      */
     public CompletableFuture<Void> updatePlayerStats(UUID playerUuid, String statType, int increment) {
-        return executeAsync(() -> {
+        return CompletableFuture.supplyAsync(() -> {
             String sql = "INSERT INTO player_stats (minecraft_uuid, " + statType + ") VALUES (?, ?) " +
                         "ON CONFLICT(minecraft_uuid) DO UPDATE SET " + statType + " = " + statType + " + ?";
-            
-            if (type.equals("sqlite")) {
-                sql = "INSERT OR REPLACE INTO player_stats (minecraft_uuid, " + statType + ") " +
-                     "VALUES (?, COALESCE((SELECT " + statType + " FROM player_stats WHERE minecraft_uuid = ?), 0) + ?)";
-            }
             
             try (Connection conn = getConnection();
                  PreparedStatement stmt = conn.prepareStatement(sql)) {
@@ -415,7 +464,11 @@ public class DatabaseManager {
                 }
                 
                 stmt.executeUpdate();
+                
+            } catch (SQLException e) {
+                plugin.getLogger().severe("Failed to update player stats: " + e.getMessage());
             }
+            
             return null;
         });
     }
@@ -424,7 +477,7 @@ public class DatabaseManager {
      * Get Minecraft name from Discord ID
      */
     public CompletableFuture<String> getMinecraftName(String discordId) {
-        return executeAsync(() -> {
+        return CompletableFuture.supplyAsync(() -> {
             String sql = "SELECT minecraft_name FROM verified_users WHERE discord_id = ?";
             
             try (Connection conn = getConnection();
@@ -437,7 +490,11 @@ public class DatabaseManager {
                         return rs.getString("minecraft_name");
                     }
                 }
+                
+            } catch (SQLException e) {
+                plugin.getLogger().severe("Failed to get Minecraft name: " + e.getMessage());
             }
+            
             return null;
         });
     }
@@ -446,7 +503,7 @@ public class DatabaseManager {
      * Create a player report
      */
     public CompletableFuture<Integer> createReport(UUID reporterUuid, UUID targetUuid, String reason) {
-        return executeAsync(() -> {
+        return CompletableFuture.supplyAsync(() -> {
             String sql = "INSERT INTO moderation_logs (action_type, target_uuid, moderator_uuid, reason) VALUES (?, ?, ?, ?)";
             
             try (Connection conn = getConnection();
@@ -464,7 +521,11 @@ public class DatabaseManager {
                         return rs.getInt(1);
                     }
                 }
+                
+            } catch (SQLException e) {
+                plugin.getLogger().severe("Failed to create report: " + e.getMessage());
             }
+            
             return -1;
         });
     }
@@ -473,7 +534,7 @@ public class DatabaseManager {
      * Update ticket with Discord channel ID
      */
     public CompletableFuture<Boolean> updateTicketChannel(int ticketId, String channelId) {
-        return executeAsync(() -> {
+        return CompletableFuture.supplyAsync(() -> {
             String sql = "UPDATE tickets SET discord_channel_id = ? WHERE id = ?";
             
             try (Connection conn = getConnection();
@@ -483,6 +544,10 @@ public class DatabaseManager {
                 stmt.setInt(2, ticketId);
                 
                 return stmt.executeUpdate() > 0;
+                
+            } catch (SQLException e) {
+                plugin.getLogger().severe("Failed to update ticket channel: " + e.getMessage());
+                return false;
             }
         });
     }
@@ -491,7 +556,7 @@ public class DatabaseManager {
      * Close a ticket
      */
     public CompletableFuture<Boolean> closeTicket(int ticketId) {
-        return executeAsync(() -> {
+        return CompletableFuture.supplyAsync(() -> {
             String sql = "UPDATE tickets SET status = 'CLOSED', closed_at = CURRENT_TIMESTAMP WHERE id = ?";
             
             try (Connection conn = getConnection();
@@ -500,6 +565,10 @@ public class DatabaseManager {
                 stmt.setInt(1, ticketId);
                 
                 return stmt.executeUpdate() > 0;
+                
+            } catch (SQLException e) {
+                plugin.getLogger().severe("Failed to close ticket: " + e.getMessage());
+                return false;
             }
         });
     }
@@ -508,7 +577,7 @@ public class DatabaseManager {
      * Add message to ticket
      */
     public CompletableFuture<Boolean> addTicketMessage(int ticketId, UUID senderUuid, String senderType, String message) {
-        return executeAsync(() -> {
+        return CompletableFuture.supplyAsync(() -> {
             String sql = "INSERT INTO ticket_messages (ticket_id, sender_uuid, sender_type, message) VALUES (?, ?, ?, ?)";
             
             try (Connection conn = getConnection();
@@ -520,6 +589,10 @@ public class DatabaseManager {
                 stmt.setString(4, message);
                 
                 return stmt.executeUpdate() > 0;
+                
+            } catch (SQLException e) {
+                plugin.getLogger().severe("Failed to add ticket message: " + e.getMessage());
+                return false;
             }
         });
     }
@@ -528,7 +601,7 @@ public class DatabaseManager {
      * Get open tickets count for a player
      */
     public CompletableFuture<Integer> getOpenTicketsCount(UUID playerUuid) {
-        return executeAsync(() -> {
+        return CompletableFuture.supplyAsync(() -> {
             String sql = "SELECT COUNT(*) FROM tickets WHERE minecraft_uuid = ? AND status = 'OPEN'";
             
             try (Connection conn = getConnection();
@@ -541,7 +614,11 @@ public class DatabaseManager {
                         return rs.getInt(1);
                     }
                 }
+                
+            } catch (SQLException e) {
+                plugin.getLogger().severe("Failed to get open tickets count: " + e.getMessage());
             }
+            
             return 0;
         });
     }
@@ -550,14 +627,9 @@ public class DatabaseManager {
      * Check if player has recent reports (cooldown)
      */
     public CompletableFuture<Boolean> hasRecentReport(UUID reporterUuid, int cooldownMinutes) {
-        return executeAsync(() -> {
+        return CompletableFuture.supplyAsync(() -> {
             String sql = "SELECT 1 FROM moderation_logs WHERE moderator_uuid = ? AND action_type = 'REPORT' " +
                         "AND timestamp > datetime('now', '-" + cooldownMinutes + " minutes')";
-            
-            if (!type.equals("sqlite")) {
-                sql = "SELECT 1 FROM moderation_logs WHERE moderator_uuid = ? AND action_type = 'REPORT' " +
-                     "AND timestamp > NOW() - INTERVAL " + cooldownMinutes + " MINUTE";
-            }
             
             try (Connection conn = getConnection();
                  PreparedStatement stmt = conn.prepareStatement(sql)) {
@@ -567,6 +639,10 @@ public class DatabaseManager {
                 try (ResultSet rs = stmt.executeQuery()) {
                     return rs.next();
                 }
+                
+            } catch (SQLException e) {
+                plugin.getLogger().severe("Failed to check recent reports: " + e.getMessage());
+                return false;
             }
         });
     }
@@ -693,16 +769,6 @@ public class DatabaseManager {
         }
     }
 
-    /**
-     * Close the database connection
-     */
-    public void close() {
-        if (dataSource != null && !dataSource.isClosed()) {
-            dataSource.close();
-            plugin.getLogger().info("Database connection closed.");
-        }
-    }
-    
     /**
      * Functional interface for database operations
      */

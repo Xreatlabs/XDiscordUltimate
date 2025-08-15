@@ -127,11 +127,15 @@ public class ConfigManager {
     public String getString(String path, Map<String, String> placeholders) {
         String value = plugin.getConfig().getString(path, "");
         
-        for (Map.Entry<String, String> entry : placeholders.entrySet()) {
-            value = value.replace(entry.getKey(), entry.getValue());
+        if (placeholders != null && !placeholders.isEmpty() && value != null) {
+            for (Map.Entry<String, String> entry : placeholders.entrySet()) {
+                if (entry.getKey() != null && entry.getValue() != null) {
+                    value = value.replace(entry.getKey(), entry.getValue());
+                }
+            }
         }
         
-        return value.replace('&', '§');
+        return value != null ? value.replace('&', '§') : "";
     }
     
     /**
@@ -224,6 +228,10 @@ public class ConfigManager {
      * Get webhook URL for a specific feature
      */
     public String getWebhookUrl(String feature) {
+        if (feature == null) {
+            return "";
+        }
+        
         String path = "features." + feature + ".webhook-url";
         String url = plugin.getConfig().getString(path);
         
@@ -232,13 +240,17 @@ public class ConfigManager {
             url = plugin.getConfig().getString("features.webhooks.default-webhook", "");
         }
         
-        return url;
+        return url != null ? url : "";
     }
     
     /**
      * Get channel name for a specific feature
      */
     public String getChannelName(String feature) {
+        if (feature == null) {
+            return "";
+        }
+        
         String path = "features." + feature + ".channel";
         String channelName = plugin.getConfig().getString(path);
         
@@ -255,6 +267,10 @@ public class ConfigManager {
      * Get role name for a specific feature
      */
     public String getRoleName(String feature) {
+        if (feature == null) {
+            return "";
+        }
+        
         String path = "features." + feature + ".role";
         String roleName = plugin.getConfig().getString(path);
         

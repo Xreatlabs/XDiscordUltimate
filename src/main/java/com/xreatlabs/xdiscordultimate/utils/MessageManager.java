@@ -81,8 +81,12 @@ public class MessageManager {
     public String getMessage(String path, Map<String, String> placeholders) {
         String message = getMessage(path);
         
-        for (Map.Entry<String, String> entry : placeholders.entrySet()) {
-            message = message.replace(entry.getKey(), entry.getValue());
+        if (placeholders != null && !placeholders.isEmpty()) {
+            for (Map.Entry<String, String> entry : placeholders.entrySet()) {
+                if (entry.getKey() != null && entry.getValue() != null) {
+                    message = message.replace(entry.getKey(), entry.getValue());
+                }
+            }
         }
         
         return message;
@@ -92,6 +96,10 @@ public class MessageManager {
      * Get a message with a single placeholder
      */
     public String getMessage(String path, String placeholder, String value) {
+        if (placeholder == null || value == null) {
+            return getMessage(path);
+        }
+        
         Map<String, String> placeholders = new HashMap<>();
         placeholders.put(placeholder, value);
         return getMessage(path, placeholders);
@@ -263,6 +271,10 @@ public class MessageManager {
      * Format a Discord to Minecraft message
      */
     public String formatDiscordToMinecraft(String username, String message) {
+        if (username == null || message == null) {
+            return "";
+        }
+        
         Map<String, String> placeholders = new HashMap<>();
         placeholders.put("%user%", username);
         placeholders.put("%message%", message);
@@ -270,17 +282,23 @@ public class MessageManager {
         String format = plugin.getConfig().getString("messages.discord-to-minecraft", 
             "&7[&9Discord&7] &b%user%&7: &f%message%");
         
-        for (Map.Entry<String, String> entry : placeholders.entrySet()) {
-            format = format.replace(entry.getKey(), entry.getValue());
+        if (format != null) {
+            for (Map.Entry<String, String> entry : placeholders.entrySet()) {
+                format = format.replace(entry.getKey(), entry.getValue());
+            }
         }
         
-        return colorize(format);
+        return colorize(format != null ? format : "");
     }
     
     /**
      * Format a Minecraft to Discord message
      */
     public String formatMinecraftToDiscord(String playerName, String message) {
+        if (playerName == null || message == null) {
+            return "";
+        }
+        
         Map<String, String> placeholders = new HashMap<>();
         placeholders.put("%player%", playerName);
         placeholders.put("%message%", message);
@@ -288,11 +306,13 @@ public class MessageManager {
         String format = plugin.getConfig().getString("messages.minecraft-to-discord", 
             "**%player%**: %message%");
         
-        for (Map.Entry<String, String> entry : placeholders.entrySet()) {
-            format = format.replace(entry.getKey(), entry.getValue());
+        if (format != null) {
+            for (Map.Entry<String, String> entry : placeholders.entrySet()) {
+                format = format.replace(entry.getKey(), entry.getValue());
+            }
         }
         
-        return format;
+        return format != null ? format : "";
     }
     
     /**

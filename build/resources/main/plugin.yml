@@ -1,0 +1,96 @@
+name: XDiscordUltimate
+main: com.xreatlabs.xdiscordultimate.XDiscordUltimate
+version: 1.0.0
+api-version: 1.16
+author: XReatLabs
+description: Advanced Discord integration for Minecraft servers
+website: https://github.com/xreatlabs/xdiscordultimate
+softdepend: [LuckPerms, PlaceholderAPI, Vault]
+
+commands:
+  verify:
+    description: Link your Discord account with Minecraft
+    usage: /<command>
+    aliases: [link, discord]
+  
+  support:
+    description: Open a support ticket on Discord
+    usage: /<command> <message>
+    aliases: [ticket]
+  
+  help:
+    description: Show XDiscordUltimate help GUI
+    usage: /<command> [category]
+    aliases: [xhelp, xdhelp]
+  
+  embed:
+    description: Send a custom embed to Discord
+    usage: /<command> <channel> <title> <description>
+    permission: xdiscord.embed
+  
+  announce:
+    description: Broadcast an announcement to Discord and in-game
+    usage: /<command> <message>
+    permission: xdiscord.announce
+  
+  discordconsole:
+    description: Execute bot console commands
+    usage: /<command> <command>
+    permission: xdiscord.console
+  
+  report:
+    description: Report a player to Discord moderators
+    usage: /<command> <player> <reason>
+    aliases: [reportplayer]
+  
+  xdiscord:
+    description: Main XDiscordUltimate command
+    usage: /<command> [reload|status|help]
+    permission: xdiscord.admin
+    aliases: [xdu, xdiscordultimate]
+
+permissions:
+  xdiscord.*:
+    description: All XDiscordUltimate permissions
+    default: op
+    children:
+      xdiscord.admin: true
+      xdiscord.embed: true
+      xdiscord.announce: true
+      xdiscord.console: true
+      xdiscord.verify: true
+      xdiscord.support: true
+      xdiscord.report: true
+      xdiscord.bypass.verification: true
+  
+  xdiscord.admin:
+    description: Administrative permissions
+    default: op
+  
+  xdiscord.embed:
+    description: Send Discord embeds
+    default: op
+  
+  xdiscord.announce:
+    description: Make announcements
+    default: op
+  
+  xdiscord.console:
+    description: Access Discord bot console
+    default: false
+  
+  xdiscord.verify:
+    description: Use verification command
+    default: true
+  
+  xdiscord.support:
+    description: Create support tickets
+    default: true
+  
+  xdiscord.report:
+    description: Report players
+    default: true
+  
+  xdiscord.bypass.verification:
+    description: Bypass Discord verification requirement
+    default: false

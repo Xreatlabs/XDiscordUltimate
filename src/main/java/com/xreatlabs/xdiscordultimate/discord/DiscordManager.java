@@ -62,12 +62,19 @@ public class DiscordManager {
                 .addEventListeners(new DiscordListener(plugin))
                 .build();
             
-            // Wait for ready
-            jda.awaitReady();
+            // Wait for ready with timeout
+            try {
+                jda.awaitReady();
+            } catch (InterruptedException e) {
+                Thread.currentThread().interrupt();
+                plugin.getLogger().severe("Discord bot initialization was interrupted");
+                future.complete(false);
+                return future;
+            }
             
             // Get main guild
             String guildId = plugin.getConfigManager().getGuildId();
-            if (guildId != null && !guildId.isEmpty()) {
+            if (guildId != null && !guildId.isEmpty() && !guildId.equals("YOUR_GUILD_ID")) {
                 mainGuild = jda.getGuildById(guildId);
                 if (mainGuild == null) {
                     plugin.getLogger().warning("Could not find guild with ID: " + guildId);
@@ -83,6 +90,7 @@ public class DiscordManager {
             
         } catch (Exception e) {
             plugin.getLogger().log(Level.SEVERE, "Failed to initialize Discord bot", e);
+            ready = false;
             future.complete(false);
         }
         
@@ -104,32 +112,42 @@ public class DiscordManager {
      * Update bot activity
      */
     public void updateActivity() {
-        if (jda == null) return;
-        
-        String type = plugin.getConfig().getString("discord.activity.type", "PLAYING");
-        String text = plugin.getConfig().getString("discord.activity.text", "Minecraft");
-        
-        // Replace placeholders
-        text = text.replace("%players%", String.valueOf(plugin.getServer().getOnlinePlayers().size()));
-        text = text.replace("%max%", String.valueOf(plugin.getServer().getMaxPlayers()));
-        
-        Activity activity;
-        switch (type.toUpperCase()) {
-            case "WATCHING":
-                activity = Activity.watching(text);
-                break;
-            case "LISTENING":
-                activity = Activity.listening(text);
-                break;
-            case "COMPETING":
-                activity = Activity.competing(text);
-                break;
-            default:
-                activity = Activity.playing(text);
-                break;
+        if (jda == null || jda.getStatus() != JDA.Status.CONNECTED) {
+            return;
         }
         
-        jda.getPresence().setActivity(activity);
+        try {
+            String type = plugin.getConfig().getString("discord.activity.type", "PLAYING");
+            String text = plugin.getConfig().getString("discord.activity.text", "Minecraft");
+            
+            if (text == null) {
+                text = "Minecraft";
+            }
+            
+            // Replace placeholders
+            text = text.replace("%players%", String.valueOf(plugin.getServer().getOnlinePlayers().size()));
+            text = text.replace("%max%", String.valueOf(plugin.getServer().getMaxPlayers()));
+            
+            Activity activity;
+            switch (type.toUpperCase()) {
+                case "WATCHING":
+                    activity = Activity.watching(text);
+                    break;
+                case "LISTENING":
+                    activity = Activity.listening(text);
+                    break;
+                case "COMPETING":
+                    activity = Activity.competing(text);
+                    break;
+                default:
+                    activity = Activity.playing(text);
+                    break;
+            }
+            
+            jda.getPresence().setActivity(activity);
+        } catch (Exception e) {
+            plugin.getLogger().warning("Failed to update Discord activity: " + e.getMessage());
+        }
     }
     
     /**
@@ -176,12 +194,15 @@ public class DiscordManager {
         } catch (NumberFormatException e) {
             plugin.getLogger().warning("'" + id + "' is not a valid Discord channel ID. Please check your config.yml.");
             return null;
+        } catch (Exception e) {
+            plugin.getLogger().warning("Error getting Discord channel by ID: " + e.getMessage());
+            return null;
         }
     }
 
     public TextChannel getConsoleChannel() {
         String channelId = plugin.getConfig().getString("discord-console.channel-id");
-        if (channelId == null || channelId.isEmpty()) {
+        if (channelId == null || channelId.isEmpty() || channelId.equals("YOUR_CHANNEL_ID")) {
             return null;
         }
         return getTextChannelById(channelId);

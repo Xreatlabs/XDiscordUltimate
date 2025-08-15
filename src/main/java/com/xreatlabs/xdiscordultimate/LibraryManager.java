@@ -36,15 +36,15 @@ public class LibraryManager {
             loadLibrary("com.fasterxml.jackson.core", "jackson-annotations", "2.15.2");
             
             // Kotlin runtime (required by JDA)
-            loadLibrary("org.jetbrains.kotlin", "kotlin-stdlib", "1.8.10");
-            loadLibrary("org.jetbrains.kotlin", "kotlin-stdlib-common", "1.8.10");
-            loadLibrary("org.jetbrains.kotlin", "kotlin-stdlib-jdk8", "1.8.10");
+            loadLibrary("org.jetbrains.kotlin", "kotlin-stdlib", "1.9.10");
+            loadLibrary("org.jetbrains.kotlin", "kotlin-stdlib-common", "1.9.10");
+            loadLibrary("org.jetbrains.kotlin", "kotlin-stdlib-jdk8", "1.9.10");
             
-            // Okio (required by OkHttp3) - using okio-jvm for OkHttp 4.10.0 compatibility
-            loadLibrary("com.squareup.okio", "okio-jvm", "3.0.0");
+            // Okio (required by OkHttp3) - using okio-jvm for OkHttp 4.12.0 compatibility
+            loadLibrary("com.squareup.okio", "okio-jvm", "3.5.0");
             
             // OkHttp3 (HTTP client)
-            loadLibrary("com.squareup.okhttp3", "okhttp", "4.10.0");
+            loadLibrary("com.squareup.okhttp3", "okhttp", "4.12.0");
             
             // JDA (Discord API) - Load after dependencies
             loadLibrary("net.dv8tion", "JDA", "5.0.0-beta.18");
@@ -53,24 +53,26 @@ public class LibraryManager {
             loadLibrary("com.google.code.gson", "gson", "2.10.1");
             
             // HikariCP (Database connection pooling)
-            loadLibrary("com.zaxxer", "HikariCP", "5.0.1");
+            loadLibrary("com.zaxxer", "HikariCP", "5.1.0");
             
             // Database drivers
-            loadLibrary("org.xerial", "sqlite-jdbc", "3.42.0.0");
-            loadLibrary("com.mysql", "mysql-connector-j", "8.0.33");
-            loadLibrary("org.postgresql", "postgresql", "42.6.0");
+            loadLibrary("org.xerial", "sqlite-jdbc", "3.44.1.0");
+            loadLibrary("com.mysql", "mysql-connector-j", "8.2.0");
+            loadLibrary("org.postgresql", "postgresql", "42.7.1");
             
             // Logging
             loadLibrary("org.slf4j", "slf4j-api", "2.0.9");
-            loadLibrary("ch.qos.logback", "logback-classic", "1.4.11");
-            loadLibrary("org.apache.logging.log4j", "log4j-core", "2.17.1");
-            loadLibrary("org.apache.logging.log4j", "log4j-api", "2.17.1");
+            loadLibrary("ch.qos.logback", "logback-classic", "1.4.14");
+            loadLibrary("org.apache.logging.log4j", "log4j-core", "2.22.1");
+            loadLibrary("org.apache.logging.log4j", "log4j-api", "2.22.1");
             
             plugin.getLogger().info("All runtime dependencies loaded successfully!");
             
         } catch (Exception e) {
             plugin.getLogger().severe("Failed to load runtime dependencies: " + e.getMessage());
-            e.printStackTrace();
+            if (plugin instanceof XDiscordUltimate && ((XDiscordUltimate) plugin).getConfigManager() != null && ((XDiscordUltimate) plugin).getConfigManager().isDebugEnabled()) {
+                e.printStackTrace();
+            }
             throw new RuntimeException("Critical dependency loading failure", e);
         }
     }

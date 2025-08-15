@@ -1,0 +1,343 @@
+# XDiscordUltimate Configuration
+# Version: 1.0.0
+# Documentation: https://github.com/xreatlabs/xdiscordultimate/wiki
+
+# Admin Discord IDs - These users have full control over sensitive commands
+adminIDs:
+  - "123456789012345678"
+  - "987654321098765432"
+
+# General Settings
+general:
+  # Enable debug messages in console
+  debug: false
+  # Language file to use (en_US, es_ES, etc.)
+  language: "en_US"
+  # Check for updates on startup
+  check-updates: true
+
+# Feature Toggles - Enable/disable specific features
+features:
+  # Chat Bridge - Core feature for Discord-Minecraft chat integration
+  chat-bridge:
+    enabled: true
+    # Discord channel ID for chat bridge (use channel ID, not name)
+    chat-channel-id: ""
+    # Fallback: Discord channel name (only used if ID is not set)
+    chat-channel: "minecraft-chat"
+    # Enable Minecraft to Discord chat
+    minecraft-to-discord: true
+    # Enable Discord to Minecraft chat
+    discord-to-minecraft: true
+    # Use embeds for Minecraft messages
+    use-embeds: false
+    # Filter bot messages from Discord
+    filter-bot-messages: true
+    # Message formats
+    minecraft-format: "**%player%**: %message%"
+    discord-format: "&7[&9Discord&7] &b%user%&7: &f%message%"
+
+  server-logging:
+    enabled: true
+    # Discord channel ID for logs (use channel ID, not name)
+    logs-channel-id: "YOUR_LOGS_CHANNEL_ID"
+    # Log server start/stop events
+    log-server-events: true
+    # Log player advancements
+    log-advancements: true
+    # Log commands used by players
+    log-commands: true
+    # List of commands to IGNORE. Commands listed here will NOT be logged.
+    ignored-commands:
+      - "afk"
+      - "balancetop"
+      - "seen"
+    # Message formats
+    advancement-message: "🏆 **%player%** has made the advancement **[%advancement%]**"
+    command-message: "```[%timestamp%] %player% used command: %command%```"
+
+  verification:
+    enabled: true
+    # Kick unverified players after X minutes (0 to disable)
+    kick-after-minutes: 30
+    # Whitelist mode - only verified players can join
+    whitelist-mode: false
+    # Role to give verified players in Discord
+    verified-role: "Verified"
+    # Minecraft permission group to add (requires LuckPerms)
+    verified-group: "verified"
+    # Code verification settings
+    code-length: 6
+    code-expiry-minutes: 5
+  
+  webhooks:
+    enabled: true
+    # Allow players with permission to create embeds
+    player-embeds: true
+    # GUI builder for embeds (requires permission)
+    gui-builder: true
+    # Default webhook URL for embeds
+    default-webhook: ""
+  
+  voice-channel:
+    enabled: true
+    # Show voice channel status in tab list
+    show-in-tab: true
+    # Create temporary voice channels on join
+    auto-temp-vc: false
+    # Proximity voice chat (requires additional setup)
+    proximity-vc: false
+    proximity-range: 50
+    # Text-to-speech settings
+    tts:
+      enabled: true
+      language: "en"
+      speed: 1.0
+      volume: 0.8
+      chat-messages: false
+      discord-messages: true
+      player-events: true
+  
+  server-control:
+    enabled: true
+    # Commands that can be executed from Discord
+    allowed-commands:
+      restart: true
+      stop: true
+      kick: true
+      tps: true
+      list: true
+    # Require both admin ID and role
+    require-role: true
+    control-role: "Server Admin"
+  
+  player-events:
+    enabled: true
+    # Event types to send to Discord
+    events:
+      join: true
+      leave: true
+      first-join: true
+      death: true
+      advancement: true
+      milestone: true
+    # Channel to send events to
+    event-channel: "minecraft-events"
+    # Use embeds for events
+    use-embeds: true
+    # Custom emojis for events
+    emojis:
+      join: ":arrow_right:"
+      leave: ":arrow_left:"
+      death: ":skull:"
+      advancement: ":trophy:"
+  
+  admin-alerts:
+    enabled: true
+    # TPS threshold for alerts
+    tps-threshold: 15.0
+    # RAM usage percentage threshold
+    ram-threshold: 90
+    # Check interval in seconds
+    check-interval: 30
+    # DM alerts to admins
+    dm-alerts: true
+    # Also post in channel
+    alert-channel: "admin-alerts"
+    # Alert on anti-cheat violations
+    anticheat-alerts: true
+  
+  tickets:
+    enabled: true
+    # Category for ticket channels
+    ticket-category: "Support Tickets"
+    # Auto-close tickets after X hours of inactivity
+    auto-close-hours: 48
+    # Allow players to close their own tickets
+    player-close: true
+    # Transcript on close
+    save-transcript: true
+    transcript-channel: "ticket-logs"
+  
+  cross-server:
+    enabled: false
+    # Server identifier
+    server-id: "survival"
+    # Servers to sync with
+    sync-servers:
+      - "creative"
+      - "skyblock"
+    # Enable cross-server private messages
+    cross-pm: true
+    # Fallback to Discord DM if player offline
+    discord-dm-fallback: true
+  
+  minigames:
+    enabled: true
+    # Poll-triggered events
+    polls:
+      vote-day: true
+      drop-party: true
+      custom-events: true
+    # Rewards for Discord activity
+    activity-rewards: true
+    # Cooldown between polls (minutes)
+    poll-cooldown: 60
+  
+  moderation:
+    enabled: true
+    # Sync Discord bans with Minecraft
+    sync-bans: true
+    # Log channel for moderation actions
+    log-channel: "mod-logs"
+    # Include screenshots in reports
+    report-screenshots: false
+    # Auto-moderate chat
+    auto-moderate: true
+    # Report system settings
+    report-cooldown-minutes: 5
+    require-verification-for-reports: true
+    # Filtered words (uses regex)
+    filter-words:
+      - "badword1"
+      - "badword2"
+  
+  bot-console:
+    enabled: true
+    # Prefix for bot commands
+    command-prefix: "!"
+    # Allow command execution in DMs
+    allow-dm: false
+    # Console channel
+    console-channel: "bot-console"
+  
+  announcements:
+    enabled: true
+    # Default announcement channel
+    default-channel: "announcements"
+    # Also show as in-game title
+    show-title: true
+    # Title display time (ticks)
+    title-stay: 100
+    title-fade-in: 10
+    title-fade-out: 20
+  
+  leaderboards:
+    enabled: true
+    # Update interval (minutes)
+    update-interval: 30
+    # Leaderboard channel
+    leaderboard-channel: "leaderboards"
+    # Stats to track (PlaceholderAPI)
+    tracked-stats:
+      - "%statistic_player_kills%:Player Kills"
+      - "%statistic_deaths%:Deaths"
+      - "%vault_eco_balance%:Balance"
+      - "%statistic_time_played:days%:Days Played"
+    # Number of players to show
+    top-players: 10
+  
+  emoji-reactions:
+    enabled: true
+    # Custom emoji mappings
+    custom-emojis:
+      join: "<:minecraft_join:123456789>"
+      leave: "<:minecraft_leave:123456789>"
+      death: "<:minecraft_death:123456789>"
+      achievement: "<:minecraft_achieve:123456789>"
+    # Animated emojis/GIFs
+    use-animated: true
+
+# Discord Bot Settings
+discord:
+  # Bot token (get from Discord Developer Portal)
+  bot-token: "YOUR_BOT_TOKEN"
+  # Guild ID
+  guild-id: "YOUR_GUILD_ID"
+  # Activity/Status
+  activity:
+    type: "PLAYING" # PLAYING, WATCHING, LISTENING, COMPETING
+    text: "Minecraft | !help"
+    status: "ONLINE" # ONLINE, IDLE, DND, INVISIBLE
+  # Command settings
+  commands:
+    # Use slash commands
+    use-slash-commands: true
+    # Legacy command prefix
+    legacy-prefix: "!"
+  # Channel configurations
+  channels:
+    # Welcome messages for new members
+    welcome: "YOUR_WELCOME_CHANNEL_ID"
+    # General logs (member join/leave, etc.)
+    logs: "YOUR_LOGS_CHANNEL_ID"
+    # Cross-platform chat bridge
+    chat: "YOUR_CHAT_CHANNEL_ID"
+    # Console output (admin only)
+    console: "YOUR_CONSOLE_CHANNEL_ID"
+    # Player events (join/leave/death)
+    events: "YOUR_EVENTS_CHANNEL_ID"
+    # Support tickets
+    tickets: "YOUR_TICKETS_CHANNEL_ID"
+    # Moderation logs and reports
+    moderation: "YOUR_MODERATION_CHANNEL_ID"
+
+# Database Settings (for persistent data)
+database:
+  # Type: sqlite, mysql, postgresql
+  type: "sqlite"
+  # SQLite settings
+  sqlite:
+    file: "data.db"
+  # MySQL settings
+  mysql:
+    host: "localhost"
+    port: 3306
+    database: "xdiscord"
+    username: "root"
+    password: "password"
+    ssl: false
+
+# Message Formats
+messages:
+  # Chat format from Minecraft to Discord
+  minecraft-to-discord: "**%player%**: %message%"
+  # Chat format from Discord to Minecraft
+  discord-to-minecraft: "&7[&9Discord&7] &b%user%&7: &f%message%"
+  # Join message
+  join-message: ":arrow_right: **%player%** joined the server!"
+  # Leave message
+  leave-message: ":arrow_left: **%player%** left the server!"
+  # Death message
+  death-message: ":skull: **%player%** %death_message%"
+
+# Advanced Settings
+advanced:
+  # Thread pool size for async operations
+  thread-pool-size: 4
+  # Cache settings
+  cache:
+    # User cache TTL (minutes)
+    user-ttl: 60
+    # Maximum cache size
+    max-size: 1000
+  # Rate limiting
+  rate-limit:
+    # Commands per minute per user
+    commands-per-minute: 10
+    # Webhooks per minute
+    webhooks-per-minute: 5
+  # Metrics
+  metrics:
+    enabled: true
+    # bStats plugin ID
+    bstats-id: 12345
+
+# Discord Console
+discord-console:
+  enabled: true
+  channel-id: "YOUR_CONSOLE_CHANNEL_ID"
+  allowed-roles:
+    - "Admin"
+    - "Owner"
+

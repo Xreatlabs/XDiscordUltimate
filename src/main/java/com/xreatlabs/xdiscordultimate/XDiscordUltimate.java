@@ -45,37 +45,78 @@ public class XDiscordUltimate extends JavaPlugin {
             libraryManager.loadAllLibraries();
         } catch (Exception e) {
             getLogger().severe("Failed to load dependencies! Plugin will be disabled.");
+            getLogger().severe("Error: " + e.getMessage());
+            if (getConfigManager() != null && getConfigManager().isDebugEnabled()) {
+                e.printStackTrace();
+            }
             getServer().getPluginManager().disablePlugin(this);
             return;
         }
         
         // Initialize configuration
-        saveDefaultConfig();
-        configManager = new ConfigManager(this);
-        messageManager = new MessageManager(this);
+        try {
+            saveDefaultConfig();
+            configManager = new ConfigManager(this);
+            messageManager = new MessageManager(this);
+        } catch (Exception e) {
+            getLogger().severe("Failed to initialize configuration! Plugin will be disabled.");
+            getLogger().severe("Error: " + e.getMessage());
+            if (getConfigManager() != null && getConfigManager().isDebugEnabled()) {
+                e.printStackTrace();
+            }
+            getServer().getPluginManager().disablePlugin(this);
+            return;
+        }
         
         // Initialize utilities
-        adminUtils = new AdminUtils(this);
-        embedUtils = new EmbedUtils(this);
+        try {
+            adminUtils = new AdminUtils(this);
+            embedUtils = new EmbedUtils(this);
+        } catch (Exception e) {
+            getLogger().severe("Failed to initialize utilities! Plugin will be disabled.");
+            getLogger().severe("Error: " + e.getMessage());
+            if (getConfigManager() != null && getConfigManager().isDebugEnabled()) {
+                e.printStackTrace();
+            }
+            getServer().getPluginManager().disablePlugin(this);
+            return;
+        }
         
         // Check optional dependencies
         checkOptionalDependencies();
         
         // Initialize Discord manager
-        discordManager = new DiscordManager(this);
-        discordManager.initialize().thenAccept(success -> {
-            if (success) {
-                // Attach console appender now that the bot is ready
-                if (getConfig().getBoolean("discord-console.enabled", true)) {
-                    consoleAppender = new ConsoleAppender(this);
-                    consoleAppender.start();
-                    org.apache.logging.log4j.core.Logger rootLogger = (org.apache.logging.log4j.core.Logger) org.apache.logging.log4j.LogManager.getRootLogger();
-                    rootLogger.addAppender(consoleAppender);
+        try {
+            discordManager = new DiscordManager(this);
+            discordManager.initialize().thenAccept(success -> {
+                if (success) {
+                    // Attach console appender now that the bot is ready
+                    if (getConfig().getBoolean("discord-console.enabled", true)) {
+                        try {
+                            consoleAppender = new ConsoleAppender(this);
+                            consoleAppender.start();
+                            org.apache.logging.log4j.core.Logger rootLogger = (org.apache.logging.log4j.core.Logger) org.apache.logging.log4j.LogManager.getRootLogger();
+                            rootLogger.addAppender(consoleAppender);
+                        } catch (Exception e) {
+                            getLogger().warning("Failed to initialize console appender: " + e.getMessage());
+                        }
+                    }
+                } else {
+                    getLogger().severe("Failed to initialize Discord bot!");
                 }
-            } else {
-                getLogger().severe("Failed to initialize Discord bot!");
+            }).exceptionally(throwable -> {
+                getLogger().severe("Discord bot initialization failed with exception: " + throwable.getMessage());
+                return null;
+            });
+        } catch (Exception e) {
+            getLogger().severe("Failed to create Discord manager! Plugin will be disabled.");
+            getLogger().severe("Error: " + e.getMessage());
+            if (getConfigManager() != null && getConfigManager().isDebugEnabled()) {
+                e.printStackTrace();
             }
-        });
+            getServer().getPluginManager().disablePlugin(this);
+            return;
+        }
         
         // Initialize database
         try {
@@ -88,31 +129,74 @@ public class XDiscordUltimate extends JavaPlugin {
         }
         
         // Initialize module manager
-        moduleManager = new ModuleManager(this);
-        moduleManager.loadModules();
+        try {
+            moduleManager = new ModuleManager(this);
+            moduleManager.loadModules();
+        } catch (Exception e) {
+            getLogger().severe("Failed to initialize module manager! Plugin will be disabled.");
+            getLogger().severe("Error: " + e.getMessage());
+            if (getConfigManager() != null && getConfigManager().isDebugEnabled()) {
+                e.printStackTrace();
+            }
+            getServer().getPluginManager().disablePlugin(this);
+            return;
+        }
         
         // Initialize help GUI
-        helpGUI = new HelpGUI(this);
+        try {
+            helpGUI = new HelpGUI(this);
+        } catch (Exception e) {
+            getLogger().warning("Failed to initialize help GUI: " + e.getMessage());
+            helpGUI = null;
+        }
         
         // Register commands
-        registerCommands();
+        try {
+            registerCommands();
+        } catch (Exception e) {
+            getLogger().severe("Failed to register commands! Plugin will be disabled.");
+            getLogger().severe("Error: " + e.getMessage());
+            if (getConfigManager() != null && getConfigManager().isDebugEnabled()) {
+                e.printStackTrace();
+            }
+            getServer().getPluginManager().disablePlugin(this);
+            return;
+        }
         
         // Register listeners
-        registerListeners();
+        try {
+            registerListeners();
+        } catch (Exception e) {
+            getLogger().severe("Failed to register listeners! Plugin will be disabled.");
+            getLogger().severe("Error: " + e.getMessage());
+            if (getConfigManager() != null && getConfigManager().isDebugEnabled()) {
+                e.printStackTrace();
+            }
+            getServer().getPluginManager().disablePlugin(this);
+            return;
+        }
         
         // Discord events are now handled by DiscordListener
         
         // Start metrics
         if (getConfig().getBoolean("advanced.metrics.enabled", true)) {
-            int pluginId = getConfig().getInt("advanced.metrics.bstats-id", 12345);
-            new Metrics(this, pluginId);
+            try {
+                int pluginId = getConfig().getInt("advanced.metrics.bstats-id", 12345);
+                new Metrics(this, pluginId);
+            } catch (Exception e) {
+                getLogger().warning("Failed to start metrics: " + e.getMessage());
+            }
         }
         
         // Log server startup
         if (moduleManager != null) {
-            Module loggingModule = moduleManager.getModule("server-logging");
-            if (loggingModule != null && loggingModule.isEnabled()) {
-                ((com.xreatlabs.xdiscordultimate.modules.logging.ServerLoggingModule) loggingModule).logServerStartup();
+            try {
+                Module loggingModule = moduleManager.getModule("server-logging");
+                if (loggingModule != null && loggingModule.isEnabled()) {
+                    ((com.xreatlabs.xdiscordultimate.modules.logging.ServerLoggingModule) loggingModule).logServerStartup();
+                }
+            } catch (Exception e) {
+                getLogger().warning("Failed to log server startup: " + e.getMessage());
             }
         }
         
@@ -120,46 +204,79 @@ public class XDiscordUltimate extends JavaPlugin {
         
         // Check for updates
         if (getConfig().getBoolean("general.check-updates", true)) {
-            new UpdateChecker(this).checkForUpdates();
+            try {
+                new UpdateChecker(this).checkForUpdates();
+            } catch (Exception e) {
+                getLogger().warning("Failed to check for updates: " + e.getMessage());
+            }
         }
     }
     
     @Override
     public void onDisable() {
+        getLogger().info("XDiscordUltimate shutting down...");
+        
         // Detach console appender
         if (consoleAppender != null) {
-            consoleAppender.stop();
-            org.apache.logging.log4j.core.Logger rootLogger = (org.apache.logging.log4j.core.Logger) org.apache.logging.log4j.LogManager.getRootLogger();
-            rootLogger.removeAppender(consoleAppender);
+            try {
+                consoleAppender.stop();
+                org.apache.logging.log4j.core.Logger rootLogger = (org.apache.logging.log4j.core.Logger) org.apache.logging.log4j.LogManager.getRootLogger();
+                rootLogger.removeAppender(consoleAppender);
+            } catch (Exception e) {
+                getLogger().warning("Error detaching console appender: " + e.getMessage());
+            }
         }
 
         // Log server shutdown
         if (moduleManager != null) {
-            Module loggingModule = moduleManager.getModule("server-logging");
-            if (loggingModule != null && loggingModule.isEnabled()) {
-                ((com.xreatlabs.xdiscordultimate.modules.logging.ServerLoggingModule) loggingModule).logServerShutdown();
+            try {
+                Module loggingModule = moduleManager.getModule("server-logging");
+                if (loggingModule != null && loggingModule.isEnabled()) {
+                    ((com.xreatlabs.xdiscordultimate.modules.logging.ServerLoggingModule) loggingModule).logServerShutdown();
+                }
+            } catch (Exception e) {
+                getLogger().warning("Failed to log server shutdown: " + e.getMessage());
             }
         }
         
         // Cleanup help GUI
         if (helpGUI != null) {
-            helpGUI.cleanup();
+            try {
+                helpGUI.cleanup();
+            } catch (Exception e) {
+                getLogger().warning("Error cleaning up help GUI: " + e.getMessage());
+            }
         }
         
         // Disable modules
         if (moduleManager != null) {
-            moduleManager.disableModules();
+            try {
+                moduleManager.disableModules();
+            } catch (Exception e) {
+                getLogger().warning("Error disabling modules: " + e.getMessage());
+            }
         }
         
         // Shutdown Discord bot
         if (discordManager != null) {
-            discordManager.shutdown();
+            try {
+                discordManager.shutdown();
+            } catch (Exception e) {
+                getLogger().warning("Error shutting down Discord bot: " + e.getMessage());
+            }
         }
         
         // Close database
         if (databaseManager != null) {
-            databaseManager.close();
+            try {
+                databaseManager.close();
+            } catch (Exception e) {
+                getLogger().warning("Error closing database: " + e.getMessage());
+            }
         }
+        
+        // Clear instance reference
+        instance = null;
         
         getLogger().info("XDiscordUltimate has been disabled!");
     }

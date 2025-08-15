@@ -35,6 +35,11 @@ public class ChatListener implements Listener {
         Player player = event.getPlayer();
         String message = event.getMessage();
         
+        // Clean up old entries periodically to prevent memory leaks
+        if (System.currentTimeMillis() % 1000 == 0) { // Clean up every second
+            cleanupOldEntries();
+        }
+        
         // Update message count in stats
         plugin.getDatabaseManager().updatePlayerStats(player.getUniqueId(), "messages_sent", 1);
         
@@ -71,6 +76,28 @@ public class ChatListener implements Listener {
     }
     
     /**
+     * Clean up old entries to prevent memory leaks
+     */
+    private void cleanupOldEntries() {
+        long cutoff = System.currentTimeMillis() - 300000; // 5 minutes ago
+        
+        // Clean up old message times
+        lastMessageTime.entrySet().removeIf(entry -> entry.getValue() < cutoff);
+        
+        // Clean up message counts for players who haven't sent messages recently
+        messageCount.entrySet().removeIf(entry -> {
+            Long time = lastMessageTime.get(entry.getKey());
+            return time == null || time < cutoff;
+        });
+        
+        // Clean up last messages for players who haven't sent messages recently
+        lastMessage.entrySet().removeIf(entry -> {
+            Long time = lastMessageTime.get(entry.getKey());
+            return time == null || time < cutoff;
+        });
+    }
+
+    /**
      * Check if a message should be filtered
      */
     private boolean shouldFilterMessage(String message, Player player) {
@@ -79,15 +106,27 @@ public class ChatListener implements Listener {
             return false;
         }
         
+        if (message == null || message.isEmpty()) {
+            return false;
+        }
+        
         String lowerMessage = message.toLowerCase();
         
         // Check filter words
         for (String word : filterWords) {
+            if (word == null || word.isEmpty()) {
+                continue;
+            }
+            
             if (word.startsWith("regex:")) {
                 // Regex pattern
                 String pattern = word.substring(6);
-                if (message.matches(pattern)) {
-                    return true;
+                try {
+                    if (message.matches(pattern)) {
+                        return true;
+                    }
+                } catch (Exception e) {
+                    plugin.getLogger().warning("Invalid regex pattern: " + pattern);
                 }
             } else {
                 // Simple word check
@@ -98,13 +137,25 @@ public class ChatListener implements Listener {
         }
         
         // Check for spam (repeated characters)
-        if (containsSpam(message)) {
-            return true;
+        if (message.length() > 3) {
+            char firstChar = message.charAt(0);
+            boolean allSame = true;
+            for (int i = 1; i < message.length(); i++) {
+                if (message.charAt(i) != firstChar) {
+                    allSame = false;
+                    break;
+                }
+            }
+            if (allSame) {
+                return true;
+            }
         }
         
-        // Check for excessive caps
-        if (isExcessiveCaps(message) && message.length() > 5) {
-            return true;
+        // Check for URLs if disabled
+        if (!plugin.getConfig().getBoolean("features.chat.allow-urls", false)) {
+            if (urlPattern.matcher(message).find()) {
+                return true;
+            }
         }
         
         return false;

@@ -38,7 +38,8 @@ public class UpdateChecker {
             try {
                 String latestVersion = getLatestVersion();
                 
-                if (latestVersion != null && isNewerVersion(latestVersion)) {
+                // Only notify if we got a valid version AND it's actually newer
+                if (latestVersion != null && !latestVersion.isEmpty() && isNewerVersion(latestVersion)) {
                     Bukkit.getScheduler().runTask(plugin, () -> {
                         plugin.getLogger().warning("========================================");
                         plugin.getLogger().warning("A new version of XDiscordUltimate is available!");
@@ -46,20 +47,13 @@ public class UpdateChecker {
                         plugin.getLogger().warning("Latest version: " + latestVersion);
                         plugin.getLogger().warning("Download at: https://github.com/xreatlabs/xdiscordultimate/releases");
                         plugin.getLogger().warning("========================================");
-                        
-                        // Notify admins in-game
-                        Bukkit.getOnlinePlayers().stream()
-                            .filter(player -> player.hasPermission("xdiscord.admin"))
-                            .forEach(player -> {
-                                plugin.getMessageManager().sendWarning(player, 
-                                    "A new version of XDiscordUltimate is available: v" + latestVersion);
-                            });
                     });
                 } else {
-                    plugin.getLogger().info("XDiscordUltimate is up to date!");
+                    plugin.getLogger().info("XDiscordUltimate v" + currentVersion + " is up to date!");
                 }
             } catch (Exception e) {
-                plugin.getLogger().log(Level.WARNING, "Failed to check for updates", e);
+                // Silently fail - don't spam console with update check errors
+                plugin.getLogger().info("XDiscordUltimate v" + currentVersion + " loaded");
             }
         });
     }
@@ -68,6 +62,7 @@ public class UpdateChecker {
      * Get the latest version from GitHub
      */
     private String getLatestVersion() {
+        // Try GitHub first
         try {
             Request request = new Request.Builder()
                 .url(GITHUB_API_URL)
@@ -78,22 +73,23 @@ public class UpdateChecker {
                 if (response.isSuccessful() && response.body() != null) {
                     String json = response.body().string();
                     JsonObject jsonObject = JsonParser.parseString(json).getAsJsonObject();
-                    String tagName = jsonObject.get("tag_name").getAsString();
                     
-                    // Remove 'v' prefix if present
-                    if (tagName.startsWith("v")) {
-                        tagName = tagName.substring(1);
+                    if (jsonObject.has("tag_name")) {
+                        String tagName = jsonObject.get("tag_name").getAsString();
+                        // Remove 'v' prefix if present
+                        if (tagName.startsWith("v")) {
+                            tagName = tagName.substring(1);
+                        }
+                        return tagName;
                     }
-                    
-                    return tagName;
                 }
             }
-        } catch (IOException e) {
-            // Try Spigot API as fallback
-            return getLatestVersionFromSpigot();
+        } catch (Exception e) {
+            // GitHub API failed, try Spigot
         }
         
-        return null;
+        // Try Spigot as fallback
+        return getLatestVersionFromSpigot();
     }
     
     /**
@@ -107,11 +103,15 @@ public class UpdateChecker {
             
             try (Response response = httpClient.newCall(request).execute()) {
                 if (response.isSuccessful() && response.body() != null) {
-                    return response.body().string().trim();
+                    String version = response.body().string().trim();
+                    // Validate it looks like a version number
+                    if (version.matches("\\d+\\.\\d+(\\.\\d+)?")) {
+                        return version;
+                    }
                 }
             }
-        } catch (IOException e) {
-            plugin.getLogger().log(Level.WARNING, "Failed to check Spigot for updates", e);
+        } catch (Exception e) {
+            // Spigot API also failed
         }
         
         return null;
@@ -121,13 +121,17 @@ public class UpdateChecker {
      * Check if a version is newer than the current version
      */
     private boolean isNewerVersion(String latestVersion) {
+        if (latestVersion == null || latestVersion.isEmpty()) {
+            return false;
+        }
+        
         try {
             Version current = new Version(currentVersion);
             Version latest = new Version(latestVersion);
             return latest.compareTo(current) > 0;
         } catch (Exception e) {
-            // If version parsing fails, do simple string comparison
-            return !currentVersion.equals(latestVersion);
+            // If version parsing fails, assume no update
+            return false;
         }
     }
     

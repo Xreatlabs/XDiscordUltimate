@@ -58,7 +58,7 @@ public class AdminAlertsModule extends Module implements Listener {
     
     @Override
     public String getName() {
-        return "AdminAlerts";
+        return "Admin Alerts";
     }
     
     @Override
@@ -94,47 +94,43 @@ public class AdminAlertsModule extends Module implements Listener {
     }
     
     private void loadConfiguration() {
-        alertsChannelName = getConfig().getString("channel-name", "admin-alerts");
-        alertSuspiciousCommands = getConfig().getBoolean("alert-suspicious-commands", true);
-        alertOppedPlayers = getConfig().getBoolean("alert-opped-players", true);
-        alertResourceUsage = getConfig().getBoolean("alert-resource-usage", true);
-        alertErrorLogs = getConfig().getBoolean("alert-error-logs", true);
-        alertBlockMonitoring = getConfig().getBoolean("alert-block-monitoring", true);
-        alertMultipleLogins = getConfig().getBoolean("alert-multiple-logins", true);
+        org.bukkit.configuration.ConfigurationSection config = getConfig();
         
-        // Load monitored blocks
+        if (config != null) {
+            alertsChannelName = config.getString("alert-channel", "admin-alerts");
+            tpsThreshold = config.getDouble("tps-threshold", 15.0);
+            memoryThreshold = config.getDouble("ram-threshold", 90.0);
+            alertResourceUsage = config.getBoolean("dm-alerts", true);
+        } else {
+            warning("Config section not found, using defaults");
+            alertsChannelName = "admin-alerts";
+            tpsThreshold = 15.0;
+            memoryThreshold = 90.0;
+            alertResourceUsage = true;
+        }
+        
+        // Default settings
+        alertSuspiciousCommands = true;
+        alertOppedPlayers = true;
+        alertErrorLogs = true;
+        alertBlockMonitoring = true;
+        alertMultipleLogins = true;
+        
+        // Default monitored blocks
         monitoredBlocks = new HashSet<>();
-        List<String> blockList = getConfig().getStringList("monitored-blocks");
-        for (String blockName : blockList) {
-            try {
-                Material material = Material.valueOf(blockName.toUpperCase());
-                monitoredBlocks.add(material);
-            } catch (IllegalArgumentException e) {
-                warning("Invalid material in monitored-blocks: " + blockName);
-            }
-        }
+        monitoredBlocks.add(Material.TNT);
+        monitoredBlocks.add(Material.BEDROCK);
+        monitoredBlocks.add(Material.COMMAND_BLOCK);
+        monitoredBlocks.add(Material.BARRIER);
         
-        // Default monitored blocks if none specified
-        if (monitoredBlocks.isEmpty()) {
-            monitoredBlocks.add(Material.TNT);
-            monitoredBlocks.add(Material.BEDROCK);
-            monitoredBlocks.add(Material.COMMAND_BLOCK);
-            monitoredBlocks.add(Material.BARRIER);
-        }
+        // Default suspicious commands
+        suspiciousCommands = Arrays.asList(
+            "op", "deop", "stop", "reload", "restart",
+            "ban", "ban-ip", "pardon", "whitelist",
+            "gamemode", "gamerule", "difficulty"
+        );
         
-        // Load suspicious commands
-        suspiciousCommands = getConfig().getStringList("suspicious-commands");
-        if (suspiciousCommands.isEmpty()) {
-            suspiciousCommands = Arrays.asList(
-                "op", "deop", "stop", "reload", "restart",
-                "ban", "ban-ip", "pardon", "whitelist",
-                "gamemode", "gamerule", "difficulty"
-            );
-        }
-        
-        // Resource thresholds
-        tpsThreshold = getConfig().getDouble("tps-threshold", 15.0);
-        memoryThreshold = getConfig().getDouble("memory-threshold", 90.0);
+        debug("Alert channel: " + alertsChannelName);
     }
     
     @EventHandler(priority = EventPriority.MONITOR)
@@ -307,8 +303,22 @@ public class AdminAlertsModule extends Module implements Listener {
             return null;
         }
         
-        return plugin.getDiscordManager().getMainGuild()
-            .getTextChannelsByName(alertsChannelName, true)
+        if (alertsChannelName == null || alertsChannelName.isEmpty()) {
+            return null;
+        }
+        
+        // Try by ID first (if numeric)
+        if (alertsChannelName.matches("\\d+")) {
+            TextChannel channel = plugin.getDiscordManager().getTextChannelById(alertsChannelName);
+            if (channel != null) {
+                return channel;
+            }
+        }
+        
+        net.dv8tion.jda.api.entities.Guild guild = plugin.getDiscordManager().getMainGuild();
+        if (guild == null) return null;
+        
+        return guild.getTextChannelsByName(alertsChannelName, true)
             .stream()
             .findFirst()
             .orElse(null);

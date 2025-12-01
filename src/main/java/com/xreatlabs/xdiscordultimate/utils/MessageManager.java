@@ -20,12 +20,15 @@ public class MessageManager {
     private final XDiscordUltimate plugin;
     private FileConfiguration messagesConfig;
     private File messagesFile;
-    private final String prefix;
+    private String prefix;
     
     public MessageManager(XDiscordUltimate plugin) {
         this.plugin = plugin;
-        this.prefix = "&8[&bXDiscord&8] ";
         loadMessages();
+        // Load prefix from config or use default gradient - parse it immediately
+        String rawPrefix = messagesConfig.getString("general.prefix", 
+            "<gradient:#55FFFF:#5555FF>XDiscord</gradient> &8» &r");
+        this.prefix = ColorUtils.parse(rawPrefix);
     }
     
     /**
@@ -61,6 +64,10 @@ public class MessageManager {
      */
     public void reload() {
         loadMessages();
+        // Re-parse prefix after reload
+        String rawPrefix = messagesConfig.getString("general.prefix", 
+            "<gradient:#55FFFF:#5555FF>XDiscord</gradient> &8» &r");
+        this.prefix = ColorUtils.parse(rawPrefix);
     }
     
     /**
@@ -239,10 +246,10 @@ public class MessageManager {
     }
     
     /**
-     * Convert color codes
+     * Convert color codes (supports hex, gradients, MiniMessage)
      */
     public String colorize(String message) {
-        return ChatColor.translateAlternateColorCodes('&', message);
+        return ColorUtils.parse(message);
     }
     
     /**

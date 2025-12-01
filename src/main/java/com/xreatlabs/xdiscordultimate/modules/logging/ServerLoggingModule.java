@@ -44,7 +44,7 @@ public class ServerLoggingModule extends Module implements Listener {
     
     @Override
     public String getName() {
-        return "ServerLogging";
+        return "Server Logging";
     }
     
     @Override
@@ -89,25 +89,40 @@ public class ServerLoggingModule extends Module implements Listener {
     }
     
     private void loadConfiguration() {
-        // Try to get channel IDs first, then fall back to names
-        String logsChannelId = getConfig().getString("logs-channel-id", "");
-        String consoleChannelId = getConfig().getString("console-channel-id", "");
+        org.bukkit.configuration.ConfigurationSection config = getConfig();
         
-        logsChannelName = !logsChannelId.isEmpty() ? logsChannelId : getConfig().getString("logs-channel", "server-logs");
-        consoleChannelName = !consoleChannelId.isEmpty() ? consoleChannelId : getConfig().getString("console-channel", "console");
+        if (config != null) {
+            logsChannelName = config.getString("logs-channel-id", "");
+            enableServerLogs = config.getBoolean("log-server-events", true);
+            enableConsoleOutput = false;
+            enableCommandLogging = config.getBoolean("log-commands", true);
+            enableErrorLogging = true;
+            enableWarningLogging = true;
+            enableInfoLogging = false;
+        } else {
+            warning("Config section not found, using defaults");
+            logsChannelName = "";
+            enableServerLogs = true;
+            enableConsoleOutput = false;
+            enableCommandLogging = true;
+            enableErrorLogging = true;
+            enableWarningLogging = true;
+            enableInfoLogging = false;
+        }
         
-        enableServerLogs = getConfig().getBoolean("enable-server-logs", true);
-        enableConsoleOutput = getConfig().getBoolean("enable-console-output", false);
-        enableCommandLogging = getConfig().getBoolean("enable-command-logging", true);
-        enableErrorLogging = getConfig().getBoolean("enable-error-logging", true);
-        enableWarningLogging = getConfig().getBoolean("enable-warning-logging", true);
-        enableInfoLogging = getConfig().getBoolean("enable-info-logging", false);
+        // Fallback to global channel config
+        if (logsChannelName == null || logsChannelName.isEmpty()) {
+            logsChannelName = plugin.getConfig().getString("discord.channels.logs", "");
+        }
+        consoleChannelName = plugin.getConfig().getString("discord.channels.console", "");
         
         // Setup tracked levels
         trackedLevels.clear();
         if (enableErrorLogging) trackedLevels.add(Level.SEVERE);
         if (enableWarningLogging) trackedLevels.add(Level.WARNING);
         if (enableInfoLogging) trackedLevels.add(Level.INFO);
+        
+        info("Logs channel: " + (logsChannelName.isEmpty() ? "(not set)" : logsChannelName));
     }
     
     private void setupLogHandler() {
@@ -278,26 +293,23 @@ public class ServerLoggingModule extends Module implements Listener {
             return null;
         }
         
-        // First try the module's configured channel ID
-        if (!logsChannelName.isEmpty() && logsChannelName.matches("\\d+")) {
+        if (logsChannelName == null || logsChannelName.isEmpty()) {
+            return null;
+        }
+        
+        // Try by ID first (if numeric)
+        if (logsChannelName.matches("\\d+")) {
             TextChannel channel = plugin.getDiscordManager().getTextChannelById(logsChannelName);
             if (channel != null) {
                 return channel;
             }
         }
         
-        // Then try to get by ID from main config
-        String channelId = plugin.getConfig().getString("discord.channels.logs");
-        if (channelId != null && !channelId.isEmpty() && !channelId.equals("YOUR_LOGS_CHANNEL_ID")) {
-            TextChannel channel = plugin.getDiscordManager().getTextChannelById(channelId);
-            if (channel != null) {
-                return channel;
-            }
-        }
-        
         // Fall back to name lookup
-        return plugin.getDiscordManager().getMainGuild()
-            .getTextChannelsByName(logsChannelName, true)
+        net.dv8tion.jda.api.entities.Guild guild = plugin.getDiscordManager().getMainGuild();
+        if (guild == null) return null;
+        
+        return guild.getTextChannelsByName(logsChannelName, true)
             .stream()
             .findFirst()
             .orElse(null);
@@ -308,26 +320,23 @@ public class ServerLoggingModule extends Module implements Listener {
             return null;
         }
         
-        // First try the module's configured channel ID
-        if (!consoleChannelName.isEmpty() && consoleChannelName.matches("\\d+")) {
+        if (consoleChannelName == null || consoleChannelName.isEmpty()) {
+            return null;
+        }
+        
+        // Try by ID first (if numeric)
+        if (consoleChannelName.matches("\\d+")) {
             TextChannel channel = plugin.getDiscordManager().getTextChannelById(consoleChannelName);
             if (channel != null) {
                 return channel;
             }
         }
         
-        // Then try to get by ID from main config
-        String channelId = plugin.getConfig().getString("discord.channels.console");
-        if (channelId != null && !channelId.isEmpty() && !channelId.equals("YOUR_CONSOLE_CHANNEL_ID")) {
-            TextChannel channel = plugin.getDiscordManager().getTextChannelById(channelId);
-            if (channel != null) {
-                return channel;
-            }
-        }
-        
         // Fall back to name lookup
-        return plugin.getDiscordManager().getMainGuild()
-            .getTextChannelsByName(consoleChannelName, true)
+        net.dv8tion.jda.api.entities.Guild guild = plugin.getDiscordManager().getMainGuild();
+        if (guild == null) return null;
+        
+        return guild.getTextChannelsByName(consoleChannelName, true)
             .stream()
             .findFirst()
             .orElse(null);

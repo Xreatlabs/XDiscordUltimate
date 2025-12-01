@@ -60,9 +60,6 @@ public class PlayerListener implements Listener {
         // Log first join
         if (isFirstJoin) {
             plugin.getLogger().info("First time player joined: " + player.getName());
-            
-            // Update first join stats
-            plugin.getDatabaseManager().updatePlayerStats(player.getUniqueId(), "first_join", 1);
         }
         
         // Welcome message for new players
@@ -71,11 +68,13 @@ public class PlayerListener implements Listener {
                 @Override
                 public void run() {
                     if (player.isOnline()) {
-                        player.sendMessage("§6§l=== Welcome to the Server! ===");
-                        player.sendMessage("§eThank you for joining us!");
-                        player.sendMessage("§aUse §e/verify §ato link your Discord account");
-                        player.sendMessage("§aUse §e/help §afor more information");
-                        player.sendMessage("§6§l==============================");
+                        player.sendMessage(plugin.getMessageManager().colorize("<gradient:#55FFFF:#5555FF>━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━</gradient>"));
+                        player.sendMessage(plugin.getMessageManager().colorize("  <rainbow>Welcome to the Server!</rainbow>"));
+                        player.sendMessage(plugin.getMessageManager().colorize(""));
+                        player.sendMessage(plugin.getMessageManager().colorize("  &7Thank you for joining us!"));
+                        player.sendMessage(plugin.getMessageManager().colorize("  &7Use &e/verify &7to link Discord"));
+                        player.sendMessage(plugin.getMessageManager().colorize("  &7Use &e/help &7for more info"));
+                        player.sendMessage(plugin.getMessageManager().colorize("<gradient:#55FFFF:#5555FF>━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━</gradient>"));
                     }
                 }
             }.runTaskLater(plugin, 60L); // 3 second delay
@@ -139,9 +138,6 @@ public class PlayerListener implements Listener {
         if (advancementKey.contains("recipes/")) {
             return;
         }
-
-        // Update advancement count
-        plugin.getDatabaseManager().updatePlayerStats(player.getUniqueId(), "advancements", 1);
 
         plugin.getLogger().info(player.getName() + " earned advancement: " + advancementKey);
 

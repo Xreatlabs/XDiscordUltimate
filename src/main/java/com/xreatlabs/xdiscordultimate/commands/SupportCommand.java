@@ -68,7 +68,7 @@ public class SupportCommand implements CommandExecutor, TabCompleter {
                 if (openCount >= maxTickets) {
                     plugin.getMessageManager().sendError(player,
                         "You have reached the maximum number of open tickets (" + maxTickets + ")");
-                    player.sendMessage("§ePlease wait for your current tickets to be resolved before creating new ones.");
+                    plugin.getMessageManager().sendRawMessage(player, "&7Please wait for current tickets to be resolved.");
                     return;
                 }
                 
@@ -79,9 +79,9 @@ public class SupportCommand implements CommandExecutor, TabCompleter {
                 ticketModule.createTicket(player, message);
                 
                 // Send confirmation
-                player.sendMessage("§a✅ Support ticket created successfully!");
-                player.sendMessage("§eYour ticket will be handled by our support team.");
-                player.sendMessage("§eCheck Discord for updates on your ticket.");
+                plugin.getMessageManager().sendRawMessage(player, "<gradient:#55FF55:#55FFFF>✅ Support ticket created!</gradient>");
+                plugin.getMessageManager().sendRawMessage(player, "&7Your ticket will be handled by our support team.");
+                plugin.getMessageManager().sendRawMessage(player, "&7Check Discord for updates on your ticket.");
             })
             .exceptionally(throwable -> {
                 plugin.getLogger().severe("Error checking open tickets count: " + throwable.getMessage());

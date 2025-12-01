@@ -15,6 +15,7 @@ import net.dv8tion.jda.api.events.guild.member.update.GuildMemberUpdateTimeOutEv
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import org.bukkit.BanList;
 import org.bukkit.Bukkit;
+import com.xreatlabs.xdiscordultimate.utils.ColorUtils;
 import org.bukkit.ChatColor;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.command.CommandSender;
@@ -75,16 +76,20 @@ public class ModerationModule extends Module implements Listener {
     protected void onEnable() {
         loadConfiguration();
         
-        // Register events
+        // Register Bukkit events
         Bukkit.getPluginManager().registerEvents(this, plugin);
         
+        info("Moderation module enabled - waiting for Discord...");
+    }
+    
+    @Override
+    public void onDiscordReady() {
         // Register Discord listener
         if (plugin.getDiscordManager() != null && plugin.getDiscordManager().isReady()) {
             discordListener = new ModerationListener();
             plugin.getDiscordManager().getJDA().addEventListener(discordListener);
+            info("Moderation connected to Discord");
         }
-        
-        info("Moderation module enabled");
     }
     
     @Override
@@ -101,12 +106,26 @@ public class ModerationModule extends Module implements Listener {
     }
     
     private void loadConfiguration() {
-        moderationLogChannel = getConfig().getString("log-channel", "moderation-log");
-        syncBans = getConfig().getBoolean("sync-bans", true);
-        syncKicks = getConfig().getBoolean("sync-kicks", false);
-        syncMutes = getConfig().getBoolean("sync-mutes", true);
-        logCommands = getConfig().getBoolean("log-commands", true);
-        mutedRole = getConfig().getString("muted-role", "Muted");
+        org.bukkit.configuration.ConfigurationSection config = getConfig();
+        
+        if (config != null) {
+            moderationLogChannel = config.getString("log-channel", "mod-logs");
+            syncBans = config.getBoolean("sync-bans", true);
+            syncKicks = false;
+            syncMutes = false;
+            logCommands = config.getBoolean("auto-moderate", true);
+            mutedRole = "Muted";
+        } else {
+            warning("Config section not found, using defaults");
+            moderationLogChannel = "mod-logs";
+            syncBans = true;
+            syncKicks = false;
+            syncMutes = false;
+            logCommands = true;
+            mutedRole = "Muted";
+        }
+        
+        debug("Moderation log channel: " + moderationLogChannel);
     }
     
     @EventHandler(priority = EventPriority.MONITOR)
@@ -262,7 +281,7 @@ public class ModerationModule extends Module implements Listener {
         
         // Send warning count
         List<ModerationAction> warnings = getPlayerWarnings(target.getUniqueId());
-        target.sendMessage(ChatColor.RED + "You have been warned! Total warnings: " + warnings.size());
+        target.sendMessage(ColorUtils.parse("<gradient:#FF5555:#AA0000>⚠ Warning!</gradient> &7Total warnings: &e" + warnings.size()));
     }
     
     private void syncBanToDiscord(OfflinePlayer player, String moderator, String reason, Duration duration) {
@@ -437,7 +456,7 @@ public class ModerationModule extends Module implements Listener {
                 // Muted
                 Bukkit.getScheduler().runTask(plugin, () -> {
                     // Add to muted players (implementation depends on your mute system)
-                    player.sendMessage(ChatColor.RED + "You have been muted in Discord and Minecraft");
+                    player.sendMessage(ColorUtils.parse("<gradient:#FF5555:#AA0000>🔇 Muted!</gradient> &7You have been muted in Discord and Minecraft"));
                     
                     // Log
                     Duration duration = Duration.between(OffsetDateTime.now(), timeoutEnd);
@@ -447,7 +466,7 @@ public class ModerationModule extends Module implements Listener {
             } else {
                 // Unmuted
                 Bukkit.getScheduler().runTask(plugin, () -> {
-                    player.sendMessage(ChatColor.GREEN + "You have been unmuted");
+                    player.sendMessage(ColorUtils.parse("<gradient:#55FF55:#00AA00>🔊 Unmuted!</gradient> &7You have been unmuted"));
                     
                     // Log
                     logDiscordModerationAction("UNTIMEOUT", member.getUser(), 
@@ -474,7 +493,7 @@ public class ModerationModule extends Module implements Listener {
                         Player player = Bukkit.getPlayer(minecraftUuid);
                         if (player != null) {
                             Bukkit.getScheduler().runTask(plugin, () -> {
-                                player.sendMessage(ChatColor.RED + "You have been muted");
+                                player.sendMessage(ColorUtils.parse("<gradient:#FF5555:#AA0000>🔇 Muted!</gradient> &7You have been muted"));
                                 // Add to your mute system
                                 
                                 logDiscordModerationAction("MUTE", event.getUser(), 
@@ -503,7 +522,7 @@ public class ModerationModule extends Module implements Listener {
                         Player player = Bukkit.getPlayer(minecraftUuid);
                         if (player != null) {
                             Bukkit.getScheduler().runTask(plugin, () -> {
-                                player.sendMessage(ChatColor.GREEN + "You have been unmuted");
+                                player.sendMessage(ColorUtils.parse("<gradient:#55FF55:#00AA00>🔊 Unmuted!</gradient> &7You have been unmuted"));
                                 // Remove from your mute system
                                 
                                 logDiscordModerationAction("UNMUTE", event.getUser(), 
@@ -552,8 +571,28 @@ public class ModerationModule extends Module implements Listener {
             return null;
         }
         
-        return plugin.getDiscordManager().getMainGuild()
-            .getTextChannelsByName(moderationLogChannel, true)
+        // Use global moderation channel if module config is empty
+        String channelId = moderationLogChannel;
+        if (channelId == null || channelId.isEmpty()) {
+            channelId = plugin.getConfig().getString("discord.channels.moderation", "");
+        }
+        
+        if (channelId == null || channelId.isEmpty()) {
+            return null;
+        }
+        
+        // Try by ID first
+        if (channelId.matches("\\d+")) {
+            TextChannel channel = plugin.getDiscordManager().getTextChannelById(channelId);
+            if (channel != null) {
+                return channel;
+            }
+        }
+        
+        net.dv8tion.jda.api.entities.Guild guild = plugin.getDiscordManager().getMainGuild();
+        if (guild == null) return null;
+        
+        return guild.getTextChannelsByName(channelId, true)
             .stream()
             .findFirst()
             .orElse(null);

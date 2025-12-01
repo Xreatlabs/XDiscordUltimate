@@ -2,6 +2,7 @@ package com.xreatlabs.xdiscordultimate.commands;
 
 import com.xreatlabs.xdiscordultimate.XDiscordUltimate;
 import com.xreatlabs.xdiscordultimate.modules.verification.VerificationModule;
+import com.xreatlabs.xdiscordultimate.utils.ColorUtils;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -45,11 +46,11 @@ public class VerifyCommand implements CommandExecutor {
         
         // Check if code is provided
         if (args.length == 0) {
-            player.sendMessage("§cUsage: /verify <code>");
-            player.sendMessage("§7To get a verification code:");
-            player.sendMessage("§e1. §7Use §b/verify §7in Discord");
-            player.sendMessage("§e2. §7Copy the code you receive");
-            player.sendMessage("§e3. §7Use §b/verify <code> §7here");
+            player.sendMessage(ColorUtils.parse("<gradient:#FF5555:#FFAA00>Usage:</gradient> &e/verify <code>"));
+            player.sendMessage(ColorUtils.parse("&7To get a verification code:"));
+            player.sendMessage(ColorUtils.parse("&e1. &7Use &b/verify &7in Discord"));
+            player.sendMessage(ColorUtils.parse("&e2. &7Copy the code you receive"));
+            player.sendMessage(ColorUtils.parse("&e3. &7Use &b/verify <code> &7here"));
             return true;
         }
         

@@ -8,11 +8,9 @@ import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.Role;
 import net.dv8tion.jda.api.entities.User;
-import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
-import net.dv8tion.jda.api.interactions.commands.build.Commands;
-import net.dv8tion.jda.api.interactions.commands.build.SlashCommandData;
+
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
@@ -59,15 +57,6 @@ public class VerificationModule extends Module {
     protected void onEnable() {
         loadConfiguration();
         
-        // Register Discord listener
-        if (plugin.getDiscordManager() != null && plugin.getDiscordManager().isReady()) {
-            verificationListener = new VerificationListener();
-            plugin.getDiscordManager().getJDA().addEventListener(verificationListener);
-            
-            // Note: Slash commands are now registered centrally in DiscordListener
-            // registerSlashCommand();
-        }
-        
         // Start verification check task
         if (kickAfterMinutes > 0) {
             startVerificationCheckTask();
@@ -76,7 +65,18 @@ public class VerificationModule extends Module {
         // Start code cleanup task
         startCodeCleanupTask();
         
-        info("Verification module enabled with code-based system");
+        info("Verification module enabled - waiting for Discord...");
+    }
+    
+    @Override
+    public void onDiscordReady() {
+        // Note: Slash command /verify is handled centrally by DiscordListener
+        // We only register listener for message-based verification (!verify)
+        if (plugin.getDiscordManager() != null && plugin.getDiscordManager().isReady()) {
+            verificationListener = new VerificationListener();
+            plugin.getDiscordManager().getJDA().addEventListener(verificationListener);
+            info("Verification connected to Discord (message commands)");
+        }
     }
     
     @Override
@@ -99,20 +99,7 @@ public class VerificationModule extends Module {
         codeExpiryMinutes = getConfig().getInt("code-expiry-minutes", 5);
     }
     
-    private void registerSlashCommand() {
-        try {
-            SlashCommandData verifyCmd = Commands.slash("verify", "Get a verification code to link your Minecraft account");
-            
-            if (plugin.getDiscordManager().getMainGuild() != null) {
-                plugin.getDiscordManager().getMainGuild().upsertCommand(verifyCmd).queue(
-                    success -> info("Registered /verify slash command"),
-                    error -> error("Failed to register /verify command", error)
-                );
-            }
-        } catch (Exception e) {
-            error("Error registering slash command", e);
-        }
-    }
+    // Note: /verify slash command is registered in DiscordListener.java to avoid duplication
     
     /**
      * Generate a verification code for Discord user
@@ -212,7 +199,7 @@ public class VerificationModule extends Module {
                 // Run on main thread
                 Bukkit.getScheduler().runTask(plugin, () -> {
                     plugin.getMessageManager().sendMessage(player, "verification.success");
-                    player.sendMessage("§aYour account has been linked to Discord user §e" + pending.discordName + "§a!");
+                    player.sendMessage(plugin.getMessageManager().colorize("<gradient:#55FF55:#00AA00>Your account has been linked to Discord user</gradient> &e" + pending.discordName + " &a!"));
                     
                     // Add to verified group if LuckPerms is available
                     if (plugin.getLuckPerms() != null && !verifiedGroup.isEmpty()) {
@@ -221,6 +208,9 @@ public class VerificationModule extends Module {
                     
                     // Add Discord role
                     addDiscordRole(pending.discordId);
+                    
+                    // Sync Discord nickname to Minecraft name
+                    syncDiscordNickname(pending.discordId, player.getName());
                     
                     // Notify in Discord
                     notifyDiscordVerification(pending.discordId, player.getName());
@@ -260,8 +250,8 @@ public class VerificationModule extends Module {
                 public void run() {
                     if (player.isOnline() && !plugin.getAdminUtils().isVerified(player)) {
                         plugin.getMessageManager().sendMessage(player, "verification.required");
-                        player.sendMessage("§e1. §7Use §b/verify §7in Discord to get a verification code");
-                        player.sendMessage("§e2. §7Use §b/verify <code> §7in Minecraft to complete verification");
+                        player.sendMessage(plugin.getMessageManager().colorize("&e1. &7Use &b/verify &7in Discord to get a verification code"));
+                        player.sendMessage(plugin.getMessageManager().colorize("&e2. &7Use &b/verify <code> &7in Minecraft to complete verification"));
                     }
                 }
             }.runTaskLater(plugin, 60L); // 3 second delay
@@ -349,6 +339,36 @@ public class VerificationModule extends Module {
             }
         } catch (Exception e) {
             error("Failed to add player to LuckPerms group", e);
+        }
+    }
+    
+    /**
+     * Sync Discord nickname to Minecraft name
+     */
+    private void syncDiscordNickname(String discordId, String minecraftName) {
+        if (plugin.getDiscordManager() == null || !plugin.getDiscordManager().isReady()) {
+            return;
+        }
+        
+        try {
+            Guild guild = plugin.getDiscordManager().getMainGuild();
+            if (guild == null) return;
+            
+            Member member = guild.getMemberById(discordId);
+            if (member != null) {
+                // Don't change nickname if it's the server owner
+                if (member.isOwner()) {
+                    debug("Cannot change nickname of server owner");
+                    return;
+                }
+                
+                guild.modifyNickname(member, minecraftName).queue(
+                    success -> debug("Changed Discord nickname to " + minecraftName),
+                    error -> debug("Failed to change nickname: " + error.getMessage())
+                );
+            }
+        } catch (Exception e) {
+            debug("Failed to sync Discord nickname: " + e.getMessage());
         }
     }
     
@@ -441,8 +461,8 @@ public class VerificationModule extends Module {
                         
                         plugin.getMessageManager().sendWarning(player, 
                             "You must verify your Discord account to continue playing!");
-                        player.sendMessage("§e1. §7Use §b/verify §7in Discord to get a code");
-                        player.sendMessage("§e2. §7Use §b/verify <code> §7in Minecraft to complete");
+                        player.sendMessage(plugin.getMessageManager().colorize("&e1. &7Use &b/verify &7in Discord to get a code"));
+                        player.sendMessage(plugin.getMessageManager().colorize("&e2. &7Use &b/verify <code> &7in Minecraft to complete"));
                     }
                 }
             }
@@ -474,44 +494,12 @@ public class VerificationModule extends Module {
     }
     
     /**
-     * Discord listener for verification commands
+     * Discord listener for verification commands (message-based only)
+     * Note: Slash command /verify is handled centrally by DiscordListener
      */
     private class VerificationListener extends ListenerAdapter {
-        @Override
-        public void onSlashCommandInteraction(SlashCommandInteractionEvent event) {
-            if (!event.getName().equals("verify")) return;
-            
-            String userId = event.getUser().getId();
-            String userName = event.getUser().getName();
-            
-            // Check if already verified
-            if (isDiscordUserVerified(userId)) {
-                event.reply("❌ Your Discord account is already linked to a Minecraft account!")
-                    .setEphemeral(true)
-                    .queue();
-                return;
-            }
-            
-            // Generate verification code
-            String code = generateVerificationCode(userId, userName);
-            
-            EmbedBuilder embed = new EmbedBuilder()
-                .setColor(Color.BLUE)
-                .setTitle("🔐 Minecraft Account Verification")
-                .setDescription("To link your Discord account with your Minecraft account, follow these steps:")
-                .addField("Step 1", "Join the Minecraft server", false)
-                .addField("Step 2", "Use the following command in Minecraft:\n`/verify " + code + "`", false)
-                .addField("Your Code", "**`" + code + "`**", true)
-                .addField("Expires In", codeExpiryMinutes + " minutes", true)
-                .setFooter("This code is unique to you and can only be used once", null)
-                .setTimestamp(Instant.now());
-            
-            event.replyEmbeds(embed.build())
-                .setEphemeral(true)
-                .queue();
-            
-            info("Generated verification code for Discord user " + userName + " (" + userId + ")");
-        }
+        // Slash command handling removed - DiscordListener handles /verify centrally
+        // This prevents duplicate responses to the same slash command
         
         @Override
         public void onMessageReceived(MessageReceivedEvent event) {

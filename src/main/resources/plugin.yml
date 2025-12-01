@@ -1,11 +1,12 @@
 name: XDiscordUltimate
 main: com.xreatlabs.xdiscordultimate.XDiscordUltimate
-version: 1.0.0
+version: 1.1.0
 api-version: 1.16
 author: XReatLabs
-description: Advanced Discord integration for Minecraft servers
+description: Premium Discord integration for Minecraft servers (1.16.5 - 1.21.x)
 website: https://github.com/xreatlabs/xdiscordultimate
 softdepend: [LuckPerms, PlaceholderAPI, Vault]
+folia-supported: false
 
 commands:
   verify:
@@ -22,11 +23,6 @@ commands:
     description: Show XDiscordUltimate help GUI
     usage: /<command> [category]
     aliases: [xhelp, xdhelp]
-  
-  embed:
-    description: Send a custom embed to Discord
-    usage: /<command> <channel> <title> <description>
-    permission: xdiscord.embed
   
   announce:
     description: Broadcast an announcement to Discord and in-game
@@ -48,6 +44,11 @@ commands:
     usage: /<command> [reload|status|help]
     permission: xdiscord.admin
     aliases: [xdu, xdiscordultimate]
+  
+  stats:
+    description: View player statistics
+    usage: /<command> [player]
+    aliases: [playerstats, pstats]
 
 permissions:
   xdiscord.*:
@@ -55,20 +56,16 @@ permissions:
     default: op
     children:
       xdiscord.admin: true
-      xdiscord.embed: true
       xdiscord.announce: true
       xdiscord.console: true
       xdiscord.verify: true
       xdiscord.support: true
       xdiscord.report: true
       xdiscord.bypass.verification: true
+      xdiscord.bypass.filter: true
   
   xdiscord.admin:
     description: Administrative permissions
-    default: op
-  
-  xdiscord.embed:
-    description: Send Discord embeds
     default: op
   
   xdiscord.announce:
@@ -93,4 +90,8 @@ permissions:
   
   xdiscord.bypass.verification:
     description: Bypass Discord verification requirement
+    default: false
+  
+  xdiscord.bypass.filter:
+    description: Bypass chat filter
     default: false

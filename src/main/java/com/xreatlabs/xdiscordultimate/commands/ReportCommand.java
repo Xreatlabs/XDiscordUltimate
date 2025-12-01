@@ -44,7 +44,7 @@ public class ReportCommand implements CommandExecutor, TabCompleter {
         // Check if player is verified
         if (!plugin.getAdminUtils().isVerified(player)) {
             plugin.getMessageManager().sendError(player, "You must verify your Discord account to report players!");
-            player.sendMessage("§eUse §b/verify §ein Discord to get a verification code.");
+            player.sendMessage(plugin.getMessageManager().colorize("&eUse &b/verify &ein Discord to get a verification code."));
             return true;
         }
         
@@ -144,15 +144,36 @@ public class ReportCommand implements CommandExecutor, TabCompleter {
             return;
         }
         
-        String channelName = plugin.getConfig().getString("features.moderation.log-channel", "mod-logs");
-        TextChannel channel = plugin.getDiscordManager().getMainGuild()
-            .getTextChannelsByName(channelName, true)
-            .stream()
-            .findFirst()
-            .orElse(null);
+        // Try global moderation channel first
+        String channelId = plugin.getConfig().getString("discord.channels.moderation", "");
+        TextChannel channel = null;
+        
+        // Try by ID first
+        if (channelId != null && !channelId.isEmpty() && channelId.matches("\\d+")) {
+            channel = plugin.getDiscordManager().getTextChannelById(channelId);
+        }
+        
+        // Fall back to module config
+        if (channel == null) {
+            String channelName = plugin.getConfig().getString("features.moderation.log-channel", "mod-logs");
+            if (channelName != null && !channelName.isEmpty()) {
+                // Try by ID if numeric
+                if (channelName.matches("\\d+")) {
+                    channel = plugin.getDiscordManager().getTextChannelById(channelName);
+                }
+                // Fall back to name lookup
+                if (channel == null && plugin.getDiscordManager().getMainGuild() != null) {
+                    channel = plugin.getDiscordManager().getMainGuild()
+                        .getTextChannelsByName(channelName, true)
+                        .stream()
+                        .findFirst()
+                        .orElse(null);
+                }
+            }
+        }
         
         if (channel == null) {
-            plugin.getLogger().warning("Moderation log channel '" + channelName + "' not found!");
+            plugin.getLogger().warning("Moderation log channel not found! Configure discord.channels.moderation in config.yml");
             return;
         }
         

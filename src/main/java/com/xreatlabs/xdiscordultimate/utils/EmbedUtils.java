@@ -19,10 +19,74 @@ public class EmbedUtils {
     private final Map<String, Color> colorMap;
     private final Pattern hexPattern;
     
+    // Premium color palette
+    public static final Color BRAND_PRIMARY = new Color(85, 255, 255);    // Aqua
+    public static final Color BRAND_SECONDARY = new Color(85, 85, 255);   // Blue
+    public static final Color SUCCESS = new Color(87, 242, 135);          // Green
+    public static final Color WARNING = new Color(254, 231, 92);          // Yellow
+    public static final Color ERROR = new Color(237, 66, 69);             // Red
+    public static final Color INFO = new Color(88, 101, 242);             // Blurple
+    public static final Color PREMIUM = new Color(255, 215, 0);           // Gold
+    public static final Color DISCORD = new Color(114, 137, 218);         // Discord Blue
+    
     public EmbedUtils(XDiscordUltimate plugin) {
         this.plugin = plugin;
         this.colorMap = initializeColorMap();
         this.hexPattern = Pattern.compile("#[a-fA-F0-9]{6}");
+    }
+    
+    /**
+     * Create a branded embed with XDiscord styling
+     */
+    public static EmbedBuilder brandedEmbed() {
+        return new EmbedBuilder()
+            .setColor(BRAND_PRIMARY)
+            .setFooter("XDiscordUltimate", null)
+            .setTimestamp(Instant.now());
+    }
+    
+    /**
+     * Create a success embed
+     */
+    public static EmbedBuilder successEmbed(String title, String description) {
+        return new EmbedBuilder()
+            .setColor(SUCCESS)
+            .setTitle("✅ " + title)
+            .setDescription(description)
+            .setTimestamp(Instant.now());
+    }
+    
+    /**
+     * Create an error embed
+     */
+    public static EmbedBuilder errorEmbed(String title, String description) {
+        return new EmbedBuilder()
+            .setColor(ERROR)
+            .setTitle("❌ " + title)
+            .setDescription(description)
+            .setTimestamp(Instant.now());
+    }
+    
+    /**
+     * Create a warning embed
+     */
+    public static EmbedBuilder warningEmbed(String title, String description) {
+        return new EmbedBuilder()
+            .setColor(WARNING)
+            .setTitle("⚠️ " + title)
+            .setDescription(description)
+            .setTimestamp(Instant.now());
+    }
+    
+    /**
+     * Create an info embed
+     */
+    public static EmbedBuilder infoEmbed(String title, String description) {
+        return new EmbedBuilder()
+            .setColor(INFO)
+            .setTitle("ℹ️ " + title)
+            .setDescription(description)
+            .setTimestamp(Instant.now());
     }
     
     /**

@@ -1,6 +1,7 @@
 package com.xreatlabs.xdiscordultimate.commands;
 
 import com.xreatlabs.xdiscordultimate.XDiscordUltimate;
+import com.xreatlabs.xdiscordultimate.utils.ColorUtils;
 import com.xreatlabs.xdiscordultimate.utils.HelpGUI;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -16,11 +17,13 @@ import java.util.stream.Collectors;
 public class HelpCommand implements CommandExecutor, TabCompleter {
     
     private final XDiscordUltimate plugin;
-    private final HelpGUI helpGUI;
     
     public HelpCommand(XDiscordUltimate plugin) {
         this.plugin = plugin;
-        this.helpGUI = new HelpGUI(plugin);
+    }
+    
+    private HelpGUI getHelpGUI() {
+        return plugin.getHelpGUI();
     }
     
     @Override
@@ -39,57 +42,61 @@ public class HelpCommand implements CommandExecutor, TabCompleter {
             switch (category) {
                 case "discord":
                 case "verification":
-                    helpGUI.openDiscordHelp(player);
+                    getHelpGUI().openDiscordHelp(player);
                     break;
                 case "report":
                 case "moderation":
-                    helpGUI.openModerationHelp(player);
+                    getHelpGUI().openModerationHelp(player);
                     break;
                 case "support":
                 case "ticket":
                 case "tickets":
-                    helpGUI.openSupportHelp(player);
+                    getHelpGUI().openSupportHelp(player);
                     break;
                 case "admin":
                 case "console":
                     if (plugin.getAdminUtils().isAdmin(player)) {
-                        helpGUI.openAdminHelp(player);
+                        getHelpGUI().openAdminHelp(player);
                     } else {
                         plugin.getMessageManager().sendError(player, "You don't have permission to view admin commands!");
                     }
                     break;
                 case "voice":
                 case "tts":
-                    helpGUI.openVoiceHelp(player);
+                    getHelpGUI().openVoiceHelp(player);
                     break;
                 default:
-                    helpGUI.openMainHelp(player);
+                    getHelpGUI().openMainHelp(player);
                     break;
             }
         } else {
             // Open main help GUI
-            helpGUI.openMainHelp(player);
+            getHelpGUI().openMainHelp(player);
         }
         
         return true;
     }
     
     private void showConsoleHelp(CommandSender sender) {
-        sender.sendMessage("§6=== XDiscordUltimate Help ===");
-        sender.sendMessage("§eThis plugin integrates Discord with Minecraft!");
+        sender.sendMessage(color("<gradient:#55FFFF:#5555FF>━━━ XDiscordUltimate Help ━━━</gradient>"));
+        sender.sendMessage(color("&7This plugin integrates Discord with Minecraft!"));
         sender.sendMessage("");
-        sender.sendMessage("§bMain Commands:");
-        sender.sendMessage("§7- §a/verify <code> §7- Link your Discord account");
-        sender.sendMessage("§7- §a/report <player> <reason> §7- Report a player");
-        sender.sendMessage("§7- §a/support <message> §7- Create a support ticket");
-        sender.sendMessage("§7- §a/discord §7- Get Discord server invite");
+        sender.sendMessage(color("<gradient:#55FF55:#55FFFF>Main Commands:</gradient>"));
+        sender.sendMessage(color("&8▸ &a/verify <code> &8- &7Link your Discord account"));
+        sender.sendMessage(color("&8▸ &a/report <player> <reason> &8- &7Report a player"));
+        sender.sendMessage(color("&8▸ &a/support <message> &8- &7Create a support ticket"));
+        sender.sendMessage(color("&8▸ &a/discord &8- &7Get Discord server invite"));
         sender.sendMessage("");
-        sender.sendMessage("§bAdmin Commands:");
-        sender.sendMessage("§7- §a/xdiscord reload §7- Reload configuration");
-        sender.sendMessage("§7- §a/xdiscord info §7- Show plugin information");
-        sender.sendMessage("§7- §a/dconsole §7- Toggle Discord console");
+        sender.sendMessage(color("<gradient:#FF5555:#FFAA00>Admin Commands:</gradient>"));
+        sender.sendMessage(color("&8▸ &e/xdiscord reload &8- &7Reload configuration"));
+        sender.sendMessage(color("&8▸ &e/xdiscord info &8- &7Show plugin information"));
+        sender.sendMessage(color("&8▸ &e/dconsole &8- &7Toggle Discord console"));
         sender.sendMessage("");
-        sender.sendMessage("§eFor detailed help, use §b/help §ein-game for the GUI!");
+        sender.sendMessage(color("&7For detailed help, use &b/help &7in-game!"));
+    }
+    
+    private String color(String message) {
+        return ColorUtils.parse(message);
     }
     
     @Override

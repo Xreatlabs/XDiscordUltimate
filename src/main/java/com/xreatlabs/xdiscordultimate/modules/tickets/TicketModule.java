@@ -57,7 +57,11 @@ public class TicketModule extends Module {
     @Override
     protected void onEnable() {
         loadConfiguration();
-        
+        info("Ticket module enabled - waiting for Discord...");
+    }
+    
+    @Override
+    public void onDiscordReady() {
         // Register Discord listener
         if (plugin.getDiscordManager() != null && plugin.getDiscordManager().isReady()) {
             listener = new TicketListener();
@@ -70,9 +74,8 @@ public class TicketModule extends Module {
             if (autoCloseInactive) {
                 startAutoCloseTask();
             }
+            info("Ticket system connected to Discord");
         }
-        
-        info("Ticket module enabled");
     }
     
     @Override
@@ -89,12 +92,26 @@ public class TicketModule extends Module {
     }
     
     private void loadConfiguration() {
-        ticketCategoryName = getConfig().getString("category-name", "Support Tickets");
-        ticketChannelName = getConfig().getString("panel-channel", "create-ticket");
-        supportRoleName = getConfig().getString("support-role", "Support");
-        maxOpenTickets = getConfig().getInt("max-open-tickets", 3);
-        autoCloseInactive = getConfig().getBoolean("auto-close-inactive", true);
-        inactiveHours = getConfig().getInt("inactive-hours", 48);
+        org.bukkit.configuration.ConfigurationSection config = getConfig();
+        
+        if (config != null) {
+            ticketCategoryName = config.getString("ticket-category", "Support Tickets");
+            ticketChannelName = config.getString("transcript-channel", "ticket-logs");
+            supportRoleName = "Support";
+            maxOpenTickets = 3;
+            autoCloseInactive = config.getInt("auto-close-hours", 48) > 0;
+            inactiveHours = config.getInt("auto-close-hours", 48);
+        } else {
+            warning("Config section not found, using defaults");
+            ticketCategoryName = "Support Tickets";
+            ticketChannelName = "ticket-logs";
+            supportRoleName = "Support";
+            maxOpenTickets = 3;
+            autoCloseInactive = true;
+            inactiveHours = 48;
+        }
+        
+        debug("Ticket category: " + ticketCategoryName);
     }
     
     /**
@@ -127,8 +144,18 @@ public class TicketModule extends Module {
         Guild guild = plugin.getDiscordManager().getMainGuild();
         if (guild == null) return;
         
-        TextChannel panelChannel = guild.getTextChannelsByName(ticketChannelName, true)
-            .stream().findFirst().orElse(null);
+        // Try global tickets channel first
+        String channelId = plugin.getConfig().getString("discord.channels.tickets", "");
+        TextChannel panelChannel = null;
+        
+        if (channelId != null && !channelId.isEmpty() && channelId.matches("\\d+")) {
+            panelChannel = plugin.getDiscordManager().getTextChannelById(channelId);
+        }
+        
+        if (panelChannel == null) {
+            panelChannel = guild.getTextChannelsByName(ticketChannelName, true)
+                .stream().findFirst().orElse(null);
+        }
         
         if (panelChannel == null) {
             // Create the channel
@@ -278,8 +305,8 @@ public class TicketModule extends Module {
                 if (uuid != null) {
                     Player player = Bukkit.getPlayer(uuid);
                     if (player != null && player.isOnline()) {
-                        player.sendMessage("§a✅ Your support ticket #" + dbTicketId + " has been created!");
-                        player.sendMessage("§eCheck Discord for updates on your ticket.");
+                        player.sendMessage(plugin.getMessageManager().colorize("<gradient:#55FF55:#00AA00>✅ Your support ticket #" + dbTicketId + " has been created!</gradient>"));
+                        player.sendMessage(plugin.getMessageManager().colorize("&eCheck Discord for updates on your ticket."));
                     }
                 }
             });
@@ -466,9 +493,9 @@ public class TicketModule extends Module {
                 if (uuid != null) {
                     Player player = Bukkit.getPlayer(uuid);
                     if (player != null && player.isOnline()) {
-                        player.sendMessage("§c🔒 Your support ticket #" + ticket.id + " has been closed by " + closedBy);
+                        player.sendMessage(plugin.getMessageManager().colorize("<gradient:#FF5555:#AA0000>🔒 Your support ticket #" + ticket.id + " has been closed by " + closedBy + "</gradient>"));
                         if (ticket.claimedBy != null) {
-                            player.sendMessage("§7Handled by: " + ticket.claimedBy);
+                            player.sendMessage(plugin.getMessageManager().colorize("&7Handled by: &f" + ticket.claimedBy));
                         }
                     }
                 }

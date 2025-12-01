@@ -59,7 +59,7 @@ public class BotConsoleModule extends Module {
     
     @Override
     public String getName() {
-        return "BotConsole";
+        return "Bot Console";
     }
     
     @Override
@@ -70,14 +70,15 @@ public class BotConsoleModule extends Module {
     @Override
     protected void onEnable() {
         loadConfiguration();
-        
+        info("Bot Console module enabled - waiting for Discord...");
+    }
+    
+    @Override
+    public void onDiscordReady() {
         // Register Discord listener
         if (plugin.getDiscordManager() != null && plugin.getDiscordManager().isReady()) {
             consoleListener = new ConsoleListener();
             plugin.getDiscordManager().getJDA().addEventListener(consoleListener);
-            
-            // Note: Slash commands are now registered centrally in DiscordListener
-            // registerSlashCommands();
             
             // Start console streaming
             if (enableLogStreaming) {
@@ -86,9 +87,9 @@ public class BotConsoleModule extends Module {
             
             // Setup log appender
             setupLogAppender();
+            
+            info("Bot Console connected to Discord");
         }
-        
-        info("Bot console module enabled");
     }
     
     @Override
@@ -113,10 +114,22 @@ public class BotConsoleModule extends Module {
     }
     
     private void loadConfiguration() {
-        consoleChannelName = getConfig().getString("console-channel", "bot-console");
-        enableConsoleInput = getConfig().getBoolean("enable-console-input", true);
-        enableLogStreaming = getConfig().getBoolean("enable-log-streaming", true);
-        maxLogLines = getConfig().getInt("max-log-lines", 10);
+        org.bukkit.configuration.ConfigurationSection config = getConfig();
+        
+        if (config != null) {
+            consoleChannelName = config.getString("console-channel", "bot-console");
+            enableConsoleInput = !config.getBoolean("allow-dm", false); // inverted - if allow-dm is false, console input is enabled
+            enableLogStreaming = true;
+            maxLogLines = 10;
+        } else {
+            warning("Config section not found, using defaults");
+            consoleChannelName = "bot-console";
+            enableConsoleInput = true;
+            enableLogStreaming = true;
+            maxLogLines = 10;
+        }
+        
+        debug("Console channel: " + consoleChannelName);
     }
     
     private void registerSlashCommands() {
@@ -331,7 +344,7 @@ public class BotConsoleModule extends Module {
                 if (verificationModule != null && verificationModule.isEnabled()) {
                     if (!verificationModule.isDiscordUserVerified(userId)) {
                         event.getMessage().reply("❌ You must verify your account before using console commands!\n" +
-                            "Use `/verify` in-game to get a verification code.").queue();
+                            "Use `/verify` here in Discord to get a code, then use `/verify <code>` in-game.").queue();
                         return;
                     }
                 }
@@ -361,7 +374,22 @@ public class BotConsoleModule extends Module {
         
         @Override
         public void onSlashCommandInteraction(SlashCommandInteractionEvent event) {
-            // Check permissions
+            // Skip if already acknowledged by another listener
+            if (event.isAcknowledged()) {
+                return;
+            }
+            
+            String commandName = event.getName();
+            String subcommandName = event.getSubcommandName();
+            
+            // IMPORTANT: Only handle console-related commands, ignore all others
+            if (!commandName.equals("console") && !commandName.equals("server") && 
+                !commandName.equals("game") && !commandName.equals("session")) {
+                // Not a console command - let other listeners handle it
+                return;
+            }
+            
+            // Check permissions for console commands
             String userId = event.getUser().getId();
             if (!plugin.getAdminUtils().isTrustedAdmin(userId)) {
                 event.reply("❌ You don't have permission to use console commands!\n" +
@@ -370,7 +398,7 @@ public class BotConsoleModule extends Module {
                     .queue();
                 
                 // Log unauthorized access attempt
-                plugin.getLogger().warning("Unauthorized slash command console access attempt by Discord user: " +
+                plugin.getLogger().warning("Unauthorized console command attempt by Discord user: " +
                     event.getUser().getName() + " (" + userId + ")");
                 return;
             }
@@ -381,7 +409,7 @@ public class BotConsoleModule extends Module {
                 if (verificationModule != null && verificationModule.isEnabled()) {
                     if (!verificationModule.isDiscordUserVerified(userId)) {
                         event.reply("❌ You must verify your account before using console commands!\n" +
-                            "Use `/verify` in-game to get a verification code.")
+                            "Use `/verify` here in Discord to get a code, then use `/verify <code>` in-game.")
                             .setEphemeral(true)
                             .queue();
                         return;
@@ -394,13 +422,10 @@ public class BotConsoleModule extends Module {
                 event.reply("❌ Your admin privileges have been revoked!")
                     .setEphemeral(true)
                     .queue();
-                plugin.getLogger().warning("Former admin attempted slash command console access: " +
+                plugin.getLogger().warning("Former admin attempted console command access: " +
                     event.getUser().getName() + " (" + userId + ")");
                 return;
             }
-            
-            String commandName = event.getName();
-            String subcommandName = event.getSubcommandName();
             
             switch (commandName) {
                 case "console":

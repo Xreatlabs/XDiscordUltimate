@@ -2,6 +2,7 @@ package com.xreatlabs.xdiscordultimate.modules.announcements;
 
 import com.xreatlabs.xdiscordultimate.XDiscordUltimate;
 import com.xreatlabs.xdiscordultimate.modules.Module;
+import com.xreatlabs.xdiscordultimate.utils.ColorUtils;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.channel.concrete.TextChannel;
 import net.dv8tion.jda.api.entities.emoji.Emoji;
@@ -82,24 +83,38 @@ public class AnnouncementModule extends Module implements Listener {
     }
     
     private void loadConfiguration() {
-        announcementChannel = getConfig().getString("discord-channel", "announcements");
-        enableAutoAnnouncements = getConfig().getBoolean("enable-auto-announcements", true);
-        enableJoinAnnouncements = getConfig().getBoolean("enable-join-announcements", true);
-        enableDiscordSync = getConfig().getBoolean("enable-discord-sync", true);
-        announcementPrefix = ChatColor.translateAlternateColorCodes('&', 
-            getConfig().getString("announcement-prefix", "&6[&eAnnouncement&6] &f"));
+        org.bukkit.configuration.ConfigurationSection config = getConfig();
         
-        String soundName = getConfig().getString("announcement-sound", "ENTITY_EXPERIENCE_ORB_PICKUP");
-        try {
-            announcementSound = Sound.valueOf(soundName);
-        } catch (IllegalArgumentException e) {
-            announcementSound = Sound.ENTITY_EXPERIENCE_ORB_PICKUP;
-            warning("Invalid sound name: " + soundName + ", using default");
+        if (config != null) {
+            announcementChannel = config.getString("default-channel", "announcements");
+            enableAutoAnnouncements = true;
+            enableJoinAnnouncements = true;
+            enableDiscordSync = config.getBoolean("show-title", true);
+            announcementPrefix = ColorUtils.parse("<gradient:#FFD700:#FFA500>✦ Announcement</gradient> &8» &r");
+        } else {
+            warning("Config section not found, using defaults");
+            announcementChannel = "announcements";
+            enableAutoAnnouncements = true;
+            enableJoinAnnouncements = true;
+            enableDiscordSync = true;
+            announcementPrefix = ColorUtils.parse("<gradient:#FFD700:#FFA500>✦ Announcement</gradient> &8» &r");
         }
+        
+        announcementSound = Sound.ENTITY_EXPERIENCE_ORB_PICKUP;
+        debug("Announcement channel: " + announcementChannel);
     }
     
     private void loadAnnouncements() {
-        ConfigurationSection section = getConfig().getConfigurationSection("announcements");
+        org.bukkit.configuration.ConfigurationSection config = getConfig();
+        
+        // First try to load from "scheduled" section (new format)
+        ConfigurationSection section = config != null ? config.getConfigurationSection("scheduled") : null;
+        
+        // Fallback to "announcements" section (old format)
+        if (section == null && config != null) {
+            section = config.getConfigurationSection("announcements");
+        }
+        
         if (section == null) {
             // Create default announcements
             createDefaultAnnouncements();
@@ -117,11 +132,13 @@ public class AnnouncementModule extends Module implements Listener {
                 announcementSection.getInt("interval", 300),
                 announcementSection.getBoolean("enabled", true),
                 announcementSection.getString("permission", null),
-                announcementSection.getBoolean("discord", true),
+                announcementSection.getBoolean("minecraft", true),  // Send to Minecraft players
+                announcementSection.getBoolean("discord", true),    // Send to Discord
                 announcementSection.getString("discord-color", "#FFD700")
             );
             
             announcements.put(key, announcement);
+            debug("Loaded announcement: " + key + " (MC: " + announcement.sendToMinecraft + ", Discord: " + announcement.sendToDiscord + ")");
         }
     }
     
@@ -139,7 +156,8 @@ public class AnnouncementModule extends Module implements Listener {
             600, // 10 minutes
             true,
             null,
-            true,
+            true,  // minecraft
+            true,  // discord
             "#00BFFF"
         ));
         
@@ -156,7 +174,8 @@ public class AnnouncementModule extends Module implements Listener {
             900, // 15 minutes
             true,
             null,
-            true,
+            true,  // minecraft
+            true,  // discord
             "#FFD700"
         ));
         
@@ -172,8 +191,26 @@ public class AnnouncementModule extends Module implements Listener {
             1200, // 20 minutes
             true,
             null,
-            true,
+            true,  // minecraft
+            true,  // discord
             "#7289DA"
+        ));
+        
+        // Tips (Minecraft only)
+        announcements.put("tips", new Announcement(
+            "tips",
+            "Server Tips",
+            Arrays.asList(
+                "&aDid you know?",
+                "&7Use &e/help &7to view available commands",
+                "&7Use &e/discord &7to get our Discord invite"
+            ),
+            1800, // 30 minutes
+            true,
+            null,
+            true,   // minecraft
+            false,  // discord (disabled - MC only)
+            "#55FF55"
         ));
     }
     
@@ -213,9 +250,21 @@ public class AnnouncementModule extends Module implements Listener {
     }
     
     /**
-     * Make a custom announcement
+     * Make a custom announcement (broadcasts to both Minecraft and Discord)
      */
     public void makeAnnouncement(Player sender, String title, String message) {
+        makeAnnouncement(sender, title, message, true, true);
+    }
+    
+    /**
+     * Make a custom announcement with control over destinations
+     * @param sender The player sending the announcement (can be null)
+     * @param title The announcement title
+     * @param message The announcement message (use \\n for new lines)
+     * @param toMinecraft Send to Minecraft players
+     * @param toDiscord Send to Discord channel
+     */
+    public void makeAnnouncement(Player sender, String title, String message, boolean toMinecraft, boolean toDiscord) {
         List<String> messages = Arrays.asList(message.split("\\\\n"));
         
         Announcement customAnnouncement = new Announcement(
@@ -225,14 +274,19 @@ public class AnnouncementModule extends Module implements Listener {
             0,
             true,
             null,
-            enableDiscordSync,
+            toMinecraft,
+            toDiscord && enableDiscordSync,
             "#FF6347"
         );
         
         broadcastAnnouncement(customAnnouncement);
         
         if (sender != null) {
-            plugin.getMessageManager().sendSuccess(sender, "Announcement sent!");
+            String destinations = "";
+            if (toMinecraft && toDiscord) destinations = "Minecraft & Discord";
+            else if (toMinecraft) destinations = "Minecraft only";
+            else if (toDiscord) destinations = "Discord only";
+            plugin.getMessageManager().sendSuccess(sender, "Announcement sent to " + destinations + "!");
         }
     }
     
@@ -250,10 +304,12 @@ public class AnnouncementModule extends Module implements Listener {
     }
     
     private void broadcastAnnouncement(Announcement announcement) {
-        // Send to Minecraft
-        sendMinecraftAnnouncement(announcement);
+        // Send to Minecraft (if enabled for this announcement)
+        if (announcement.sendToMinecraft) {
+            sendMinecraftAnnouncement(announcement);
+        }
         
-        // Send to Discord
+        // Send to Discord (if enabled for this announcement)
         if (enableDiscordSync && announcement.sendToDiscord) {
             sendDiscordAnnouncement(announcement);
         }
@@ -264,19 +320,19 @@ public class AnnouncementModule extends Module implements Listener {
         List<String> formattedMessages = new ArrayList<>();
         
         // Add header
-        formattedMessages.add(ChatColor.GOLD + "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━");
+        formattedMessages.add(ColorUtils.parse("<gradient:#FFD700:#FFA500>━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━</gradient>"));
         if (!announcement.title.isEmpty()) {
-            formattedMessages.add(announcementPrefix + ChatColor.YELLOW + announcement.title);
+            formattedMessages.add(announcementPrefix + ColorUtils.parse("&e" + announcement.title));
             formattedMessages.add("");
         }
         
-        // Add messages
+        // Add messages (supports gradients, hex colors, etc.)
         for (String message : announcement.messages) {
-            formattedMessages.add(ChatColor.translateAlternateColorCodes('&', message));
+            formattedMessages.add(ColorUtils.parse(message));
         }
         
         // Add footer
-        formattedMessages.add(ChatColor.GOLD + "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━");
+        formattedMessages.add(ColorUtils.parse("<gradient:#FFD700:#FFA500>━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━</gradient>"));
         
         // Send to players
         for (Player player : Bukkit.getOnlinePlayers()) {
@@ -312,17 +368,17 @@ public class AnnouncementModule extends Module implements Listener {
         }
         
         // Build the message
-        player.sendMessage(ChatColor.GOLD + "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━");
+        player.sendMessage(ColorUtils.parse("<gradient:#FFD700:#FFA500>━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━</gradient>"));
         if (!announcement.title.isEmpty()) {
-            player.sendMessage(announcementPrefix + ChatColor.YELLOW + announcement.title);
+            player.sendMessage(announcementPrefix + ColorUtils.parse("&e" + announcement.title));
             player.sendMessage("");
         }
         
         for (String message : announcement.messages) {
-            player.sendMessage(ChatColor.translateAlternateColorCodes('&', message));
+            player.sendMessage(ColorUtils.parse(message));
         }
         
-        player.sendMessage(ChatColor.GOLD + "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━");
+        player.sendMessage(ColorUtils.parse("<gradient:#FFD700:#FFA500>━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━</gradient>"));
         
         if (announcementSound != null) {
             player.playSound(player.getLocation(), announcementSound, 1.0f, 1.0f);
@@ -457,24 +513,35 @@ public class AnnouncementModule extends Module implements Listener {
      * List all announcements
      */
     public void listAnnouncements(Player player) {
-        player.sendMessage(ChatColor.GOLD + "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━");
-        player.sendMessage(ChatColor.YELLOW + "Available Announcements:");
+        player.sendMessage(ColorUtils.parse("<gradient:#FFD700:#FFA500>━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━</gradient>"));
+        player.sendMessage(ColorUtils.parse("&e&lAvailable Announcements:"));
         player.sendMessage("");
         
         for (Announcement announcement : announcements.values()) {
-            String status = announcement.enabled ? ChatColor.GREEN + "✓" : ChatColor.RED + "✗";
+            String status = announcement.enabled ? "&a✓" : "&c✗";
             String interval = announcement.interval > 0 ? 
-                " (every " + announcement.interval + "s)" : "";
+                " &7(every " + announcement.interval + "s)" : "";
             
-            player.sendMessage(status + " " + ChatColor.WHITE + announcement.id + 
-                ChatColor.GRAY + interval);
+            // Show destinations
+            String destinations = "";
+            if (announcement.sendToMinecraft && announcement.sendToDiscord) {
+                destinations = " &b[MC+DC]";
+            } else if (announcement.sendToMinecraft) {
+                destinations = " &a[MC]";
+            } else if (announcement.sendToDiscord) {
+                destinations = " &9[DC]";
+            }
+            
+            player.sendMessage(ColorUtils.parse(status + " &f" + announcement.id + interval + destinations));
             
             if (!announcement.title.isEmpty()) {
-                player.sendMessage("  " + ChatColor.GRAY + announcement.title);
+                player.sendMessage(ColorUtils.parse("  &7" + announcement.title));
             }
         }
         
-        player.sendMessage(ChatColor.GOLD + "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━");
+        player.sendMessage("");
+        player.sendMessage(ColorUtils.parse("&7[MC] = Minecraft only, [DC] = Discord only, [MC+DC] = Both"));
+        player.sendMessage(ColorUtils.parse("<gradient:#FFD700:#FFA500>━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━</gradient>"));
     }
     
     /**
@@ -531,17 +598,20 @@ public class AnnouncementModule extends Module implements Listener {
         final int interval;
         boolean enabled;
         final String permission;
+        final boolean sendToMinecraft;
         final boolean sendToDiscord;
         final String discordColor;
         
         Announcement(String id, String title, List<String> messages, int interval, 
-                    boolean enabled, String permission, boolean sendToDiscord, String discordColor) {
+                    boolean enabled, String permission, boolean sendToMinecraft, 
+                    boolean sendToDiscord, String discordColor) {
             this.id = id;
             this.title = title;
             this.messages = new ArrayList<>(messages);
             this.interval = interval;
             this.enabled = enabled;
             this.permission = permission;
+            this.sendToMinecraft = sendToMinecraft;
             this.sendToDiscord = sendToDiscord;
             this.discordColor = discordColor;
         }

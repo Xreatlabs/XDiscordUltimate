@@ -4,19 +4,20 @@ import com.xreatlabs.xdiscordultimate.XDiscordUltimate;
 import com.xreatlabs.xdiscordultimate.modules.chatbridge.ChatBridgeModule;
 import com.xreatlabs.xdiscordultimate.modules.logging.ServerLoggingModule;
 import com.xreatlabs.xdiscordultimate.modules.verification.VerificationModule;
-import com.xreatlabs.xdiscordultimate.modules.webhooks.WebhookModule;
-import com.xreatlabs.xdiscordultimate.modules.voice.VoiceChannelModule;
 import com.xreatlabs.xdiscordultimate.modules.servercontrol.ServerControlModule;
-import com.xreatlabs.xdiscordultimate.modules.events.PlayerEventsModule;
-import com.xreatlabs.xdiscordultimate.modules.alerts.AdminAlertsModule;
+import com.xreatlabs.xdiscordultimate.modules.adminalerts.AdminAlertsModule;
 import com.xreatlabs.xdiscordultimate.modules.tickets.TicketModule;
-import com.xreatlabs.xdiscordultimate.modules.crossserver.CrossServerModule;
-import com.xreatlabs.xdiscordultimate.modules.minigames.MiniGamesModule;
 import com.xreatlabs.xdiscordultimate.modules.moderation.ModerationModule;
-import com.xreatlabs.xdiscordultimate.modules.console.BotConsoleModule;
+import com.xreatlabs.xdiscordultimate.modules.botconsole.BotConsoleModule;
 import com.xreatlabs.xdiscordultimate.modules.announcements.AnnouncementModule;
-import com.xreatlabs.xdiscordultimate.modules.leaderboards.LeaderboardModule;
-import com.xreatlabs.xdiscordultimate.modules.reactions.EmojiReactionModule;
+import com.xreatlabs.xdiscordultimate.modules.stats.PlayerStatsModule;
+import com.xreatlabs.xdiscordultimate.modules.serverstatus.ServerStatusModule;
+import com.xreatlabs.xdiscordultimate.modules.boosters.BoosterPerksModule;
+import com.xreatlabs.xdiscordultimate.modules.welcomedm.WelcomeDMModule;
+import com.xreatlabs.xdiscordultimate.modules.leaderboard.LeaderboardModule;
+import com.xreatlabs.xdiscordultimate.modules.activityroles.ActivityRolesModule;
+import com.xreatlabs.xdiscordultimate.modules.voicechannel.VoiceChannelModule;
+import com.xreatlabs.xdiscordultimate.modules.economy.EconomyBridgeModule;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -36,25 +37,28 @@ public class ModuleManager {
      * Load all modules
      */
     public void loadModules() {
-        // Register core modules first
+        // Register core modules
         registerModule("chat-bridge", new ChatBridgeModule(plugin));
         registerModule("server-logging", new ServerLoggingModule(plugin));
         
-        // Register all other modules
+        // Register other modules
         registerModule("verification", new VerificationModule(plugin));
-        registerModule("webhooks", new WebhookModule(plugin));
-        registerModule("voice-channel", new VoiceChannelModule(plugin));
         registerModule("server-control", new ServerControlModule(plugin));
-        registerModule("player-events", new PlayerEventsModule(plugin));
         registerModule("admin-alerts", new AdminAlertsModule(plugin));
         registerModule("tickets", new TicketModule(plugin));
-        registerModule("cross-server", new CrossServerModule(plugin));
-        registerModule("minigames", new MiniGamesModule(plugin));
         registerModule("moderation", new ModerationModule(plugin));
         registerModule("bot-console", new BotConsoleModule(plugin));
         registerModule("announcements", new AnnouncementModule(plugin));
-        registerModule("leaderboards", new LeaderboardModule(plugin));
-        registerModule("emoji-reactions", new EmojiReactionModule(plugin));
+        registerModule("player-stats", new PlayerStatsModule(plugin));
+        registerModule("server-status", new ServerStatusModule(plugin));
+        registerModule("booster-perks", new BoosterPerksModule(plugin));
+        registerModule("welcome-dm", new WelcomeDMModule(plugin));
+        
+        // New advanced modules
+        registerModule("leaderboard", new LeaderboardModule(plugin));
+        registerModule("activity-roles", new ActivityRolesModule(plugin));
+        registerModule("voice-channels", new VoiceChannelModule(plugin));
+        registerModule("economy-bridge", new EconomyBridgeModule(plugin));
         
         // Enable modules based on configuration
         for (Map.Entry<String, Module> entry : modules.entrySet()) {
@@ -85,9 +89,8 @@ public class ModuleManager {
      * Check if a module is enabled in config
      */
     private boolean isModuleEnabled(String moduleName) {
-        // Convert module name to config path
-        String configPath = moduleName.replace("-", "");
-        return plugin.getConfigManager().isFeatureEnabled(configPath);
+        // Module name already matches config path (e.g., "chat-bridge" -> "features.chat-bridge")
+        return plugin.getConfigManager().isFeatureEnabled(moduleName);
     }
     
     /**

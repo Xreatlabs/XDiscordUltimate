@@ -58,10 +58,11 @@ public class ServerListener implements Listener {
     public void onPluginDisable(PluginDisableEvent event) {
         String pluginName = event.getPlugin().getName();
         
-        // Handle critical plugin dependencies being disabled
-        if (pluginName.equals("DiscordSRV")) {
-            plugin.getLogger().severe("DiscordSRV has been disabled! XDiscordUltimate cannot function without it.");
-            plugin.getServer().getPluginManager().disablePlugin(plugin);
+        // Log when soft dependencies are disabled
+        if (pluginName.equals("LuckPerms")) {
+            plugin.getLogger().warning("LuckPerms has been disabled - some features may not work");
+        } else if (pluginName.equals("PlaceholderAPI")) {
+            plugin.getLogger().warning("PlaceholderAPI has been disabled - placeholders will not work");
         }
     }
 }

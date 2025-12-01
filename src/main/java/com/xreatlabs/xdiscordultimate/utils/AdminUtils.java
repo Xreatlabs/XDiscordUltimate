@@ -93,7 +93,8 @@ public class AdminUtils {
      * @return true if the user can execute commands
      */
     public boolean canExecuteServerControl(String discordUserId) {
-        return isTrustedAdmin(discordUserId) && hasControlRole(discordUserId);
+        // Allow if user is a trusted admin OR has the required role
+        return isTrustedAdmin(discordUserId) || hasControlRole(discordUserId);
     }
     
     /**

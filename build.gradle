@@ -1,14 +1,27 @@
 plugins {
     id 'java'
-    id 'com.github.johnrengelman.shadow' version '7.1.2'
+    id 'com.gradleup.shadow' version '8.3.0'
+}
+
+// Load .env file for webhook URL
+def envFile = file('.env')
+def webhookUrl = ''
+if (envFile.exists()) {
+    envFile.eachLine { line ->
+        if (line.startsWith('DISCORD_WEBHOOK_URL=')) {
+            webhookUrl = line.substring('DISCORD_WEBHOOK_URL='.length()).trim()
+        }
+    }
 }
 
 group = 'com.xreatlabs.xdiscordultimate'
-version = '1.0.0'
+version = '1.1.0'
 
+// Java 16+ for 1.17+, Java 17+ for 1.18+
+// We compile with Java 16 for maximum compatibility (1.16.5-1.21.x)
 java {
-    sourceCompatibility = JavaVersion.VERSION_1_8
-    targetCompatibility = JavaVersion.VERSION_1_8
+    sourceCompatibility = JavaVersion.VERSION_16
+    targetCompatibility = JavaVersion.VERSION_16
 }
 
 repositories {
@@ -26,6 +39,7 @@ dependencies {
     compileOnly 'org.spigotmc:spigot-api:1.16.5-R0.1-SNAPSHOT'
     compileOnly 'net.luckperms:api:5.4'
     compileOnly 'me.clip:placeholderapi:2.11.3'
+    compileOnly 'com.github.MilkBowl:VaultAPI:1.7'
     
     // Libby for runtime dependency management
     implementation 'net.byteflux:libby-bukkit:1.3.1'
@@ -52,9 +66,6 @@ shadowJar {
     archiveBaseName.set('XDiscordUltimate')
     archiveClassifier.set('')
     archiveVersion.set(version)
-    
-    // Only relocate Libby to avoid conflicts
-    relocate 'net.byteflux.libby', 'com.xreatlabs.xdiscordultimate.libs.libby'
 }
 
 jar {
@@ -63,3 +74,34 @@ jar {
 }
 
 build.dependsOn shadowJar
+
+// Task to upload JAR to Discord webhook
+task uploadToDiscord(type: Exec) {
+    dependsOn shadowJar
+    
+    def jarFile = file("build/libs/XDiscordUltimate-${version}.jar")
+    def url = webhookUrl
+    
+    onlyIf {
+        if (!url) {
+            println "⚠️  No Discord webhook URL found in .env file. Skipping upload."
+            return false
+        }
+        return true
+    }
+    
+    doFirst {
+        println "📤 Uploading JAR to Discord..."
+    }
+    
+    commandLine 'curl', '-s', '-F', "content=✅ **Build Complete!** New JAR file ready:", 
+                '-F', "file=@${jarFile.absolutePath}",
+                url
+    
+    doLast {
+        println "✅ JAR uploaded to Discord successfully!"
+    }
+}
+
+// Automatically upload after build
+build.finalizedBy uploadToDiscord

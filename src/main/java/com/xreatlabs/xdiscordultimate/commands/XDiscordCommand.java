@@ -2,6 +2,7 @@ package com.xreatlabs.xdiscordultimate.commands;
 
 import com.xreatlabs.xdiscordultimate.XDiscordUltimate;
 import com.xreatlabs.xdiscordultimate.modules.Module;
+import com.xreatlabs.xdiscordultimate.utils.ColorUtils;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -87,25 +88,26 @@ public class XDiscordCommand implements CommandExecutor, TabCompleter {
     }
     
     private void handleStatus(CommandSender sender) {
-        plugin.getMessageManager().sendInfo(sender, "=== XDiscordUltimate Status ===");
+        sender.sendMessage(color("<gradient:#55FFFF:#5555FF>━━━ XDiscordUltimate Status ━━━</gradient>"));
+        sender.sendMessage("");
         
         // Plugin version
-        sender.sendMessage("§7Version: §e" + plugin.getDescription().getVersion());
+        sender.sendMessage(color("&8▸ <gradient:#55FFFF:#5555FF>Version</gradient>&8: &f" + plugin.getDescription().getVersion()));
         
         // Discord connection status
         boolean discordConnected = plugin.getDiscordManager() != null &&
                                  plugin.getDiscordManager().getJDA() != null &&
                                  plugin.getDiscordManager().getJDA().getStatus().name().equals("CONNECTED");
-        sender.sendMessage("§7Discord: " + (discordConnected ? "§aConnected" : "§cDisconnected"));
+        sender.sendMessage(color("&8▸ <gradient:#5555FF:#7289DA>Discord</gradient>&8: " + (discordConnected ? "&a● Connected" : "&c● Disconnected")));
         
         // Database status
         boolean databaseConnected = plugin.getDatabaseManager() != null;
-        sender.sendMessage("§7Database: " + (databaseConnected ? "§aConnected" : "§cDisconnected"));
+        sender.sendMessage(color("&8▸ <gradient:#55FF55:#00AA00>Database</gradient>&8: " + (databaseConnected ? "&a● Connected" : "&c● Disconnected")));
         
         // Module status
         Map<String, Module> modules = plugin.getModuleManager().getModules();
         long enabledModules = modules.values().stream().filter(Module::isEnabled).count();
-        sender.sendMessage("§7Modules: §e" + enabledModules + "/" + modules.size() + " §7enabled");
+        sender.sendMessage(color("&8▸ <gradient:#FFAA00:#FF5555>Modules</gradient>&8: &e" + enabledModules + "&7/&f" + modules.size() + " &7enabled"));
         
         // Memory usage
         Runtime runtime = Runtime.getRuntime();
@@ -113,33 +115,35 @@ public class XDiscordCommand implements CommandExecutor, TabCompleter {
         long totalMemory = runtime.totalMemory() / 1024 / 1024;
         long freeMemory = runtime.freeMemory() / 1024 / 1024;
         long usedMemory = totalMemory - freeMemory;
-        sender.sendMessage("§7Memory: §e" + usedMemory + "MB / " + maxMemory + "MB");
+        sender.sendMessage(color("&8▸ <gradient:#AA00AA:#FF55FF>Memory</gradient>&8: &e" + usedMemory + "MB &7/ &f" + maxMemory + "MB"));
         
         // Player stats
         int onlinePlayers = plugin.getServer().getOnlinePlayers().size();
-        sender.sendMessage("§7Online Players: §e" + onlinePlayers);
+        sender.sendMessage(color("&8▸ <gradient:#55FF55:#55FFFF>Players</gradient>&8: &e" + onlinePlayers + " &7online"));
+        sender.sendMessage("");
     }
     
     private void handleModules(CommandSender sender) {
-        plugin.getMessageManager().sendInfo(sender, "=== XDiscordUltimate Modules ===");
+        sender.sendMessage(color("<gradient:#55FFFF:#5555FF>━━━ XDiscordUltimate Modules ━━━</gradient>"));
+        sender.sendMessage("");
         
         Map<String, Module> modules = plugin.getModuleManager().getModules();
         
         for (Map.Entry<String, Module> entry : modules.entrySet()) {
-            String key = entry.getKey();
             Module module = entry.getValue();
             
-            String status = module.isEnabled() ? "§aEnabled" : "§cDisabled";
-            sender.sendMessage("§7" + module.getName() + ": " + status);
-            sender.sendMessage("  §8" + module.getDescription());
+            String status = module.isEnabled() ? "&a●" : "&c●";
+            sender.sendMessage(color(status + " <gradient:#55FFFF:#5555FF>" + module.getName() + "</gradient>"));
+            sender.sendMessage(color("  &8" + module.getDescription()));
         }
+        sender.sendMessage("");
     }
     
     private void handleDebug(CommandSender sender, String[] args) {
         if (args.length < 2) {
             boolean debugEnabled = plugin.getConfigManager().isDebugEnabled();
-            sender.sendMessage("§7Debug mode is currently: " + 
-                             (debugEnabled ? "§aEnabled" : "§cDisabled"));
+            sender.sendMessage(color("&8▸ <gradient:#FFAA00:#FF5555>Debug</gradient>&8: " + 
+                             (debugEnabled ? "&a● Enabled" : "&c● Disabled")));
             return;
         }
         
@@ -185,12 +189,12 @@ public class XDiscordCommand implements CommandExecutor, TabCompleter {
     private void showHelp(CommandSender sender) {
         plugin.getMessageManager().sendMessageList(sender, "help.header");
         
-        sender.sendMessage("§e/xdiscord reload §7- Reload the plugin configuration");
-        sender.sendMessage("§e/xdiscord status §7- Show plugin status");
-        sender.sendMessage("§e/xdiscord modules §7- List all modules and their status");
-        sender.sendMessage("§e/xdiscord debug <on|off> §7- Toggle debug mode");
-        sender.sendMessage("§e/xdiscord admin <add|remove> <id> §7- Manage admin IDs");
-        sender.sendMessage("§e/xdiscord help <command> §7- Show help for a specific command");
+        sender.sendMessage(color("  <gradient:#55FF55:#55FFFF>▸</gradient> &e/xdiscord reload &8- &7Reload configuration"));
+        sender.sendMessage(color("  <gradient:#55FF55:#55FFFF>▸</gradient> &e/xdiscord status &8- &7Show plugin status"));
+        sender.sendMessage(color("  <gradient:#55FF55:#55FFFF>▸</gradient> &e/xdiscord modules &8- &7List all modules"));
+        sender.sendMessage(color("  <gradient:#55FF55:#55FFFF>▸</gradient> &e/xdiscord debug <on|off> &8- &7Toggle debug"));
+        sender.sendMessage(color("  <gradient:#55FF55:#55FFFF>▸</gradient> &e/xdiscord admin <add|remove> <id> &8- &7Manage admins"));
+        sender.sendMessage(color("  <gradient:#55FF55:#55FFFF>▸</gradient> &e/xdiscord help <cmd> &8- &7Command help"));
         
         plugin.getMessageManager().sendMessageList(sender, "help.footer");
     }
@@ -199,35 +203,35 @@ public class XDiscordCommand implements CommandExecutor, TabCompleter {
         // Show detailed help for specific commands
         switch (command.toLowerCase()) {
             case "verify":
-                sender.sendMessage("§e/verify §7- " + 
-                    plugin.getMessageManager().getMessage("commands.verify"));
-                sender.sendMessage("§7Links your Minecraft account with Discord for enhanced features.");
+                sender.sendMessage(color("<gradient:#55FFFF:#5555FF>/verify</gradient> &8- &7" + 
+                    plugin.getMessageManager().getMessage("commands.verify")));
+                sender.sendMessage(color("&8  Links your Minecraft account with Discord."));
                 break;
                 
             case "support":
-                sender.sendMessage("§e/support <message> §7- " + 
-                    plugin.getMessageManager().getMessage("commands.support"));
-                sender.sendMessage("§7Creates a support ticket that staff can respond to via Discord.");
+                sender.sendMessage(color("<gradient:#55FFFF:#5555FF>/support <message></gradient> &8- &7" + 
+                    plugin.getMessageManager().getMessage("commands.support")));
+                sender.sendMessage(color("&8  Creates a support ticket for staff."));
                 break;
                 
             case "embed":
-                sender.sendMessage("§e/embed <channel> <title> <description> §7- " + 
-                    plugin.getMessageManager().getMessage("commands.embed"));
-                sender.sendMessage("§7Sends a custom embed message to the specified Discord channel.");
-                sender.sendMessage("§7Requires: §exdiscord.embed");
+                sender.sendMessage(color("<gradient:#55FFFF:#5555FF>/embed <channel> <title> <desc></gradient>"));
+                sender.sendMessage(color("&8  Sends embed to Discord. Requires: &exdiscord.embed"));
                 break;
                 
             case "announce":
-                sender.sendMessage("§e/announce <message> §7- " + 
-                    plugin.getMessageManager().getMessage("commands.announce"));
-                sender.sendMessage("§7Broadcasts an announcement to both Discord and in-game.");
-                sender.sendMessage("§7Requires: §exdiscord.announce");
+                sender.sendMessage(color("<gradient:#55FFFF:#5555FF>/announce <message></gradient>"));
+                sender.sendMessage(color("&8  Broadcasts to Discord & in-game. Requires: &exdiscord.announce"));
                 break;
                 
             default:
                 plugin.getMessageManager().sendError(sender, "No help available for: " + command);
                 break;
         }
+    }
+    
+    private String color(String message) {
+        return ColorUtils.parse(message);
     }
     
     @Override

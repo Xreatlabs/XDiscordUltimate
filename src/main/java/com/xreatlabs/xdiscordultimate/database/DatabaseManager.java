@@ -247,14 +247,24 @@ public class DatabaseManager {
     public CompletableFuture<Boolean> linkAccount(UUID minecraftUuid, String discordId, 
                                                   String minecraftName, String discordName) {
         return executeAsync(() -> {
-            String sql = "INSERT INTO verified_users (minecraft_uuid, discord_id, minecraft_name, discord_name) " +
-                        "VALUES (?, ?, ?, ?) ON CONFLICT(minecraft_uuid) DO UPDATE SET " +
-                        "discord_id = ?, discord_name = ?, verified_at = CURRENT_TIMESTAMP";
+            String sql;
             
-            // SQLite uses different syntax
-            if (type.equals("sqlite")) {
-                sql = "INSERT OR REPLACE INTO verified_users (minecraft_uuid, discord_id, minecraft_name, discord_name) " +
-                     "VALUES (?, ?, ?, ?)";
+            switch (type.toLowerCase()) {
+                case "sqlite":
+                    sql = "INSERT OR REPLACE INTO verified_users (minecraft_uuid, discord_id, minecraft_name, discord_name) " +
+                         "VALUES (?, ?, ?, ?)";
+                    break;
+                case "mysql":
+                    sql = "INSERT INTO verified_users (minecraft_uuid, discord_id, minecraft_name, discord_name) " +
+                         "VALUES (?, ?, ?, ?) ON DUPLICATE KEY UPDATE " +
+                         "discord_id = VALUES(discord_id), discord_name = VALUES(discord_name), verified_at = CURRENT_TIMESTAMP";
+                    break;
+                case "postgresql":
+                default:
+                    sql = "INSERT INTO verified_users (minecraft_uuid, discord_id, minecraft_name, discord_name) " +
+                         "VALUES (?, ?, ?, ?) ON CONFLICT(minecraft_uuid) DO UPDATE SET " +
+                         "discord_id = EXCLUDED.discord_id, discord_name = EXCLUDED.discord_name, verified_at = CURRENT_TIMESTAMP";
+                    break;
             }
             
             try (Connection conn = getConnection();
@@ -264,11 +274,6 @@ public class DatabaseManager {
                 stmt.setString(2, discordId);
                 stmt.setString(3, minecraftName);
                 stmt.setString(4, discordName);
-                
-                if (!type.equals("sqlite")) {
-                    stmt.setString(5, discordId);
-                    stmt.setString(6, discordName);
-                }
                 
                 return stmt.executeUpdate() > 0;
             }
@@ -317,6 +322,35 @@ public class DatabaseManager {
             }
             return null;
         });
+    }
+    
+    /**
+     * Get Discord ID from Minecraft UUID (synchronous version for use in async contexts)
+     */
+    public String getDiscordIdSync(UUID minecraftUuid) {
+        String sql = "SELECT discord_id FROM verified_users WHERE minecraft_uuid = ?";
+        
+        try (Connection conn = getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+            
+            stmt.setString(1, minecraftUuid.toString());
+            
+            try (ResultSet rs = stmt.executeQuery()) {
+                if (rs.next()) {
+                    return rs.getString("discord_id");
+                }
+            }
+        } catch (SQLException e) {
+            plugin.getLogger().warning("Database error in getDiscordIdSync: " + e.getMessage());
+        }
+        return null;
+    }
+    
+    /**
+     * Get Minecraft UUID from Discord ID (for economy module)
+     */
+    public CompletableFuture<UUID> getMinecraftUUID(String discordId) {
+        return getMinecraftUuid(discordId);
     }
     
     /**
@@ -393,12 +427,22 @@ public class DatabaseManager {
      */
     public CompletableFuture<Void> updatePlayerStats(UUID playerUuid, String statType, int increment) {
         return executeAsync(() -> {
-            String sql = "INSERT INTO player_stats (minecraft_uuid, " + statType + ") VALUES (?, ?) " +
-                        "ON CONFLICT(minecraft_uuid) DO UPDATE SET " + statType + " = " + statType + " + ?";
+            String sql;
             
-            if (type.equals("sqlite")) {
-                sql = "INSERT OR REPLACE INTO player_stats (minecraft_uuid, " + statType + ") " +
-                     "VALUES (?, COALESCE((SELECT " + statType + " FROM player_stats WHERE minecraft_uuid = ?), 0) + ?)";
+            switch (type.toLowerCase()) {
+                case "sqlite":
+                    sql = "INSERT OR REPLACE INTO player_stats (minecraft_uuid, " + statType + ") " +
+                         "VALUES (?, COALESCE((SELECT " + statType + " FROM player_stats WHERE minecraft_uuid = ?), 0) + ?)";
+                    break;
+                case "mysql":
+                    sql = "INSERT INTO player_stats (minecraft_uuid, " + statType + ") VALUES (?, ?) " +
+                         "ON DUPLICATE KEY UPDATE " + statType + " = " + statType + " + VALUES(" + statType + ")";
+                    break;
+                case "postgresql":
+                default:
+                    sql = "INSERT INTO player_stats (minecraft_uuid, " + statType + ") VALUES (?, ?) " +
+                         "ON CONFLICT(minecraft_uuid) DO UPDATE SET " + statType + " = player_stats." + statType + " + EXCLUDED." + statType;
+                    break;
             }
             
             try (Connection conn = getConnection();
@@ -406,12 +450,11 @@ public class DatabaseManager {
                 
                 stmt.setString(1, playerUuid.toString());
                 
-                if (type.equals("sqlite")) {
+                if (type.equalsIgnoreCase("sqlite")) {
                     stmt.setString(2, playerUuid.toString());
                     stmt.setInt(3, increment);
                 } else {
                     stmt.setInt(2, increment);
-                    stmt.setInt(3, increment);
                 }
                 
                 stmt.executeUpdate();

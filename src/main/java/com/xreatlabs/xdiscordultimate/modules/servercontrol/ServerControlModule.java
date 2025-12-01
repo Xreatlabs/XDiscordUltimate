@@ -33,14 +33,17 @@ public class ServerControlModule extends Module {
     @Override
     protected void onEnable() {
         loadConfiguration();
-        
+        info("Server control module enabled - waiting for Discord...");
+    }
+    
+    @Override
+    public void onDiscordReady() {
         // Register Discord listener
         if (plugin.getDiscordManager() != null && plugin.getDiscordManager().isReady()) {
             listener = new ServerControlListener();
             plugin.getDiscordManager().getJDA().addEventListener(listener);
+            info("Server control connected to Discord");
         }
-        
-        info("Server control module enabled");
     }
     
     @Override

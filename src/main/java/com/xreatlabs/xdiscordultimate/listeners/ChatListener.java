@@ -67,7 +67,7 @@ public class ChatListener implements Listener {
         }
         
         // Update last message time for spam detection
-        updateLastMessageTime(player);
+        updateLastMessageTime(player, message);
     }
     
     /**
@@ -190,14 +190,19 @@ public class ChatListener implements Listener {
     /**
      * Update last message time for spam detection
      */
-    private void updateLastMessageTime(Player player) {
+    private void updateLastMessageTime(Player player, String message) {
         UUID uuid = player.getUniqueId();
         lastMessageTime.put(uuid, System.currentTimeMillis());
+        lastMessage.put(uuid, message);
         
         // Clean up old entries (older than 1 minute)
         long cutoff = System.currentTimeMillis() - 60000;
         lastMessageTime.entrySet().removeIf(entry -> entry.getValue() < cutoff);
         messageCount.entrySet().removeIf(entry -> {
+            Long time = lastMessageTime.get(entry.getKey());
+            return time == null || time < cutoff;
+        });
+        lastMessage.entrySet().removeIf(entry -> {
             Long time = lastMessageTime.get(entry.getKey());
             return time == null || time < cutoff;
         });

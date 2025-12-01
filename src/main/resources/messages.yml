@@ -1,140 +1,138 @@
 # XDiscordUltimate Messages Configuration
-# Use & for color codes
+# ============================================
+# Supports:
+#   - Legacy color codes: &a, &b, &c, etc.
+#   - Hex colors: &#FF5555 or <#FF5555>
+#   - Gradients: <gradient:#FF0000:#0000FF>text</gradient>
+#   - Rainbow: <rainbow>text</rainbow>
+#   - MiniMessage tags: <bold>, <italic>, <underlined>, <strikethrough>
+#   - Named colors: <red>, <green>, <blue>, <gold>, etc.
+# ============================================
 
-# General messages
+# General Messages
 general:
-  reload-success: "&aConfiguration reloaded successfully!"
-  reload-failed: "&cFailed to reload configuration. Check console for errors."
-  no-console: "&cThis command cannot be executed from console!"
-  player-only: "&cThis command can only be executed by players!"
+  # Plugin prefix - supports gradients!
+  prefix: "<gradient:#55FFFF:#5555FF>XDiscord</gradient> &8» &r"
+  reload: "<gradient:#55FF55:#00AA00>Configuration reloaded successfully!</gradient>"
+  reload-success: "<gradient:#55FF55:#00AA00>Configuration reloaded successfully!</gradient>"
+  reload-failed: "<gradient:#FF5555:#AA0000>Failed to reload configuration.</gradient> &7Check console for errors."
+  no-permission: "<gradient:#FF5555:#AA0000>You don't have permission</gradient> &7to use this command."
+  player-only: "<gradient:#FFAA00:#FF5555>This command</gradient> &7can only be used by players."
+  unknown-command: "&7Unknown command. Use &e/xdiscord help &7for help."
 
-# Error messages
+# Error Messages
 errors:
-  no-permission: "&cYou don't have permission to use this command!"
-  player-not-found: "&cPlayer &e%player% &cnot found!"
-  invalid-usage: "&cInvalid usage! Use: &e%usage%"
-  feature-disabled: "&cThis feature is currently disabled!"
-  discord-not-linked: "&cYour account is not linked with Discord! Use &e/verify"
-  already-linked: "&cYour account is already linked with Discord!"
-  verification-required: "&cYou must verify your Discord account to play on this server!"
-  command-error: "&cAn error occurred while executing this command!"
+  no-permission: "<gradient:#FF5555:#AA0000>Access Denied!</gradient> &7You don't have permission."
+  player-not-found: "<gradient:#FF5555:#FFAA00>Player Not Found!</gradient> &7'%player%' is not online."
+  invalid-usage: "<gradient:#FFAA00:#FF5555>Invalid Usage!</gradient> &7Correct: &e%usage%"
+  not-verified: "<gradient:#FFAA00:#FF5555>Verification Required!</gradient> &7Use &e/verify &7to link accounts."
+  already-verified: "<gradient:#55FF55:#55FFFF>Already Verified!</gradient> &7Your account is linked."
+  verification-failed: "<gradient:#FF5555:#AA0000>Verification Failed!</gradient> &7Please try again."
+  cooldown: "<gradient:#FFAA00:#FF5555>Cooldown!</gradient> &7Please wait before using this again."
+  feature-disabled: "<gradient:#AAAAAA:#555555>Feature Disabled!</gradient> &7This feature is currently off."
+  discord-not-linked: "<gradient:#5555FF:#AA00AA>Discord Required!</gradient> &7Link with &e/verify &7first."
 
-# Verification messages
+# Success Messages
+success:
+  verified: "<gradient:#55FF55:#55FFFF>Success!</gradient> &7Your account is now linked to Discord!"
+  ticket-created: "<gradient:#55FF55:#55FFFF>Ticket Created!</gradient> &7Check Discord for updates."
+  report-sent: "<gradient:#55FF55:#00AA00>Report Submitted!</gradient> &7Moderators have been notified."
+  announcement-sent: "<gradient:#FFAA00:#FF5555>Announcement Sent!</gradient> &7Broadcast complete."
+
+# Verification Messages
 verification:
-  instructions: "&bPlease visit the following link to verify your Discord account:"
-  link-generated: "&a%link%"
-  click-to-verify: "&e&lCLICK HERE TO VERIFY"
-  success: "&aYour Discord account has been successfully linked!"
-  failed: "&cVerification failed! Please try again."
-  timeout: "&cVerification timed out. Please use &e/verify &cagain."
-  already-verified: "&aYour account is already verified!"
-  kick-message: "&cYou must verify your Discord account within %minutes% minutes to play!"
-  waiting: "&eWaiting for Discord verification..."
+  code-generated: "<gradient:#55FFFF:#5555FF>Verification Code</gradient> &8» &e&l%code%"
+  code-expired: "<gradient:#FF5555:#AA0000>Code Expired!</gradient> &7Generate a new one."
+  code-invalid: "<gradient:#FF5555:#FFAA00>Invalid Code!</gradient> &7Check and try again."
+  instructions: "&7Use this code in Discord with &e/verify &7to link."
+  already-linked: "<gradient:#FFAA00:#FF5555>Already Linked!</gradient> &7This Discord is linked to another account."
+  already-verified: "<gradient:#55FF55:#55FFFF>Already Verified!</gradient> &7Your account is linked."
+  success: "<gradient:#55FF55:#55FFFF>Verification Complete!</gradient> &7Accounts are now linked!"
+  required: "<gradient:#FFAA00:#FF5555>Verification Required!</gradient> &7Link your Discord account."
+  kick-message: "<gradient:#FF5555:#AA0000>Verification Required!</gradient>\n&7You must verify within &e%minutes% &7minutes!"
 
-# Support/Ticket messages
+# Ticket Messages
+tickets:
+  created: "<gradient:#55FFFF:#5555FF>Ticket #%id%</gradient> &7created! Staff will assist soon."
+  closed: "<gradient:#AAAAAA:#555555>Ticket #%id%</gradient> &7has been closed."
+  not-found: "<gradient:#FF5555:#AA0000>Not Found!</gradient> &7Ticket does not exist."
+  max-tickets: "<gradient:#FFAA00:#FF5555>Limit Reached!</gradient> &7Max open tickets reached."
+
+# Support Messages
 support:
-  ticket-created: "&aSupport ticket created! Check Discord for updates."
-  ticket-closed: "&aYour support ticket has been closed."
-  ticket-already-open: "&cYou already have an open support ticket!"
-  ticket-not-found: "&cTicket not found!"
-  ticket-response: "&bSupport response: &f%message%"
-  no-message: "&cPlease provide a message for your support ticket!"
+  no-message: "<gradient:#FF5555:#FFAA00>Missing Message!</gradient> &7Provide a message for your ticket."
+  created: "<gradient:#55FF55:#55FFFF>Support Ticket Created!</gradient> &7Check Discord."
 
-# Embed messages
-embed:
-  sent-successfully: "&aEmbed sent successfully to Discord!"
-  invalid-channel: "&cInvalid Discord channel!"
-  no-webhook: "&cNo webhook configured for this channel!"
-  creation-failed: "&cFailed to create embed. Check your syntax!"
-  gui-opened: "&aEmbed builder GUI opened!"
-
-# Announcement messages
-announcement:
-  sent: "&aAnnouncement sent to Discord and all players!"
-  no-message: "&cPlease provide an announcement message!"
-  format: "&6&l[ANNOUNCEMENT] &e%message%"
-
-# Report messages
+# Report Messages
 report:
-  success: "&aPlayer &e%player% &ahas been reported for: &f%reason%"
-  no-reason: "&cPlease provide a reason for the report!"
-  self-report: "&cYou cannot report yourself!"
-  cooldown: "&cPlease wait before reporting another player!"
+  success: "<gradient:#55FF55:#00AA00>Report #%id%</gradient> &7against &e%player% &7submitted!"
+  cooldown: "<gradient:#FFAA00:#FF5555>Cooldown!</gradient> &7Wait before reporting again."
+  self-report: "<gradient:#FF5555:#AA0000>Error!</gradient> &7You cannot report yourself!"
 
-# Server control messages
-server-control:
-  restart-scheduled: "&cServer restart scheduled in &e%time% &cseconds!"
-  restart-cancelled: "&aServer restart cancelled."
-  stopping: "&cServer is shutting down..."
-  kicked-player: "&aKicked player &e%player%"
-  tps-info: "&bCurrent TPS: &e%tps%"
-  player-list: "&bOnline players (&e%count%&b): &f%players%"
+# Announcement Messages
+announcement:
+  no-message: "<gradient:#FF5555:#FFAA00>Missing Message!</gradient> &7Provide announcement content."
+  sent: "<gradient:#55FF55:#55FFFF>Announcement Sent!</gradient> &7Broadcast to all platforms."
 
-# Discord console messages
-discord-console:
-  executed: "&aCommand executed from Discord console."
-  no-command: "&cPlease provide a command to execute!"
-  blacklisted: "&cThis command is blacklisted!"
+# Chat Messages
+chat:
+  discord-to-minecraft: "&8[<gradient:#5555FF:#7289DA>Discord</gradient>&8] &b%user%&8: &f%message%"
+  minecraft-to-discord: "**%player%**: %message%"
+  filtered: "<gradient:#FF5555:#AA0000>Message Blocked!</gradient> &7Chat filter activated."
+  spam-warning: "<gradient:#FFAA00:#FF5555>Slow Down!</gradient> &7Don't spam the chat."
 
-# Cross-server messages
-cross-server:
-  message-sent: "&aMessage sent to &e%player% &aon &e%server%"
-  player-offline: "&cPlayer &e%player% &cis not online on any server!"
-  server-offline: "&cServer &e%server% &cis not available!"
+# Join/Leave Messages
+events:
+  player-join: "<gradient:#55FF55:#55FFFF>+</gradient> &7%player% joined"
+  player-leave: "<gradient:#FF5555:#FFAA00>-</gradient> &7%player% left"
+  first-join: "<rainbow>Welcome!</rainbow> &e%player% &7joined for the first time!"
 
-# Leaderboard messages
-leaderboard:
-  updated: "&aLeaderboards updated!"
-  no-data: "&cNo leaderboard data available."
-  header: "&6&l=== %stat% Leaderboard ==="
-  entry: "&e#%position% &7- &b%player% &7- &f%value%"
+# Stats Messages
+stats:
+  header: "<gradient:#FFAA00:#FF5555>━━━ %player%'s Stats ━━━</gradient>"
+  kills: "&8▸ <gradient:#FF5555:#FFAA00>Kills</gradient>&8: &f%value%"
+  deaths: "&8▸ <gradient:#AAAAAA:#555555>Deaths</gradient>&8: &f%value%"
+  kd-ratio: "&8▸ <gradient:#55FFFF:#5555FF>K/D Ratio</gradient>&8: &f%value%"
+  mob-kills: "&8▸ <gradient:#55FF55:#00AA00>Mob Kills</gradient>&8: &f%value%"
+  playtime: "&8▸ <gradient:#AA00AA:#FF55FF>Playtime</gradient>&8: &f%value%"
+  not-found: "<gradient:#FF5555:#AA0000>Not Found!</gradient> &7Player stats unavailable."
 
-# Mini-game messages
-minigames:
-  poll-created: "&aA new poll has been created in Discord!"
-  vote-recorded: "&aYour vote has been recorded!"
-  event-started: "&6&l%event% &6has started!"
-  event-ended: "&e%event% &ehas ended!"
-  reward-given: "&aYou received a reward for Discord activity!"
-
-# Moderation messages
+# Moderation Messages
 moderation:
-  banned: "&cPlayer &e%player% &chas been banned for: &f%reason%"
-  unbanned: "&aPlayer &e%player% &ahas been unbanned."
-  kicked: "&ePlayer &e%player% &ehas been kicked for: &f%reason%"
-  warned: "&ePlayer &e%player% &ehas been warned for: &f%reason%"
-  muted: "&cPlayer &e%player% &chas been muted for: &f%reason%"
-  unmuted: "&aPlayer &e%player% &ahas been unmuted."
-  sync-complete: "&aModeration sync completed with Discord."
+  ban-success: "<gradient:#FF5555:#AA0000>Banned!</gradient> &e%player% &7has been banned."
+  kick-success: "<gradient:#FFAA00:#FF5555>Kicked!</gradient> &e%player% &7has been kicked."
+  mute-success: "<gradient:#AAAAAA:#555555>Muted!</gradient> &e%player% &7has been muted."
+  unmute-success: "<gradient:#55FF55:#55FFFF>Unmuted!</gradient> &e%player% &7can speak again."
+  warn-success: "<gradient:#FFAA00:#FF5555>Warned!</gradient> &e%player% &7has been warned."
 
-# Voice channel messages
-voice:
-  joined-vc: "&aYou joined voice channel: &e%channel%"
-  left-vc: "&eYou left the voice channel."
-  vc-created: "&aTemporary voice channel created!"
-  proximity-enabled: "&aProximity voice chat enabled."
-  proximity-disabled: "&eProximity voice chat disabled."
-
-# Admin alert messages
-alerts:
-  tps-low: "&c&lWARNING: &cServer TPS has dropped to &e%tps%"
-  ram-high: "&c&lWARNING: &cRAM usage is at &e%usage%%"
-  player-cheat: "&c&lALERT: &e%player% &ctriggered anti-cheat: &f%violation%"
-  server-lag: "&c&lWARNING: &cServer is experiencing lag!"
-
-# Command descriptions (for help)
-commands:
-  verify: "Link your Discord account"
-  support: "Create a support ticket"
-  embed: "Send a Discord embed"
-  announce: "Make an announcement"
-  discordconsole: "Execute bot commands"
-  report: "Report a player"
-  xdiscord: "Main plugin command"
-
-# Help messages
+# Help Messages
 help:
-  header: "&b&l=== XDiscordUltimate Help ==="
-  footer: "&7Use &e/xdiscord help <command> &7for more info"
-  command-format: "&e/%command% &7- &f%description%"
-  no-commands: "&cYou don't have access to any commands!"
+  header:
+    - ""
+    - "<gradient:#55FFFF:#5555FF>━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━</gradient>"
+    - "       <gradient:#55FFFF:#5555FF>&lXDiscordUltimate</gradient> &8- &7Help"
+    - "<gradient:#55FFFF:#5555FF>━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━</gradient>"
+    - ""
+  footer:
+    - ""
+    - "<gradient:#55FFFF:#5555FF>━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━</gradient>"
+    - "  &7Use <gradient:#55FFFF:#5555FF>/xdiscord help</gradient> &7for commands"
+    - "<gradient:#55FFFF:#5555FF>━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━</gradient>"
+    - ""
+  verify: "  <gradient:#55FF55:#55FFFF>▸</gradient> &e/verify &8- &7Link Discord account"
+  support: "  <gradient:#55FF55:#55FFFF>▸</gradient> &e/support <msg> &8- &7Create ticket"
+  stats: "  <gradient:#55FF55:#55FFFF>▸</gradient> &e/stats [player] &8- &7View statistics"
+  report: "  <gradient:#55FF55:#55FFFF>▸</gradient> &e/report <player> <reason> &8- &7Report player"
+  help: "  <gradient:#55FF55:#55FFFF>▸</gradient> &e/help &8- &7Show this menu"
+
+# Command Descriptions
+commands:
+  verify: "Link your Discord account with Minecraft"
+  support: "Create a support ticket for staff assistance"
+  embed: "Send a custom embed message to Discord"
+  announce: "Broadcast an announcement to Discord and in-game"
+
+# Server Control Messages
+server-control:
+  restart-scheduled: "<gradient:#FF5555:#FFAA00>Server Restart</gradient> &7in &e%time% &7seconds!"
+  stopping: "<gradient:#FF5555:#AA0000>Server Stopping...</gradient> &7See you soon!"

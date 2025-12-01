@@ -25,6 +25,12 @@ public class DiscordConsoleCommand implements CommandExecutor {
 
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
+        // Security check - require permission
+        if (!sender.hasPermission("xdiscord.console")) {
+            messageManager.sendError(sender, "You don't have permission to use this command!");
+            return true;
+        }
+        
         if (args.length == 0) {
             messageManager.sendError(sender, "Usage: /dconsole <command>");
             return true;

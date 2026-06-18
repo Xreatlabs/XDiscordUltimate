@@ -132,89 +132,212 @@ public class BotConsoleModule extends Module {
         debug("Console channel: " + consoleChannelName);
     }
     
-    private void registerSlashCommands() {
-        try {
-            List<SlashCommandData> commands = new ArrayList<>();
-            
-            // Main console command - direct command execution
-            SlashCommandData consoleCmd = Commands.slash("console", "Execute Minecraft console commands")
-                .addOption(OptionType.STRING, "command", "The Minecraft command to execute (without /)", true);
-            commands.add(consoleCmd);
-            
-            // Server management commands
-            SlashCommandData serverCmd = Commands.slash("server", "Server management and information")
-                .addSubcommands(
-                    new SubcommandData("logs", "Show recent console logs"),
-                    new SubcommandData("tps", "Show server TPS"),
-                    new SubcommandData("memory", "Show memory usage"),
-                    new SubcommandData("players", "List online players"),
-                    new SubcommandData("plugins", "List server plugins"),
-                    new SubcommandData("restart", "Restart the server"),
-                    new SubcommandData("stop", "Stop the server"),
-                    new SubcommandData("save", "Save all worlds"),
-                    new SubcommandData("op", "Give operator status")
-                        .addOption(OptionType.STRING, "player", "Player name", true),
-                    new SubcommandData("deop", "Remove operator status")
-                        .addOption(OptionType.STRING, "player", "Player name", true),
-                    new SubcommandData("ban", "Ban a player")
-                        .addOption(OptionType.STRING, "player", "Player name", true)
-                        .addOption(OptionType.STRING, "reason", "Ban reason", false),
-                    new SubcommandData("pardon", "Unban a player")
-                        .addOption(OptionType.STRING, "player", "Player name", true),
-                    new SubcommandData("kick", "Kick a player")
-                        .addOption(OptionType.STRING, "player", "Player name", true)
-                        .addOption(OptionType.STRING, "reason", "Kick reason", false),
-                    new SubcommandData("whitelist", "Manage whitelist")
-                        .addOption(OptionType.STRING, "action", "add/remove/on/off", true)
-                        .addOption(OptionType.STRING, "player", "Player name (for add/remove)", false),
-                    new SubcommandData("reload", "Reload server configuration")
-                );
-            commands.add(serverCmd);
-            
-            // Game commands
-            SlashCommandData gameCmd = Commands.slash("game", "Game management commands")
-                .addSubcommands(
-                    new SubcommandData("gamemode", "Change gamemode")
-                        .addOption(OptionType.STRING, "mode", "Gamemode (survival/creative/adventure/spectator)", true)
-                        .addOption(OptionType.STRING, "player", "Player name", false),
-                    new SubcommandData("difficulty", "Set difficulty")
-                        .addOption(OptionType.STRING, "level", "Difficulty level", true),
-                    new SubcommandData("time", "Manage time")
-                        .addOption(OptionType.STRING, "action", "set/add", true)
-                        .addOption(OptionType.INTEGER, "value", "Time value", true),
-                    new SubcommandData("weather", "Set weather")
-                        .addOption(OptionType.STRING, "type", "clear/rain/thunder", true)
-                        .addOption(OptionType.INTEGER, "duration", "Duration in seconds", false),
-                    new SubcommandData("give", "Give items to player")
-                        .addOption(OptionType.STRING, "player", "Player name", true)
-                        .addOption(OptionType.STRING, "item", "Item ID", true)
-                        .addOption(OptionType.INTEGER, "amount", "Amount", false),
-                    new SubcommandData("tp", "Teleport players")
-                        .addOption(OptionType.STRING, "player", "Player to teleport", true)
-                        .addOption(OptionType.STRING, "target", "Target player or coordinates", true)
-                );
-            commands.add(gameCmd);
-            
-            // Session command
-            SlashCommandData sessionCmd = Commands.slash("session", "Manage console session")
-                .addSubcommands(
-                    new SubcommandData("start", "Start logging session"),
-                    new SubcommandData("stop", "Stop logging session and get transcript")
-                );
-            commands.add(sessionCmd);
-            
-            // Update commands for the guild
-            if (plugin.getDiscordManager().getMainGuild() != null) {
-                plugin.getDiscordManager().getMainGuild().updateCommands()
-                    .addCommands(commands)
-                    .queue(
-                        success -> info("Successfully registered " + commands.size() + " slash commands"),
-                        error -> error("Failed to register slash commands", error)
-                    );
-            }
-        } catch (Exception e) {
-            error("Error registering slash commands", e);
+    @Override
+    public List<SlashCommandData> getSlashCommands() {
+        List<SlashCommandData> commands = new ArrayList<>();
+        
+        commands.add(Commands.slash("console", "Execute Minecraft console commands")
+            .addOption(OptionType.STRING, "command", "The Minecraft command to execute (without /)", true));
+        
+        commands.add(Commands.slash("server", "Server management and information")
+            .addSubcommands(
+                new SubcommandData("logs", "Show recent console logs"),
+                new SubcommandData("tps", "Show server TPS"),
+                new SubcommandData("memory", "Show memory usage"),
+                new SubcommandData("players", "List online players"),
+                new SubcommandData("plugins", "List server plugins"),
+                new SubcommandData("restart", "Restart the server"),
+                new SubcommandData("stop", "Stop the server"),
+                new SubcommandData("save", "Save all worlds"),
+                new SubcommandData("op", "Give operator status")
+                    .addOption(OptionType.STRING, "player", "Player name", true),
+                new SubcommandData("deop", "Remove operator status")
+                    .addOption(OptionType.STRING, "player", "Player name", true),
+                new SubcommandData("ban", "Ban a player")
+                    .addOption(OptionType.STRING, "player", "Player name", true)
+                    .addOption(OptionType.STRING, "reason", "Ban reason", false),
+                new SubcommandData("pardon", "Unban a player")
+                    .addOption(OptionType.STRING, "player", "Player name", true),
+                new SubcommandData("kick", "Kick a player")
+                    .addOption(OptionType.STRING, "player", "Player name", true)
+                    .addOption(OptionType.STRING, "reason", "Kick reason", false),
+                new SubcommandData("whitelist", "Manage whitelist")
+                    .addOption(OptionType.STRING, "action", "add/remove/on/off", true)
+                    .addOption(OptionType.STRING, "player", "Player name (for add/remove)", false),
+                new SubcommandData("reload", "Reload server configuration")
+            ));
+        
+        commands.add(Commands.slash("game", "Game management commands")
+            .addSubcommands(
+                new SubcommandData("gamemode", "Change gamemode")
+                    .addOption(OptionType.STRING, "mode", "Gamemode (survival/creative/adventure/spectator)", true)
+                    .addOption(OptionType.STRING, "player", "Player name", false),
+                new SubcommandData("difficulty", "Set difficulty")
+                    .addOption(OptionType.STRING, "level", "Difficulty level", true),
+                new SubcommandData("time", "Manage time")
+                    .addOption(OptionType.STRING, "action", "set/add", true)
+                    .addOption(OptionType.INTEGER, "value", "Time value", true),
+                new SubcommandData("weather", "Set weather")
+                    .addOption(OptionType.STRING, "type", "clear/rain/thunder", true)
+                    .addOption(OptionType.INTEGER, "duration", "Duration in seconds", false),
+                new SubcommandData("give", "Give items to player")
+                    .addOption(OptionType.STRING, "player", "Player name", true)
+                    .addOption(OptionType.STRING, "item", "Item ID", true)
+                    .addOption(OptionType.INTEGER, "amount", "Amount", false),
+                new SubcommandData("tp", "Teleport players")
+                    .addOption(OptionType.STRING, "player", "Player to teleport", true)
+                    .addOption(OptionType.STRING, "target", "Target player or coordinates", true)
+            ));
+        
+        commands.add(Commands.slash("session", "Manage console session")
+            .addSubcommands(
+                new SubcommandData("start", "Start logging session"),
+                new SubcommandData("stop", "Stop logging session and get transcript")
+            ));
+        
+        return commands;
+    }
+    
+    @Override
+    public boolean handleSlashCommand(SlashCommandInteractionEvent event) {
+        ConsoleListener handler = consoleListener != null ? consoleListener : new ConsoleListener();
+        handler.handleSlashCommand(event);
+        return event.isAcknowledged();
+    }
+
+    @Override
+    public boolean handleTextCommand(MessageReceivedEvent event, String command, String args) {
+        if (!"console".equals(command) && !"server".equals(command) &&
+            !"game".equals(command) && !"session".equals(command)) {
+            return false;
         }
+
+        String userId = event.getAuthor().getId();
+        if (!canUseConsole(userId)) {
+            event.getMessage().reply("You don't have permission to use console commands!\n" +
+                "Only trusted administrators can access the console.").queue();
+            return true;
+        }
+
+        if (!plugin.getAdminUtils().getAdminIDs().contains(userId)) {
+            event.getMessage().reply("Your admin privileges have been revoked!").queue();
+            return true;
+        }
+
+        switch (command) {
+            case "console":
+                if (args.trim().isEmpty()) {
+                    event.getMessage().reply("Usage: `!console <command>`").queue();
+                } else {
+                    executeConsoleCommand(event, args.trim());
+                }
+                return true;
+            case "server":
+                handleServerTextCommand(event, args.trim());
+                return true;
+            case "game":
+                handleGameTextCommand(event, args.trim());
+                return true;
+            case "session":
+                handleSessionCommand(event, args.trim());
+                return true;
+            default:
+                return false;
+        }
+    }
+
+    private boolean canUseConsole(String userId) {
+        if (!plugin.getAdminUtils().isTrustedAdmin(userId)) {
+            return false;
+        }
+
+        if (plugin.getConfigManager().isFeatureEnabled("verification")) {
+            VerificationModule verificationModule = plugin.getModuleManager().getModule(VerificationModule.class);
+            if (verificationModule != null && verificationModule.isEnabled()) {
+                if (!verificationModule.isDiscordUserVerified(userId)) {
+                    return false;
+                }
+            }
+        }
+
+        return true;
+    }
+
+    private void handleServerTextCommand(MessageReceivedEvent event, String args) {
+        if (args.trim().isEmpty()) {
+            event.getMessage().reply("Usage: `!server <logs|tps|memory|players|plugins|restart|stop|save>`").queue();
+            return;
+        }
+
+        String[] parts = args.trim().split(" ", 2);
+        String subcommand = parts[0].toLowerCase();
+
+        switch (subcommand) {
+            case "logs":
+                sendRecentLogs(event);
+                break;
+            case "tps":
+                sendTpsInfo(event);
+                break;
+            case "memory":
+                sendMemoryInfo(event);
+                break;
+            case "players":
+                sendPlayerList(event);
+                break;
+            case "plugins":
+                sendPluginList(event);
+                break;
+            case "restart":
+                executeConsoleCommand(event, "restart");
+                break;
+            case "stop":
+                executeConsoleCommand(event, "stop");
+                break;
+            case "save":
+                executeConsoleCommand(event, "save-all");
+                break;
+            default:
+                event.getMessage().reply("Unknown server subcommand.").queue();
+        }
+    }
+
+    private void handleGameTextCommand(MessageReceivedEvent event, String args) {
+        if (args.trim().isEmpty()) {
+            event.getMessage().reply("Usage: `!game <gamemode|difficulty|time|weather|give|tp> ...`").queue();
+            return;
+        }
+
+        String[] parts = args.trim().split(" ", 2);
+        String subcommand = parts[0].toLowerCase();
+        String subArgs = parts.length > 1 ? parts[1] : "";
+
+        String command;
+        switch (subcommand) {
+            case "gamemode":
+                command = "gamemode " + subArgs;
+                break;
+            case "difficulty":
+                command = "difficulty " + subArgs;
+                break;
+            case "time":
+                command = "time " + subArgs;
+                break;
+            case "weather":
+                command = "weather " + subArgs;
+                break;
+            case "give":
+                command = "give " + subArgs;
+                break;
+            case "tp":
+                command = "tp " + subArgs;
+                break;
+            default:
+                event.getMessage().reply("Unknown game subcommand.").queue();
+                return;
+        }
+
+        executeConsoleCommand(event, command);
     }
     
     private void setupLogAppender() {
@@ -372,9 +495,7 @@ public class BotConsoleModule extends Module {
             executeConsoleCommand(event, message);
         }
         
-        @Override
-        public void onSlashCommandInteraction(SlashCommandInteractionEvent event) {
-            // Skip if already acknowledged by another listener
+        public void handleSlashCommand(SlashCommandInteractionEvent event) {
             if (event.isAcknowledged()) {
                 return;
             }
@@ -382,28 +503,22 @@ public class BotConsoleModule extends Module {
             String commandName = event.getName();
             String subcommandName = event.getSubcommandName();
             
-            // IMPORTANT: Only handle console-related commands, ignore all others
             if (!commandName.equals("console") && !commandName.equals("server") && 
                 !commandName.equals("game") && !commandName.equals("session")) {
-                // Not a console command - let other listeners handle it
                 return;
             }
             
-            // Check permissions for console commands
             String userId = event.getUser().getId();
             if (!plugin.getAdminUtils().isTrustedAdmin(userId)) {
                 event.reply("❌ You don't have permission to use console commands!\n" +
                     "Only trusted administrators can access the console.")
                     .setEphemeral(true)
                     .queue();
-                
-                // Log unauthorized access attempt
                 plugin.getLogger().warning("Unauthorized console command attempt by Discord user: " +
                     event.getUser().getName() + " (" + userId + ")");
                 return;
             }
             
-            // Check if verification is required
             if (plugin.getConfigManager().isFeatureEnabled("verification")) {
                 VerificationModule verificationModule = plugin.getModuleManager().getModule(VerificationModule.class);
                 if (verificationModule != null && verificationModule.isEnabled()) {
@@ -417,7 +532,6 @@ public class BotConsoleModule extends Module {
                 }
             }
             
-            // Additional security check - ensure user is still in admin list
             if (!plugin.getAdminUtils().getAdminIDs().contains(userId)) {
                 event.reply("❌ Your admin privileges have been revoked!")
                     .setEphemeral(true)
@@ -429,7 +543,6 @@ public class BotConsoleModule extends Module {
             
             switch (commandName) {
                 case "console":
-                    // Direct console command execution
                     if (subcommandName == null) {
                         handleDirectConsoleCommand(event);
                     } else {
@@ -446,6 +559,11 @@ public class BotConsoleModule extends Module {
                     handleSessionSlashCommand(event, subcommandName);
                     break;
             }
+        }
+
+        @Override
+        public void onSlashCommandInteraction(SlashCommandInteractionEvent event) {
+            handleSlashCommand(event);
         }
         
         /**
@@ -501,9 +619,9 @@ public class BotConsoleModule extends Module {
                     // Prepare response
                     String response;
                     if (output.isEmpty()) {
-                        response = "✅ **Command executed successfully!** (No output)";
+                        response = "✅ Done (no output)";
                     } else {
-                        response = "✅ **Command executed successfully:**\n```\n" +
+                        response = "✅ Done:\n```\n" +
                                   (output.length() > 1800 ? output.substring(0, 1800) + "..." : output) +
                                   "\n```";
                     }
@@ -802,9 +920,9 @@ public class BotConsoleModule extends Module {
                 // Send response
                 String output = baos.toString();
                 if (output.isEmpty()) {
-                    event.getHook().editOriginal("✅ Command executed successfully!").queue();
+                    event.getHook().editOriginal("✅ Done").queue();
                 } else {
-                    event.getHook().editOriginal("✅ Command executed successfully!\n```\n" + output + "\n```").queue();
+                    event.getHook().editOriginal("✅ Done\n```\n" + output + "\n```").queue();
                 }
 
                 // Log the command
@@ -1162,47 +1280,22 @@ public class BotConsoleModule extends Module {
     private void sendHelpMessageSlash(SlashCommandInteractionEvent event) {
         EmbedBuilder embed = new EmbedBuilder()
             .setColor(Color.BLUE)
-            .setTitle("📚 Enhanced Console Commands")
-            .setDescription("**New streamlined command structure for server administration**")
-            .addField("🚀 **Main Console Command**",
-                "`/console <command>` - Execute any Minecraft command directly\n" +
-                "**Examples:**\n" +
-                "• `/console list` - List online players\n" +
-                "• `/console ban PlayerName Reason` - Ban a player\n" +
-                "• `/console gamemode creative PlayerName` - Change gamemode\n" +
-                "• `/console tp Player1 Player2` - Teleport players\n" +
-                "• `/console give PlayerName diamond 64` - Give items",
+            .setTitle("Console Commands")
+            .setDescription("Execute server commands from Discord.")
+            .addField("`/console <command>`",
+                "Run any Minecraft console command.\n" +
+                "Examples: `/console list`, `/console ban Player`, `/console give Player diamond 64`",
                 false)
-            .addField("🖥️ **Server Management (`/server`)**",
-                "`logs` - Show recent console logs\n" +
-                "`tps` - Show server TPS and performance\n" +
-                "`memory` - Show memory usage statistics\n" +
-                "`players` - List online players with details\n" +
-                "`plugins` - List all server plugins\n" +
-                "`restart` - Restart the server\n" +
-                "`stop` - Stop the server\n" +
-                "`save` - Save all worlds",
+            .addField("`/server`",
+                "`logs`, `tps`, `memory`, `players`, `plugins`, `restart`, `stop`, `save`",
                 false)
-            .addField("🎮 **Game Commands (`/game`)**",
-                "`gamemode` - Change player gamemode\n" +
-                "`difficulty` - Set world difficulty\n" +
-                "`time` - Manage world time\n" +
-                "`weather` - Control weather\n" +
-                "`give` - Give items to players\n" +
-                "`tp` - Teleport players",
+            .addField("`/game`",
+                "`gamemode`, `difficulty`, `time`, `weather`, `give`, `tp`",
                 false)
-            .addField("📝 **Session Management (`/session`)**",
-                "`start` - Start command logging session\n" +
-                "`stop` - Stop session and download transcript",
+            .addField("`/session`",
+                "`start`, `stop`",
                 false)
-            .addField("✨ **Key Features**",
-                "• **Direct Execution**: `/console <command>` runs any Minecraft command\n" +
-                "• **Smart Output**: Shows command results with success/failure status\n" +
-                "• **Security**: Admin ID verification + account verification required\n" +
-                "• **Logging**: All commands logged with user identification\n" +
-                "• **Session Tracking**: Optional command history with transcripts",
-                false)
-            .setFooter("🔒 Only verified administrators can use these commands", null)
+            .setFooter("XDiscordUltimate • Admin only", null)
             .setTimestamp(Instant.now());
         
         event.replyEmbeds(embed.build()).queue();

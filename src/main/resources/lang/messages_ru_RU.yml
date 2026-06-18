@@ -1,0 +1,156 @@
+general:
+  prefix: <gradient:#55FFFF:#5555FF>XDiscord</gradient> &8» &r
+  reload: <gradient:#55FF55:#00AA00>Конфигурация успешно перезагружена!</gradient>
+  reload-success: <gradient:#55FF55:#00AA00>Конфигурация успешно перезагружена!</gradient>
+  reload-failed: <gradient:#FF5555:#AA0000>Не удалось перезагрузить конфигурацию.</gradient> &7Проверьте консоль на ошибки.
+  no-permission: <gradient:#FF5555:#AA0000>Доступ Запрещен</gradient> &7У вас нет разрешения
+  player-only: <gradient:#FFAA00:#FF5555>Эта команда</gradient> &7может использоваться только игроками.
+  unknown-command: '&7Неизвестная команда. Используйте &e/xdiscord help &7для справки.'
+errors:
+  no-permission: <gradient:#FF5555:#AA0000>Доступ Запрещен!</gradient> &7У вас нет разрешения.
+  player-not-found: <gradient:#FF5555:#FFAA00>Игрок Не Найден!</gradient> &7'%player%' не в сети.
+  invalid-usage: '<gradient:#FFAA00:#FF5555>Неправильное Использование!</gradient> &7Правильно: &e%usage%'
+  not-verified: <gradient:#FFAA00:#FF5555>Требуется Верификация!</gradient> &7Используйте &e/verify &7для привязки аккаунтов.
+  already-verified: <gradient:#55FF55:#55FFFF>Уже Верифицирован!</gradient> &7Ваш аккаунт привязан.
+  verification-failed: <gradient:#FF5555:#AA0000>Верификация Неудачна!</gradient> &7Пожалуйста, попробуйте снова.
+  cooldown: <gradient:#FFAA00:#FF5555>Охлаждение!</gradient> &7Пожалуйста, подождите перед повторным использованием.
+  feature-disabled: <gradient:#AAAAAA:#555555>Функция Отключена!</gradient> &7Эта функция сейчас отключена.
+  discord-not-linked: <gradient:#5555FF:#AA00AA>Требуется Discord!</gradient> &7Сначала привяжите с &e/verify &7.
+  cannot-report-admin: <gradient:#FF5555:#AA0000>Нельзя Жалобиться на Админов!</gradient> &7Вы не можете жаловаться на администраторов сервера.
+  module-not-available: <gradient:#FF5555:#FFAA00>Модуль Недоступен!</gradient> &7Эта функция в данный момент недоступна.
+  ticket-create-failed: <gradient:#FF5555:#AA0000>Ошибка!</gradient> &7Не удалось создать тикет. Попробуйте еще раз.
+  unknown-subcommand: <gradient:#FF5555:#FFAA00>Неизвестная Подкоманда!</gradient> &7'%sub%' не является допустимой подкомандой.
+  invalid-discord-id: <gradient:#FF5555:#FFAA00>Неверный Формат!</gradient> &7ID Discord должен быть числовым snowflake.
+  whitelist-submission-failed: <gradient:#FF5555:#AA0000>Ошибка!</gradient> &7Не удалось отправить запрос в белый список.
+  chat-filtered: '&cYour message was blocked by the chat filter.'
+  spam: '&cPlease don''t spam the chat!'
+  max-tickets: '&cYou have reached the maximum number of open tickets!'
+success:
+  verified: <gradient:#55FF55:#55FFFF>Успех!</gradient> &7Ваш аккаунт теперь привязан к Discord!
+  ticket-created: <gradient:#55FF55:#55FFFF>Тикет Создан!</gradient> &7Проверьте Discord для обновлений.
+  report-sent: <gradient:#55FF55:#00AA00>Жалоба Отправлена!</gradient> &7Модераторы уведомлены.
+  announcement-sent: <gradient:#FFAA00:#FF5555>Объявление Отправлено!</gradient> &7Трансляция завершена.
+  debug-enabled: <gradient:#55FF55:#55FFFF>Режим Отладки Включен!</gradient> &7Будут показаны подробные логи.
+  debug-disabled: <gradient:#AAAAAA:#555555>Режим Отладки Выключен!</gradient> &7Будут показаны только важные сообщения.
+  language-changed: <gradient:#55FF55:#55FFFF>Язык Изменен!</gradient> &7Ваш язык теперь установлен на &e%language%&7.
+  announcements-muted: '&aAnnouncements muted!'
+  announcements-unmuted: '&aAnnouncements unmuted!'
+verification:
+  code-generated: <gradient:#55FFFF:#5555FF>Код Верификации</gradient> &8» &e&l%code%
+  code-expired: <gradient:#FF5555:#AA0000>Код Истёк!</gradient> &7Сгенерируйте новый.
+  code-invalid: <gradient:#FF5555:#FFAA00>Неверный Код!</gradient> &7Проверьте и попробуйте снова.
+  instructions: '&7Используйте этот код в Discord с &e/verify &7для привязки.'
+  already-linked: <gradient:#FFAA00:#FF5555>Уже Привязан!</gradient> &7Этот Discord привязан к другому аккаунту.
+  already-verified: <gradient:#55FF55:#55FFFF>Уже Верифицирован!</gradient> &7Ваш аккаунт привязан.
+  success: <gradient:#55FF55:#55FFFF>Верификация Завершена!</gradient> &7Аккаунты теперь связаны!
+  required: <gradient:#FFAA00:#FF5555>Требуется Верификация!</gradient> &7Привяжите ваш аккаунт Discord.
+  kick-message: '<gradient:#FF5555:#AA0000>Требуется Верификация!</gradient>
+
+    &7Вы должны верифицироваться в течение &e%minutes% &7минут!'
+tickets:
+  created: '<gradient:#55FFFF:#5555FF>Тикет #%id%</gradient> &7создан! Скоро поможет персонал.'
+  closed: '<gradient:#AAAAAA:#555555>Тикет #%id%</gradient> &7был закрыт.'
+  not-found: <gradient:#FF5555:#AA0000>Не Найдено!</gradient> &7Тикет не существует.
+  max-tickets: <gradient:#FFAA00:#FF5555>Лимит Достигнут!</gradient> &7Максимум открытых тикетов достигнут.
+support:
+  no-message: <gradient:#FF5555:#FFAA00>Сообщение Отсутствует!</gradient> &7Укажите сообщение для вашего тикета.
+  created: <gradient:#55FF55:#55FFFF>Тикет Поддержки Создан!</gradient> &7Проверьте Discord.
+  usage: '&eUsage: /support <message>'
+report:
+  must-verify: <gradient:#FFAA00:#FF5555>Требуется Верификация!</gradient> &7Вам нужно верифицировать аккаунт Discord, чтобы жаловаться на игроков. Используйте &e/verify &7в Discord.
+  success: '<gradient:#55FF55:#00AA00>Жалоба #%id%</gradient> &7на &e%player% &7отправлена!'
+  cooldown: <gradient:#FFAA00:#FF5555>Охлаждение!</gradient> &7Подождите перед следующей жалобой.
+  self-report: <gradient:#FF5555:#AA0000>Ошибка!</gradient> &7Вы не можете пожаловаться на себя!
+  usage: '&eUsage: /report <player> <reason>'
+announcement:
+  no-message: <gradient:#FF5555:#FFAA00>Сообщение Отсутствует!</gradient> &7Укажите содержание объявления.
+  sent: <gradient:#55FF55:#55FFFF>Объявление Отправлено!</gradient> &7Транслировано на все платформы.
+chat:
+  discord-to-minecraft: '&8[<gradient:#5555FF:#7289DA>Discord</gradient>&8] &b%user%&8: &f%message%'
+  minecraft-to-discord: '**%player%**: %message%'
+  filtered: <gradient:#FF5555:#AA0000>Сообщение Заблокировано!</gradient> &7Фильтр чата активирован.
+  spam-warning: <gradient:#FFAA00:#FF5555>Помедленнее!</gradient> &7Не спамьте в чате.
+events:
+  player-join: <gradient:#55FF55:#55FFFF>+</gradient> &7%player% вошёл
+  player-leave: <gradient:#FF5555:#FFAA00>-</gradient> &7%player% вышел
+  first-join: <rainbow>Добро пожаловать!</rainbow> &e%player% &7вошёл впервые!
+stats:
+  header: <gradient:#FFAA00:#FF5555>━━━ Статистика %player% ━━━</gradient>
+  kills: '&8▸ <gradient:#FF5555:#FFAA00>Убийства</gradient>&8: &f%value%'
+  deaths: '&8▸ <gradient:#AAAAAA:#555555>Смерти</gradient>&8: &f%value%'
+  kd-ratio: '&8▸ <gradient:#55FFFF:#5555FF>K/D Коэффициент</gradient>&8: &f%value%'
+  mob-kills: '&8▸ <gradient:#55FF55:#00AA00>Убийство Мобов</gradient>&8: &f%value%'
+  playtime: '&8▸ <gradient:#AA00AA:#FF55FF>Время Игры</gradient>&8: &f%value%'
+  not-found: <gradient:#FF5555:#AA0000>Не Найдено!</gradient> &7Статистика игрока недоступна.
+moderation:
+  ban-success: <gradient:#FF5555:#AA0000>Забанен!</gradient> &e%player% &7был забанен.
+  kick-success: <gradient:#FFAA00:#FF5555>Кикнут!</gradient> &e%player% &7был кикнут.
+  mute-success: <gradient:#AAAAAA:#555555>Замучен!</gradient> &e%player% &7был замучен.
+  unmute-success: <gradient:#55FF55:#55FFFF>Размучен!</gradient> &e%player% &7может снова говорить.
+  warn-success: <gradient:#FFAA00:#FF5555>Предупреждён!</gradient> &e%player% &7был предупреждён.
+help:
+  header:
+  - ''
+  - <gradient:#55FFFF:#5555FF>━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━</gradient>
+  - '       <gradient:#55FFFF:#5555FF>&lXDiscordUltimate</gradient> &8- &7Помощь'
+  - <gradient:#55FFFF:#5555FF>━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━</gradient>
+  - ''
+  footer:
+  - ''
+  - <gradient:#55FFFF:#5555FF>━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━</gradient>
+  - '  &7Используйте <gradient:#55FFFF:#5555FF>/xdiscord help</gradient> &7для команд'
+  - <gradient:#55FFFF:#5555FF>━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━</gradient>
+  - ''
+  verify: '  <gradient:#55FF55:#55FFFF>▸</gradient> &e/verify &8- &7Привязать аккаунт Discord'
+  support: '  <gradient:#55FF55:#55FFFF>▸</gradient> &e/support <msg> &8- &7Создать тикет'
+  stats: '  <gradient:#55FF55:#55FFFF>▸</gradient> &e/stats [player] &8- &7Просмотреть статистику'
+  report: '  <gradient:#55FF55:#55FFFF>▸</gradient> &e/report <player> <reason> &8- &7Пожаловаться на игрока'
+  must-verify: <gradient:#FFAA00:#FF5555>Требуется Верификация!</gradient> &7Вам нужно верифицировать аккаунт Discord, чтобы жаловаться на игроков. Используйте &e/verify &7в Discord.
+  help: '  <gradient:#55FF55:#55FFFF>▸</gradient> &e/help &8- &7Показать это меню'
+commands:
+  verify: Привяжите ваш аккаунт Discord с Minecraft
+  support: Создайте тикет поддержки для помощи персонала
+  report: Пожалуйтесь на игрока модераторам Discord
+  must-verify: <gradient:#FFAA00:#FF5555>Требуется Верификация!</gradient> &7Вам нужно верифицировать аккаунт Discord, чтобы жаловаться на игроков. Используйте &e/verify &7в Discord.
+  discord: Получите ссылку-приглашение сервера Discord
+  embed: Отправьте пользовательский эмбед в Discord
+  announce: Транслируйте объявление в Discord и в игре
+discord:
+  commands:
+    help:
+      description: Показать все команды и функции бота
+    status:
+      description: Показать статус сервера в реальном времени с TPS и количеством игроков
+    players:
+      description: Список всех онлайн игроков с их мирами
+    server:
+      description: Показать подробную информацию о сервере
+    ping:
+      description: Проверить задержку бота и время ответа
+    tps:
+      description: Показать производительность сервера (TPS/MSPT)
+    verify:
+      description: Привяжите ваш аккаунт Discord к Minecraft
+    stats:
+      description: Просмотр статистики и достижений игроков
+      option-player: Имя игрока для поиска
+    console:
+      description: Выполнить команду на сервере (Только Админ)
+      option-command: Команда для выполнения
+    announce:
+      description: Транслировать объявление всем игрокам
+      option-message: Сообщение объявления
+      option-title: Необязательный заголовок объявления
+    online:
+      description: Быстрый просмотр кто онлайн
+    info:
+      description: Показать информацию и версию плагина
+server-control:
+  restart-scheduled: <gradient:#FF5555:#FFAA00>Перезагрузка Сервера</gradient> &7через &e%time% &7секунд!
+  stopping: <gradient:#FF5555:#AA0000>Остановка Сервера...</gradient> &7До скорой встречи!
+info:
+  sending-test-welcome: '&bSending test welcome DM...'
+  reloading-welcome-dm: '&bReloading welcome DM module...'
+  reload-start: '&bReloading configuration...'
+  plugin-info: <gradient:#55FFFF:#5555FF>=== Информация XDiscordUltimate ===</gradient>
+  plugin-version: '&7Версия: &e%version%'

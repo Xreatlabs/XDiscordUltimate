@@ -147,8 +147,8 @@ public class BoosterPerksModule extends Module {
 
                     // Check if this is a NEW booster (wasn't in our list before)
                     if (!boosters.contains(discordId)) {
-                        // Check if they have a linked Minecraft account
-                        UUID minecraftUuid = plugin.getDatabaseManager().getMinecraftUuid(discordId).join();
+                        // This runs inside an async Bukkit task, so a sync DB lookup is safe.
+                        UUID minecraftUuid = plugin.getDatabaseManager().getMinecraftUuidSync(discordId);
                         if (minecraftUuid != null) {
                             onBoosterAdded(minecraftUuid.toString(), member.getEffectiveName());
                         }
@@ -159,7 +159,8 @@ public class BoosterPerksModule extends Module {
             // Check for removed boosters
             for (String oldBooster : boosters) {
                 if (!currentBoosters.contains(oldBooster)) {
-                    UUID minecraftUuid = plugin.getDatabaseManager().getMinecraftUuid(oldBooster).join();
+                    // This runs inside an async Bukkit task, so a sync DB lookup is safe.
+                    UUID minecraftUuid = plugin.getDatabaseManager().getMinecraftUuidSync(oldBooster);
                     if (minecraftUuid != null) {
                         onBoosterRemoved(minecraftUuid.toString());
                     }
@@ -204,22 +205,28 @@ public class BoosterPerksModule extends Module {
      * Manually trigger booster sync for a specific player
      */
     public void checkAndSyncPlayer(Player player) {
-        String discordId = plugin.getDatabaseManager().getDiscordId(player.getUniqueId()).join();
-        if (discordId == null) return;
-        
-        Guild guild = plugin.getDiscordManager().getMainGuild();
-        if (guild == null) return;
-        
-        guild.retrieveMemberById(discordId).queue(member -> {
-            if (member != null && hasBoosterRole(member)) {
-                if (!boosters.contains(discordId)) {
-                    boosters.add(discordId);
-                    onBoosterAdded(player.getUniqueId().toString(), member.getEffectiveName());
-                }
-            }
-        }, error -> {
-            debug("Could not check booster status for " + player.getName());
-        });
+        plugin.getDatabaseManager().getDiscordId(player.getUniqueId())
+            .thenAccept(discordId -> {
+                if (discordId == null) return;
+
+                Guild guild = plugin.getDiscordManager().getMainGuild();
+                if (guild == null) return;
+
+                guild.retrieveMemberById(discordId).queue(member -> {
+                    if (member != null && hasBoosterRole(member)) {
+                        if (!boosters.contains(discordId)) {
+                            boosters.add(discordId);
+                            onBoosterAdded(player.getUniqueId().toString(), member.getEffectiveName());
+                        }
+                    }
+                }, error -> {
+                    debug("Could not check booster status for " + player.getName());
+                });
+            })
+            .exceptionally(throwable -> {
+                warning("Failed to check booster status for " + player.getName() + ": " + throwable.getMessage());
+                return null;
+            });
     }
 
     private void onBoosterAdded(String uuid, String discordName) {
@@ -267,7 +274,9 @@ public class BoosterPerksModule extends Module {
     }
 
     public boolean isBooster(Player player) {
-        String discordId = plugin.getDatabaseManager().getDiscordId(player.getUniqueId()).join();
+        // Synchronous lookup: this is called from sync contexts (PlaceholderAPI) that must
+        // return a value immediately. The database lookup is bounded and does not use .join().
+        String discordId = plugin.getDatabaseManager().getDiscordIdSync(player.getUniqueId());
         return discordId != null && boosters.contains(discordId);
     }
 

@@ -29,14 +29,12 @@ public class HelpCommand implements CommandExecutor, TabCompleter {
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         if (!(sender instanceof Player)) {
-            // Console help - show text-based help
             showConsoleHelp(sender);
             return true;
         }
-        
+
         Player player = (Player) sender;
-        
-        // Check if args specify a category
+
         if (args.length > 0) {
             String category = args[0].toLowerCase();
             switch (category) {
@@ -58,7 +56,7 @@ public class HelpCommand implements CommandExecutor, TabCompleter {
                     if (plugin.getAdminUtils().isAdmin(player)) {
                         getHelpGUI().openAdminHelp(player);
                     } else {
-                        plugin.getMessageManager().sendError(player, "You don't have permission to view admin commands!");
+                        plugin.getMessageManager().sendError(player, "errors.no-permission");
                     }
                     break;
                 case "voice":
@@ -70,10 +68,9 @@ public class HelpCommand implements CommandExecutor, TabCompleter {
                     break;
             }
         } else {
-            // Open main help GUI
             getHelpGUI().openMainHelp(player);
         }
-        
+
         return true;
     }
     
@@ -103,21 +100,20 @@ public class HelpCommand implements CommandExecutor, TabCompleter {
     public List<String> onTabComplete(CommandSender sender, Command command, String alias, String[] args) {
         if (args.length == 1) {
             List<String> categories = Arrays.asList(
-                "discord", "verification", "report", "moderation", 
+                "discord", "verification", "report", "moderation",
                 "support", "ticket", "voice", "tts"
             );
-            
-            // Add admin category if player has permission
+
             if (sender instanceof Player && plugin.getAdminUtils().isAdmin((Player) sender)) {
                 categories = new ArrayList<>(categories);
                 categories.addAll(Arrays.asList("admin", "console"));
             }
-            
+
             return categories.stream()
                 .filter(cat -> cat.toLowerCase().startsWith(args[0].toLowerCase()))
                 .collect(Collectors.toList());
         }
-        
+
         return new ArrayList<>();
     }
 }

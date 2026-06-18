@@ -1,0 +1,156 @@
+general:
+  prefix: <gradient:#55FFFF:#5555FF>XDiscord</gradient> &8» &r
+  reload: <gradient:#55FF55:#00AA00>โหลดการตั้งค่าใหม่สำเร็จ!</gradient>
+  reload-success: <gradient:#55FF55:#00AA00>โหลดการตั้งค่าใหม่สำเร็จ!</gradient>
+  reload-failed: <gradient:#FF5555:#AA0000>โหลดการตั้งค่าใหม่ล้มเหลว</gradient> &7ตรวจสอบคอนโซลเพื่อหาข้อผิดพลาด
+  no-permission: <gradient:#FF5555:#AA0000>การเข้าถึงถูกปฏิเสธ</gradient> &7คุณไม่มีสิทธิ์
+  player-only: <gradient:#FFAA00:#FF5555>คำสั่งนี้</gradient> &7สามารถใช้โดยผู้เล่นเท่านั้น
+  unknown-command: '&7ไม่ทราบคำสั่ง ใช้ &e/xdiscord help &7เพื่อรับความช่วยเหลือ'
+errors:
+  no-permission: <gradient:#FF5555:#AA0000>การเข้าถึงถูกปฏิเสธ!</gradient> &7คุณไม่มีสิทธิ์
+  player-not-found: <gradient:#FF5555:#FFAA00>ไม่พบผู้เล่น!</gradient> &7'%player%' ไม่ออนไลน์
+  invalid-usage: '<gradient:#FFAA00:#FF5555>การใช้งานไม่ถูกต้อง!</gradient> &7ที่ถูกต้อง: &e%usage%'
+  not-verified: <gradient:#FFAA00:#FF5555>ต้องมีการยืนยัน!</gradient> &7ใช้ &e/verify &7เพื่อเชื่อมโยงบัญชี
+  already-verified: <gradient:#55FF55:#55FFFF>ยืนยันแล้ว!</gradient> &7บัญชีของคุณถูกเชื่อมโยงแล้ว
+  verification-failed: <gradient:#FF5555:#AA0000>การยืนยันล้มเหลว!</gradient> &7โปรดลองอีกครั้ง
+  cooldown: <gradient:#FFAA00:#FF5555>คูลดาวน์!</gradient> &7โปรดรอสักครู่ก่อนใช้อีกครั้ง
+  feature-disabled: <gradient:#AAAAAA:#555555>คุณลักษณะถูกปิดใช้งาน!</gradient> &7คุณลักษณะนี้ถูกปิดอยู่ในขณะนี้
+  discord-not-linked: <gradient:#5555FF:#AA00AA>ต้องการ Discord!</gradient> &7เชื่อมโยงก่อนด้วย &e/verify &7
+  cannot-report-admin: <gradient:#FF5555:#AA0000>ไม่สามารถรายงานแอดมิน!</gradient> &7คุณไม่สามารถรายงานผู้ดูแลเซิร์ฟเวอร์ได้
+  module-not-available: <gradient:#FF5555:#FFAA00>โมดูลไม่พร้อมใช้งาน!</gradient> &7ฟีเจอร์นี้ไม่พร้อมใช้งานในขณะนี้
+  ticket-create-failed: <gradient:#FF5555:#AA0000>ข้อผิดพลาด!</gradient> &7ไม่สามารถสร้างตั๋วได้ กรุณาลองอีกครั้ง
+  unknown-subcommand: <gradient:#FF5555:#FFAA00>คำสั่งย่อยที่ไม่รู้จัก!</gradient> &7'%sub%' ไม่ใช่คำสั่งย่อยที่ถูกต้อง
+  invalid-discord-id: <gradient:#FF5555:#FFAA00>รูปแบบไม่ถูกต้อง!</gradient> &7Discord ID ต้องเป็นตัวเลข snowflake
+  whitelist-submission-failed: <gradient:#FF5555:#AA0000>ข้อผิดพลาด!</gradient> &7ไม่สามารถส่งคำขอรายชื่อที่อนุญาตได้
+  chat-filtered: '&cYour message was blocked by the chat filter.'
+  spam: '&cPlease don''t spam the chat!'
+  max-tickets: '&cYou have reached the maximum number of open tickets!'
+success:
+  verified: <gradient:#55FF55:#55FFFF>สำเร็จ!</gradient> &7บัญชีของคุณถูกเชื่อมโยงกับ Discord แล้ว!
+  ticket-created: <gradient:#55FF55:#55FFFF>สร้างตั๋วแล้ว!</gradient> &7ตรวจสอบ Discord เพื่อดูการอัปเดต
+  report-sent: <gradient:#55FF55:#00AA00>ส่งรายงานแล้ว!</gradient> &7ผู้ดูแลได้รับการแจ้งเตือนแล้ว
+  announcement-sent: <gradient:#FFAA00:#FF5555>ส่งประกาศแล้ว!</gradient> &7การออกอากาศเสร็จสมบูรณ์
+  debug-enabled: <gradient:#55FF55:#55FFFF>เปิดใช้งานโหมดดีบัก!</gradient> &7จะแสดงบันทึกโดยละเอียด
+  debug-disabled: <gradient:#AAAAAA:#555555>ปิดใช้งานโหมดดีบัก!</gradient> &7จะแสดงเฉพาะข้อความสำคัญเท่านั้น
+  language-changed: <gradient:#55FF55:#55FFFF>เปลี่ยนภาษาแล้ว!</gradient> &7ภาษาของคุณตั้งค่าเป็น &e%language%&7 แล้ว
+  announcements-muted: '&aAnnouncements muted!'
+  announcements-unmuted: '&aAnnouncements unmuted!'
+verification:
+  code-generated: <gradient:#55FFFF:#5555FF>รหัสยืนยัน</gradient> &8» &e&l%code%
+  code-expired: <gradient:#FF5555:#AA0000>รหัสหมดอายุ!</gradient> &7สร้างรหัสใหม่
+  code-invalid: <gradient:#FF5555:#FFAA00>รหัสไม่ถูกต้อง!</gradient> &7ตรวจสอบและลองอีกครั้ง
+  instructions: '&7ใช้รหัสนี้ใน Discord กับ &e/verify &7เพื่อเชื่อมโยง'
+  already-linked: <gradient:#FFAA00:#FF5555>เชื่อมโยงแล้ว!</gradient> &7Discord นี้ถูกเชื่อมโยงกับบัญชีอื่น
+  already-verified: <gradient:#55FF55:#55FFFF>ยืนยันแล้ว!</gradient> &7บัญชีของคุณถูกเชื่อมโยงแล้ว
+  success: <gradient:#55FF55:#55FFFF>การยืนยันเสร็จสมบูรณ์!</gradient> &7บัญชีถูกเชื่อมโยงแล้ว!
+  required: <gradient:#FFAA00:#FF5555>ต้องมีการยืนยัน!</gradient> &7เชื่อมโยงบัญชี Discord ของคุณ
+  kick-message: '<gradient:#FF5555:#AA0000>ต้องมีการยืนยัน!</gradient>
+
+    &7คุณต้องยืนยันภายใน &e%minutes% &7นาที!'
+tickets:
+  created: '<gradient:#55FFFF:#5555FF>ตั๋ว #%id%</gradient> &7สร้างแล้ว! เจ้าหน้าที่จะช่วยเหลือเร็วๆ นี้'
+  closed: '<gradient:#AAAAAA:#555555>ตั๋ว #%id%</gradient> &7ถูกปิดแล้ว'
+  not-found: <gradient:#FF5555:#AA0000>ไม่พบ!</gradient> &7ตั๋วไม่มีอยู่
+  max-tickets: <gradient:#FFAA00:#FF5555>ถึงขีดจำกัด!</gradient> &7ถึงจำนวนตั๋วสูงสุดแล้ว
+support:
+  no-message: <gradient:#FF5555:#FFAA00>ขาดข้อความ!</gradient> &7ระบุข้อความสำหรับตั๋วของคุณ
+  created: <gradient:#55FF55:#55FFFF>สร้างตั๋วสนับสนุนแล้ว!</gradient> &7ตรวจสอบ Discord
+  usage: '&eUsage: /support <message>'
+report:
+  must-verify: <gradient:#FFAA00:#FF5555>ต้องมีการยืนยัน!</gradient> &7คุณต้องยืนยันบัญชี Discord เพื่อรายงานผู้เล่น ใช้ &e/verify &7ใน Discord
+  success: '<gradient:#55FF55:#00AA00>รายงาน #%id%</gradient> &7ต่อ &e%player% &7ถูกส่งแล้ว!'
+  cooldown: <gradient:#FFAA00:#FF5555>คูลดาวน์!</gradient> &7รอสักครู่ก่อนรายงานอีกครั้ง
+  self-report: <gradient:#FF5555:#AA0000>ข้อผิดพลาด!</gradient> &7คุณไม่สามารถรายงานตัวเองได้!
+  usage: '&eUsage: /report <player> <reason>'
+announcement:
+  no-message: <gradient:#FF5555:#FFAA00>ขาดข้อความ!</gradient> &7ระบุเนื้อหาของประกาศ
+  sent: <gradient:#55FF55:#55FFFF>ส่งประกาศแล้ว!</gradient> &7ออกอากาศไปยังทุกแพลตฟอร์มแล้ว
+chat:
+  discord-to-minecraft: '&8[<gradient:#5555FF:#7289DA>Discord</gradient>&8] &b%user%&8: &f%message%'
+  minecraft-to-discord: '**%player%**: %message%'
+  filtered: <gradient:#FF5555:#AA0000>ข้อความถูกบล็อก!</gradient> &7ตัวกรองแชทถูกเปิดใช้งาน
+  spam-warning: <gradient:#FFAA00:#FF5555>ช้าลง!</gradient> &7อย่าสแปมในแชท
+events:
+  player-join: <gradient:#55FF55:#55FFFF>+</gradient> &7%player% เข้าร่วม
+  player-leave: <gradient:#FF5555:#FFAA00>-</gradient> &7%player% ออก
+  first-join: <rainbow>ยินดีต้อนรับ!</rainbow> &e%player% &7เข้าร่วมเป็นครั้งแรก!
+stats:
+  header: <gradient:#FFAA00:#FF5555>━━━ สถิติ %player% ━━━</gradient>
+  kills: '&8▸ <gradient:#FF5555:#FFAA00>ฆ่า</gradient>&8: &f%value%'
+  deaths: '&8▸ <gradient:#AAAAAA:#555555>ตาย</gradient>&8: &f%value%'
+  kd-ratio: '&8▸ <gradient:#55FFFF:#5555FF>อัตรา K/D</gradient>&8: &f%value%'
+  mob-kills: '&8▸ <gradient:#55FF55:#00AA00>ฆ่ามอบ</gradient>&8: &f%value%'
+  playtime: '&8▸ <gradient:#AA00AA:#FF55FF>เวลาเล่น</gradient>&8: &f%value%'
+  not-found: <gradient:#FF5555:#AA0000>ไม่พบ!</gradient> &7สถิติผู้เล่นไม่พร้อมใช้งาน
+moderation:
+  ban-success: <gradient:#FF5555:#AA0000>แบนแล้ว!</gradient> &e%player% &7ถูกแบน
+  kick-success: <gradient:#FFAA00:#FF5555>เตะแล้ว!</gradient> &e%player% &7ถูกเตะ
+  mute-success: <gradient:#AAAAAA:#555555>ปิดเสียงแล้ว!</gradient> &e%player% &7ถูกปิดเสียง
+  unmute-success: <gradient:#55FF55:#55FFFF>เปิดเสียงแล้ว!</gradient> &e%player% &7สามารถพูดได้อีกครั้ง
+  warn-success: <gradient:#FFAA00:#FF5555>เตือนแล้ว!</gradient> &e%player% &7ถูกเตือน
+help:
+  header:
+  - ''
+  - <gradient:#55FFFF:#5555FF>━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━</gradient>
+  - '       <gradient:#55FFFF:#5555FF>&lXDiscordUltimate</gradient> &8- &7ความช่วยเหลือ'
+  - <gradient:#55FFFF:#5555FF>━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━</gradient>
+  - ''
+  footer:
+  - ''
+  - <gradient:#55FFFF:#5555FF>━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━</gradient>
+  - '  &7ใช้ <gradient:#55FFFF:#5555FF>/xdiscord help</gradient> &7สำหรับคำสั่ง'
+  - <gradient:#55FFFF:#5555FF>━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━</gradient>
+  - ''
+  verify: '  <gradient:#55FF55:#55FFFF>▸</gradient> &e/verify &8- &7เชื่อมโยงบัญชี Discord'
+  support: '  <gradient:#55FF55:#55FFFF>▸</gradient> &e/support <msg> &8- &7สร้างตั๋ว'
+  stats: '  <gradient:#55FF55:#55FFFF>▸</gradient> &e/stats [player] &8- &7ดูสถิติ'
+  report: '  <gradient:#55FF55:#55FFFF>▸</gradient> &e/report <player> <reason> &8- &7รายงานผู้เล่น'
+  must-verify: <gradient:#FFAA00:#FF5555>ต้องมีการยืนยัน!</gradient> &7คุณต้องยืนยันบัญชี Discord เพื่อรายงานผู้เล่น ใช้ &e/verify &7ใน Discord
+  help: '  <gradient:#55FF55:#55FFFF>▸</gradient> &e/help &8- &7แสดงเมนูนี้'
+commands:
+  verify: เชื่อมโยงบัญชี Discord ของคุณกับ Minecraft
+  support: สร้างตั๋วสนับสนุนเพื่อความช่วยเหลือจากเจ้าหน้าที่
+  report: รายงานผู้เล่นไปยังผู้ดูแล Discord
+  must-verify: <gradient:#FFAA00:#FF5555>ต้องมีการยืนยัน!</gradient> &7คุณต้องยืนยันบัญชี Discord เพื่อรายงานผู้เล่น ใช้ &e/verify &7ใน Discord
+  discord: รับลิงก์เชิญเข้าเซิร์ฟเวอร์ Discord
+  embed: ส่งฝังแบบกำหนดเองไปยัง Discord
+  announce: ออกอากาศประกาศไปยัง Discord และในเกม
+discord:
+  commands:
+    help:
+      description: แสดงคำสั่งและคุณลักษณะของบอททั้งหมด
+    status:
+      description: แสดงสถานะเซิร์ฟเวอร์เรียลไทม์พร้อม TPS และจำนวนผู้เล่น
+    players:
+      description: แสดงรายชื่อผู้เล่นออนไลน์ทั้งหมดพร้อมโลก
+    server:
+      description: แสดงข้อมูลเซิร์ฟเวอร์โดยละเอียด
+    ping:
+      description: ตรวจสอบเวลาแฝงของบอทและเวลาตอบสนอง
+    tps:
+      description: แสดงประสิทธิภาพเซิร์ฟเวอร์ (TPS/MSPT)
+    verify:
+      description: เชื่อมโยงบัญชี Discord ของคุณไปยัง Minecraft
+    stats:
+      description: ดูสถิติและความสำเร็จของผู้เล่น
+      option-player: ชื่อผู้เล่นที่จะค้นหา
+    console:
+      description: ดำเนินการคำสั่งบนเซิร์ฟเวอร์ (ผู้ดูแลเท่านั้น)
+      option-command: คำสั่งที่จะดำเนินการ
+    announce:
+      description: ออกอากาศประกาศไปยังผู้เล่นทุกคน
+      option-message: ข้อความประกาศ
+      option-title: ชื่อเรื่องที่เป็นตัวเลือกสำหรับประกาศ
+    online:
+      description: ดูภาพรวมว่าใคนออนไลน์
+    info:
+      description: แสดงข้อมูลและเวอร์ชันของปลักอิน
+server-control:
+  restart-scheduled: <gradient:#FF5555:#FFAA00>รีสตาร์ทเซิร์ฟเวอร์</gradient> &7ในอีก &e%time% &7วินาที!
+  stopping: <gradient:#FF5555:#AA0000>กำลังหยุดเซิร์ฟเวอร์...</gradient> &7พบกันใหม่!
+info:
+  sending-test-welcome: '&bSending test welcome DM...'
+  reloading-welcome-dm: '&bReloading welcome DM module...'
+  reload-start: '&bReloading configuration...'
+  plugin-info: <gradient:#55FFFF:#5555FF>=== ข้อมูล XDiscordUltimate ===</gradient>
+  plugin-version: '&7เวอร์ชัน: &e%version%'

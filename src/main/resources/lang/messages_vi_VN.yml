@@ -1,0 +1,156 @@
+general:
+  prefix: <gradient:#55FFFF:#5555FF>XDiscord</gradient> &8» &r
+  reload: <gradient:#55FF55:#00AA00>Cấu hình đã tải lại thành công!</gradient>
+  reload-success: <gradient:#55FF55:#00AA00>Cấu hình đã tải lại thành công!</gradient>
+  reload-failed: <gradient:#FF5555:#AA0000>Không thể tải lại cấu hình.</gradient> &7Kiểm tra console để tìm lỗi.
+  no-permission: <gradient:#FF5555:#AA0000>Truy cập bị từ chối</gradient> &7Bạn không có quyền
+  player-only: <gradient:#FFAA00:#FF5555>Lệnh này</gradient> &7chỉ có thể được sử dụng bởi người chơi.
+  unknown-command: '&7Lệnh không xác định. Sử dụng &e/xdiscord help &7để được trợ giúp.'
+errors:
+  no-permission: <gradient:#FF5555:#AA0000>Truy cập bị từ chối!</gradient> &7Bạn không có quyền.
+  player-not-found: <gradient:#FF5555:#FFAA00>Không tìm thấy người chơi!</gradient> &7'%player%' không trực tuyến.
+  invalid-usage: '<gradient:#FFAA00:#FF5555>Cách sử dụng không hợp lệ!</gradient> &7Chính xác: &e%usage%'
+  not-verified: <gradient:#FFAA00:#FF5555>Cần xác minh!</gradient> &7Sử dụng &e/verify &7để liên kết tài khoản.
+  already-verified: <gradient:#55FF55:#55FFFF>Đã xác minh!</gradient> &7Tài khoản của bạn đã được liên kết.
+  verification-failed: <gradient:#FF5555:#AA0000>Xác minh thất bại!</gradient> &7Vui lòng thử lại.
+  cooldown: <gradient:#FFAA00:#FF5555>Hồi chiêu!</gradient> &7Vui lòng đợi trước khi sử dụng lại.
+  feature-disabled: <gradient:#AAAAAA:#555555>Tính năng bị vô hiệu hóa!</gradient> &7Tính năng này hiện đang tắt.
+  discord-not-linked: <gradient:#5555FF:#AA00AA>Cần Discord!</gradient> &7Liên kết trước với &e/verify &7.
+  cannot-report-admin: <gradient:#FF5555:#AA0000>Không Thể Báo Cáo Admin!</gradient> &7Bạn không thể báo cáo quản trị viên máy chủ.
+  module-not-available: <gradient:#FF5555:#FFAA00>Module Không Khả Dụng!</gradient> &7Tính năng này hiện không khả dụng.
+  ticket-create-failed: <gradient:#FF5555:#AA0000>Lỗi!</gradient> &7Không thể tạo ticket. Vui lòng thử lại.
+  unknown-subcommand: <gradient:#FF5555:#FFAA00>Lệnh Con Không Xác Định!</gradient> &7'%sub%' không phải là lệnh con hợp lệ.
+  invalid-discord-id: <gradient:#FF5555:#FFAA00>Định Dạng Không Hợp Lệ!</gradient> &7Discord ID phải là một snowflake số.
+  whitelist-submission-failed: <gradient:#FF5555:#AA0000>Lỗi!</gradient> &7Không thể gửi yêu cầu danh sách trắng.
+  chat-filtered: '&cYour message was blocked by the chat filter.'
+  spam: '&cPlease don''t spam the chat!'
+  max-tickets: '&cYou have reached the maximum number of open tickets!'
+success:
+  verified: <gradient:#55FF55:#55FFFF>Thành công!</gradient> &7Tài khoản của bạn hiện đã được liên kết với Discord!
+  ticket-created: <gradient:#55FF55:#55FFFF>Đã tạo vé!</gradient> &7Kiểm tra Discord để cập nhật.
+  report-sent: <gradient:#55FF55:#00AA00>Đã gửi báo cáo!</gradient> &7Người kiểm soát đã được thông báo.
+  announcement-sent: <gradient:#FFAA00:#FF5555>Đã gửi thông báo!</gradient> &7Hoàn thành phát sóng.
+  debug-enabled: <gradient:#55FF55:#55FFFF>Chế độ Gỡ Lỗi Đã Bật!</gradient> &7Nhật ký chi tiết sẽ được hiển thị.
+  debug-disabled: <gradient:#AAAAAA:#555555>Chế độ Gỡ Lỗi Đã Tắt!</gradient> &7Chỉ các thông báo quan trọng sẽ được hiển thị.
+  language-changed: <gradient:#55FF55:#55FFFF>Đã Thay đổi Ngôn Ngữ!</gradient> &7Ngôn ngữ của bạn hiện được đặt thành &e%language%&7.
+  announcements-muted: '&aAnnouncements muted!'
+  announcements-unmuted: '&aAnnouncements unmuted!'
+verification:
+  code-generated: <gradient:#55FFFF:#5555FF>Mã xác minh</gradient> &8» &e&l%code%
+  code-expired: <gradient:#FF5555:#AA0000>Mã hết hạn!</gradient> &7Tạo mã mới.
+  code-invalid: <gradient:#FF5555:#FFAA00>Mã không hợp lệ!</gradient> &7Kiểm tra và thử lại.
+  instructions: '&7Sử dụng mã này trong Discord với &e/verify &7để liên kết.'
+  already-linked: <gradient:#FFAA00:#FF5555>Đã liên kết!</gradient> &7Discord này được liên kết với tài khoản khác.
+  already-verified: <gradient:#55FF55:#55FFFF>Đã xác minh!</gradient> &7Tài khoản của bạn đã được liên kết.
+  success: <gradient:#55FF55:#55FFFF>Hoàn tất xác minh!</gradient> &7Các tài khoản hiện đã được liên kết!
+  required: <gradient:#FFAA00:#FF5555>Cần xác minh!</gradient> &7Liên kết tài khoản Discord của bạn.
+  kick-message: '<gradient:#FF5555:#AA0000>Cần xác minh!</gradient>
+
+    &7Bạn phải xác minh trong &e%minutes% &7phút!'
+tickets:
+  created: '<gradient:#55FFFF:#5555FF>Vé #%id%</gradient> &7đã tạo! Nhân viên sẽ sớm giúp đỡ.'
+  closed: '<gradient:#AAAAAA:#555555>Vé #%id%</gradient> &7đã được đóng.'
+  not-found: <gradient:#FF5555:#AA0000>Không tìm thấy!</gradient> &7Vé không tồn tại.
+  max-tickets: <gradient:#FFAA00:#FF5555>Đạt giới hạn!</gradient> &7Đạt số lượng vé tối đa.
+support:
+  no-message: <gradient:#FF5555:#FFAA00>Thiếu tin nhắn!</gradient> &7Cung cấp tin nhắn cho vé của bạn.
+  created: <gradient:#55FF55:#55FFFF>Đã tạo vé hỗ trợ!</gradient> &7Kiểm tra Discord.
+  usage: '&eUsage: /support <message>'
+report:
+  must-verify: <gradient:#FFAA00:#FF5555>Cần Xác Thực!</gradient> &7Bạn cần xác minh tài khoản Discord để báo cáo người chơi. Sử dụng &e/verify &7trong Discord.
+  success: '<gradient:#55FF55:#00AA00>Báo cáo #%id%</gradient> &7đối với &e%player% &7đã được gửi!'
+  cooldown: <gradient:#FFAA00:#FF5555>Hồi chiêu!</gradient> &7Vui lòng đợi trước khi báo cáo lại.
+  self-report: <gradient:#FF5555:#AA0000>Lỗi!</gradient> &7Bạn không thể tự báo cáo mình!
+  usage: '&eUsage: /report <player> <reason>'
+announcement:
+  no-message: <gradient:#FF5555:#FFAA00>Thiếu tin nhắn!</gradient> &7Cung cấp nội dung thông báo.
+  sent: <gradient:#55FF55:#55FFFF>Đã gửi thông báo!</gradient> &7Đã phát tới tất cả các nền tảng.
+chat:
+  discord-to-minecraft: '&8[<gradient:#5555FF:#7289DA>Discord</gradient>&8] &b%user%&8: &f%message%'
+  minecraft-to-discord: '**%player%**: %message%'
+  filtered: <gradient:#FF5555:#AA0000>Tin nhắn đã bị chặn!</gradient> &7Bộ lọc chat đã kích hoạt.
+  spam-warning: <gradient:#FFAA00:#FF5555>Chậm lại!</gradient> &7Đừng spam chat.
+events:
+  player-join: <gradient:#55FF55:#55FFFF>+</gradient> &7%player% đã tham gia
+  player-leave: <gradient:#FF5555:#FFAA00>-</gradient> &7%player% đã rời đi
+  first-join: <rainbow>Chào mừng!</rainbow> &e%player% &7đã tham gia lần đầu!
+stats:
+  header: <gradient:#FFAA00:#FF5555>━━━ Thống kê %player% ━━━</gradient>
+  kills: '&8▸ <gradient:#FF5555:#FFAA00>Giết</gradient>&8: &f%value%'
+  deaths: '&8▸ <gradient:#AAAAAA:#555555>Chết</gradient>&8: &f%value%'
+  kd-ratio: '&8▸ <gradient:#55FFFF:#5555FF>Tỷ lệ K/D</gradient>&8: &f%value%'
+  mob-kills: '&8▸ <gradient:#55FF55:#00AA00>Giết Mob</gradient>&8: &f%value%'
+  playtime: '&8▸ <gradient:#AA00AA:#FF55FF>Thời gian chơi</gradient>&8: &f%value%'
+  not-found: <gradient:#FF5555:#AA0000>Không tìm thấy!</gradient> &7Thống kê người chơi không khả dụng.
+moderation:
+  ban-success: <gradient:#FF5555:#AA0000>Đã cấm!</gradient> &e%player% &7đã bị cấm.
+  kick-success: <gradient:#FFAA00:#FF5555>Đã kick!</gradient> &e%player% &7đã bị kick.
+  mute-success: <gradient:#AAAAAA:#555555>Đã tắt tiếng!</gradient> &e%player% &7đã bị tắt tiếng.
+  unmute-success: <gradient:#55FF55:#55FFFF>Bỏ tắt tiếng!</gradient> &e%player% &7có thể nói lại.
+  warn-success: <gradient:#FFAA00:#FF5555>Đã cảnh báo!</gradient> &e%player% &7đã bị cảnh báo.
+help:
+  header:
+  - ''
+  - <gradient:#55FFFF:#5555FF>━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━</gradient>
+  - '       <gradient:#55FFFF:#5555FF>&lXDiscordUltimate</gradient> &8- &7Trợ giúp'
+  - <gradient:#55FFFF:#5555FF>━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━</gradient>
+  - ''
+  footer:
+  - ''
+  - <gradient:#55FFFF:#5555FF>━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━</gradient>
+  - '  &7Sử dụng <gradient:#55FFFF:#5555FF>/xdiscord help</gradient> &7để có lệnh'
+  - <gradient:#55FFFF:#5555FF>━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━</gradient>
+  - ''
+  verify: '  <gradient:#55FF55:#55FFFF>▸</gradient> &e/verify &8- &7Liên kết tài khoản Discord'
+  support: '  <gradient:#55FF55:#55FFFF>▸</gradient> &e/support <msg> &8- &7Tạo vé'
+  stats: '  <gradient:#55FF55:#55FFFF>▸</gradient> &e/stats [player] &8- &7Xem thống kê'
+  report: '  <gradient:#55FF55:#55FFFF>▸</gradient> &e/report <player> <reason> &8- &7Báo cáo người chơi'
+  must-verify: <gradient:#FFAA00:#FF5555>Cần Xác Thực!</gradient> &7Bạn cần xác minh tài khoản Discord để báo cáo người chơi. Sử dụng &e/verify &7trong Discord.
+  help: '  <gradient:#55FF55:#55FFFF>▸</gradient> &e/help &8- &7Hiển thị menu này'
+commands:
+  verify: Liên kết tài khoản Discord của bạn với Minecraft
+  support: Tạo vé hỗ trợ để được nhân viên giúp đỡ
+  report: Báo cáo người chơi đến điều hành viên Discord
+  must-verify: <gradient:#FFAA00:#FF5555>Cần Xác Thực!</gradient> &7Bạn cần xác minh tài khoản Discord để báo cáo người chơi. Sử dụng &e/verify &7trong Discord.
+  discord: Nhận liên kết mời máy chủ Discord
+  embed: Gửi nhúng tùy chỉnh đến Discord
+  announce: Phát thông báo đến Discord và trong game
+discord:
+  commands:
+    help:
+      description: Hiển thị tất cả các lệnh và tính năng của bot
+    status:
+      description: Hiển thị trạng thái máy chủ thời gian thực với TPS và số lượng người chơi
+    players:
+      description: Liệt kê tất cả người chơi trực tuyến với thế giới của họ
+    server:
+      description: Hiển thị thông tin máy chủ chi tiết
+    ping:
+      description: Kiểm tra độ trễ bot và thời gian phản hồi
+    tps:
+      description: Hiển thị hiệu suất máy chủ (TPS/MSPT)
+    verify:
+      description: Liên kết tài khoản Discord của bạn đến Minecraft
+    stats:
+      description: Xem thống kê và thành tích người chơi
+      option-player: Tên người chơi để tìm kiếm
+    console:
+      description: Thực hiện lệnh trên máy chủ (Chỉ Admin)
+      option-command: Lệnh để thực hiện
+    announce:
+      description: Phát thông báo đến tất cả người chơi
+      option-message: Tin nhắn thông báo
+      option-title: Tiêu đề tùy chọn cho thông báo
+    online:
+      description: Xem nhanh ai đang trực tuyến
+    info:
+      description: Hiển thị thông tin và phiên bản plugin
+server-control:
+  restart-scheduled: <gradient:#FF5555:#FFAA00>Khởi động lại máy chủ</gradient> &7trong &e%time% &7giây!
+  stopping: <gradient:#FF5555:#AA0000>Đang dừng máy chủ...</gradient> &7Hẹn gặp lại!
+info:
+  sending-test-welcome: '&bSending test welcome DM...'
+  reloading-welcome-dm: '&bReloading welcome DM module...'
+  reload-start: '&bReloading configuration...'
+  plugin-info: <gradient:#55FFFF:#5555FF>=== Thông Tin XDiscordUltimate ===</gradient>
+  plugin-version: '&7Phiên Bản: &e%version%'

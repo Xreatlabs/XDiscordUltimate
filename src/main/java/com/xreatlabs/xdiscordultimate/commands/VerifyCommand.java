@@ -22,29 +22,25 @@ public class VerifyCommand implements CommandExecutor {
             plugin.getMessageManager().sendMessage(sender, "general.player-only");
             return true;
         }
-        
+
         Player player = (Player) sender;
-        
-        // Check if verification feature is enabled
+
         if (!plugin.getConfigManager().isFeatureEnabled("verification")) {
             plugin.getMessageManager().sendMessage(player, "errors.feature-disabled");
             return true;
         }
-        
-        // Check if player is already verified
+
         if (plugin.getAdminUtils().isVerified(player)) {
             plugin.getMessageManager().sendMessage(player, "verification.already-verified");
             return true;
         }
-        
-        // Get the verification module
+
         VerificationModule verificationModule = plugin.getModuleManager().getModule(VerificationModule.class);
         if (verificationModule == null || !verificationModule.isEnabled()) {
-            plugin.getMessageManager().sendError(player, "Verification module is not available!");
+            plugin.getMessageManager().sendError(player, "errors.module-not-available");
             return true;
         }
-        
-        // Check if code is provided
+
         if (args.length == 0) {
             player.sendMessage(ColorUtils.parse("<gradient:#FF5555:#FFAA00>Usage:</gradient> &e/verify <code>"));
             player.sendMessage(ColorUtils.parse("&7To get a verification code:"));
@@ -53,13 +49,11 @@ public class VerifyCommand implements CommandExecutor {
             player.sendMessage(ColorUtils.parse("&e3. &7Use &b/verify <code> &7here"));
             return true;
         }
-        
-        // Get the verification code
+
         String code = args[0].toUpperCase();
-        
-        // Process verification with the code
+
         verificationModule.processMinecraftVerification(player, code);
-        
+
         return true;
     }
 }

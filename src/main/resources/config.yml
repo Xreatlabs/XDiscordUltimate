@@ -1,379 +1,206 @@
 # XDiscordUltimate Configuration
-# Version: 1.1.0
-# Supports: Minecraft 1.16.5 - 1.21.x
-# Documentation: https://github.com/xreatlabs/xdiscordultimate/wiki
+# Version: 1.1.0 | Supports: Minecraft 1.16.5 - 1.21.x
+# Docs: https://github.com/xreatlabs/xdiscordultimate/wiki
+#
+# Discord IDs: Enable Developer Mode in Discord Settings (User Settings > Advanced > Developer Mode), then right-click any channel/role/user and select "Copy ID"
 
-# Admin Discord IDs - These users have full control over sensitive commands
-# Add your Discord user IDs here (right-click user -> Copy ID)
-adminIDs: []
+adminIDs:
+  - "917098673127694428"
 
-# General Settings
 general:
-  # Enable debug messages in console
   debug: false
-  # Language file to use (en_US, es_ES, etc.)
+  default-language: "en_US"
   language: "en_US"
-  # Check for updates on startup
   check-updates: true
 
-# Feature Toggles - Enable/disable specific features
 features:
-  # Chat Bridge - Core feature for Discord-Minecraft chat integration
   chat-bridge:
     enabled: true
-    # Discord channel ID for chat bridge (use channel ID, not name)
-    # Right-click channel -> Copy ID (requires Developer Mode in Discord settings)
     chat-channel-id: ""
-    # Fallback: Discord channel name (only used if ID is not set)
     chat-channel: "minecraft-chat"
-    # Enable Minecraft to Discord chat
     minecraft-to-discord: true
-    # Enable Discord to Minecraft chat
     discord-to-minecraft: true
-    # Filter bot messages from Discord
     filter-bot-messages: true
-    
-    # ============================================
-    # PLAYER AVATAR OPTIONS (shows Minecraft skin)
-    # ============================================
-    # Skin avatar provider: crafatar, minotar, mc-heads, visage
-    # - crafatar: Most reliable, supports overlays
-    # - minotar: Fast, supports player names
-    # - mc-heads: Good quality
-    # - visage: 3D rendered faces
-    skin-provider: "crafatar"
-    
-    # OPTION 1: WEBHOOK MODE (Recommended - Like DiscordSRV!)
-    # Creates messages that look like the player sent them!
-    # Each message shows the player's skin as the avatar
-    #
-    # AUTO-CREATE: The plugin will create a webhook automatically
-    # Bot needs "Manage Webhooks" permission
+    # - crafthead: Most reliable, works with offline-mode names
+    skin-provider: "crafthead"
     auto-create-webhook: true
-    #
-    # MANUAL: Or provide your own webhook URL
-    # Channel Settings -> Integrations -> Webhooks -> New Webhook
     use-webhook: false
     webhook-url: ""
-    
-    # OPTION 2: PLAIN TEXT MODE (Fallback if webhook not available)
-    # Simple text format: **PlayerName**: message
-    
-    # Message formats
+
     minecraft-format: "**%player%**: %message%"
     discord-format: "&7[&9Discord&7] &b%user%&7: &f%message%"
-    
-    # ============================================
-    # ENHANCED FEATURES
-    # ============================================
-    # Convert Discord @mentions to readable names
+
     show-mentions: true
-    # Play sound when a player is mentioned from Discord
     play-mention-sound: true
-    # Convert custom Discord emojis to :name: format
     convert-emojis: true
-    # Strip Discord markdown formatting (**, *, ~~, etc.)
     strip-discord-formatting: false
-    
-    # ============================================
-    # TYPING INDICATOR
-    # ============================================
-    # Show when someone is typing in Discord
-    # Displays "[Discord] Username is typing..." in Minecraft
     show-typing-indicator: true
-    
-    # ============================================
-    # PLAYER NAME FORMAT (Minecraft -> Discord)
-    # ============================================
-    # Show player's rank prefix in Discord (requires LuckPerms)
     show-player-prefix: true
-    # Show player's rank suffix in Discord (requires LuckPerms)
     show-player-suffix: false
-    # Format for Discord username/webhook name
-    # Placeholders: %prefix%, %player%, %suffix%
-    # Examples:
-    #   "%prefix%%player%" -> "[Admin] Steve"
-    #   "%player% | %prefix%" -> "Steve | Admin"
-    #   "[%prefix%] %player%" -> "[Owner] Steve"
     discord-username-format: "%prefix%%player%"
 
-  # Server Logging - Logs events to Discord
   server-logging:
     enabled: true
-    # Discord channel ID for logs
     logs-channel-id: ""
-    # Log server start/stop events
     log-server-events: true
-    # Log player join/leave
     log-join-leave: true
-    # Log player deaths
     log-deaths: true
-    # Log player advancements
     log-advancements: true
-    # Log commands used by players
     log-commands: true
-    # Commands to ignore from logging
     ignored-commands:
       - "afk"
       - "balancetop"
       - "seen"
-    # Use embeds for events
     use-embeds: true
-    # Message formats
     join-message: ":arrow_right: **%player%** joined the server"
     leave-message: ":arrow_left: **%player%** left the server"
     death-message: ":skull: **%player%** %death_message%"
     advancement-message: ":trophy: **%player%** has made the advancement **[%advancement%]**"
     command-message: "```[%timestamp%] %player% used command: %command%```"
 
-  # Verification - Link Discord and Minecraft accounts
   verification:
     enabled: true
-    # Kick unverified players after X minutes (0 to disable)
+    one-time-only: false
     kick-after-minutes: 0
-    # Whitelist mode - only verified players can join
     whitelist-mode: false
-    # Role to give verified players in Discord
     verified-role: "Verified"
-    # Minecraft permission group to add (requires LuckPerms)
     verified-group: "verified"
-    # Code verification settings
+    sync-nickname: true
     code-length: 6
     code-expiry-minutes: 5
+    # Cooldown (seconds) applied after a successful verification
+    verify-cooldown-seconds: 30
+    # Cooldown (seconds) applied after each FAILED attempt, to throttle code guessing
+    failed-attempt-cooldown-seconds: 5
+    # Consecutive failed attempts before a lockout is triggered
+    max-verify-attempts: 5
+    # Lockout duration (seconds) once max-verify-attempts is reached
+    verify-lockout-seconds: 300
 
-  # Server Control - Execute commands from Discord
   server-control:
     enabled: true
-    # Commands that can be executed from Discord
     allowed-commands:
       restart: true
       stop: true
       kick: true
       tps: true
       list: true
-    # Require admin role
     require-role: true
     control-role: "Server Admin"
 
-  # Admin Alerts - Server health monitoring
   admin-alerts:
     enabled: true
-    # TPS threshold for alerts
     tps-threshold: 15.0
-    # RAM usage percentage threshold
     ram-threshold: 90
-    # Check interval in seconds
     check-interval: 30
-    # DM alerts to admins
     dm-alerts: true
-    # Channel for alerts
     alert-channel: "admin-alerts"
 
-  # Tickets - Support ticket system
   tickets:
     enabled: true
-    # Category for ticket channels
     ticket-category: "Support Tickets"
-    # Auto-close tickets after X hours of inactivity (0 to disable)
-    auto-close-hours: 48
-    # Allow players to close their own tickets
-    player-close: true
-    # Save transcript on close
-    save-transcript: true
+    ticket-panel-channel: "ticket-logs"
     transcript-channel: "ticket-logs"
+    support-role: "Support"
+    max-open-tickets: 3
+    auto-close-hours: 48
+    auto-close-warning-enabled: true
+    auto-close-warning-minutes: 60
+    player-close: true
+    save-transcript: true
 
-  # Moderation - Ban sync and chat filtering
   moderation:
     enabled: true
-    # Sync Discord bans with Minecraft
     sync-bans: true
-    # Log channel for moderation actions
     log-channel: "mod-logs"
-    # Auto-moderate chat
     auto-moderate: true
-    # Report system settings
     report-cooldown-minutes: 5
     require-verification-for-reports: true
-    # Filtered words (uses regex)
     filter-words:
-      - "badword1"
-      - "badword2"
+      - "fuck"
+      - "shit"
+      - "ass"
+      - "bitch"
+      - "bastard"
+      - "damn"
+      - "crap"
+      - "whore"
+      - "slut"
+      - "dick"
+      - "piss"
+      - "cock"
+      - "pussy"
+      - "fag"
+      - "nigga"
+      - "nigger"
+      - "retard"
+      - "idiot"
+      - "regex:\\b(s+\\$*\\{1,}x+)\\b"
+      - "regex:\\b(s+h+i+t+)\\b"
+      - "regex:\\b(f+u+c+k+)\\b"
 
-  # Bot Console - Run server commands from Discord
   bot-console:
     enabled: true
-    # Command prefix for bot
     command-prefix: "!"
-    # Allow command execution in DMs
     allow-dm: false
-    # Console channel
     console-channel: "bot-console"
 
-  # Announcements - Send announcements to Discord and Minecraft
   announcements:
     enabled: true
-    # Default announcement channel
     default-channel: "announcements"
-    # Also show as in-game title
     show-title: true
-    # Title display time (ticks)
+    send-to-discord: false
     title-stay: 100
     title-fade-in: 10
     title-fade-out: 20
-    # Announcement prefix in Minecraft chat
     prefix: "&6[&eAnnouncement&6] &f"
-    # Sound to play (set to "NONE" to disable)
     sound: "ENTITY_EXPERIENCE_ORB_PICKUP"
-    # Discord embed color (hex)
     discord-color: "#FFD700"
-    # Customizable scheduled announcements
-    # Each announcement has these options:
-    #   enabled: true/false - Master toggle for this announcement
-    #   title: "Title" - The title shown in embeds and chat
-    #   interval: seconds - How often to broadcast (0 = disabled)
-    #   minecraft: true/false - Send to Minecraft players in-game
-    #   discord: true/false - Send to Discord channel
-    #   discord-color: "#HEXCOLOR" - Embed color for Discord
-    #   permission: "permission.node" - Required permission to see (optional)
-    #   messages: List of messages to display
-    scheduled:
-      server-info:
-        enabled: true
-        title: "Server Information"
-        interval: 600
-        minecraft: true
-        discord: true
-        discord-color: "#00BFFF"
-        messages:
-          - "&bWelcome to our server!"
-          - "&eWebsite: &fexample.com"
-          - "&eDiscord: &fdiscord.gg/example"
-          - "&eStore: &fstore.example.com"
-      vote:
-        enabled: true
-        title: "Vote Reminder"
-        interval: 900
-        minecraft: true
-        discord: true
-        discord-color: "#FFD700"
-        messages:
-          - "&6Support the server by voting!"
-          - "&eVote Link: &fexample.com/vote"
-          - "&aYou'll receive rewards for voting!"
-      discord-reminder:
-        enabled: true
-        title: "Join our Discord!"
-        interval: 1200
-        minecraft: true
-        discord: true
-        discord-color: "#7289DA"
-        messages:
-          - "&dJoin our Discord community!"
-          - "&eLink: &fdiscord.gg/example"
-          - "&aGet updates, chat with players, and more!"
-      tips:
-        enabled: true
-        title: "Server Tips"
-        interval: 1800
-        minecraft: true
-        discord: false
-        discord-color: "#55FF55"
-        messages:
-          - "&aDid you know?"
-          - "&7Use &e/help &7to view available commands"
-          - "&7Use &e/discord &7to get our Discord invite"
-      restart-warning:
-        enabled: false
-        title: "Restart Warning"
-        interval: 0
-        minecraft: true
-        discord: true
-        discord-color: "#FF5555"
-        permission: ""
-        messages:
-          - "&c&lATTENTION!"
-          - "&eThe server will restart in 5 minutes"
-          - "&7Please save your progress"
+    scheduled: {}
 
-  # Player Stats - Track and display player statistics
   player-stats:
     enabled: true
 
-  # Welcome DM - Send personalized welcome message to new players via Discord DM
   welcome-dm:
     enabled: true
-    # Only send to first-time players (players who haven't joined before)
     first-join-only: true
-    # Only send to players who have verified their Discord account
     verified-only: true
-    # Use embed (fancy) or plain text message
-    use-embed: true
-    
-    # Plain text message (used if use-embed is false)
-    # Placeholders: %player%, %discord_name%, %server_name%, %online_players%, %max_players%
-    plain-message: "Welcome to our server, %player%! Thanks for linking your Discord account."
-    
-    # Embed settings (used if use-embed is true)
+    plain-message: "Welcome, %player%! Your Discord account is linked."
+
     embed:
-      title: "Welcome to %server_name%!"
+      title: "Welcome to %server_name%"
       description: |
-        Hey **%player%**! Welcome to our Minecraft server!
-        
-        Thanks for linking your Discord account. Here's some useful info to get you started:
+        Hey **%player%**, welcome! Your accounts are linked.
       color: "#55FFFF"
-      # Use %player_head% for player's Minecraft head, or custom URL
       thumbnail: "%player_head%"
-      # Optional: Large image at bottom of embed (leave empty to disable)
       image: ""
-      footer: "Sent via XDiscordUltimate"
-      # Fields format: "Name|Value|inline" (inline is true/false)
+      footer: ""
       fields:
         - "Server IP|play.example.com|true"
-        - "Website|https://example.com|true"
+        - "Website|example.com|true"
         - "Store|store.example.com|true"
-        - "Need Help?|Use `/support <message>` in-game or open a ticket in Discord!|false"
+        - "Need help?|Use /support in-game|false"
 
-  # Server Status - Auto-updating status embed in Discord
   server-status:
     enabled: true
-    # Channel ID for status embed
     channel-id: ""
-    # Update interval in seconds
     update-interval: 60
-    # Message ID (auto-filled, don't change)
     message-id: ""
 
-  # ============================================
-  # LEADERBOARD MODULE
-  # ============================================
-  # Auto-updating leaderboard embed with interactive buttons
   leaderboard:
     enabled: true
-    # Channel ID to post leaderboard embed
     channel-id: ""
-    # Message ID (auto-filled after first post)
     message-id: ""
-    # Update interval in seconds
     update-interval: 300
-    # Number of top players to show
     top-players: 10
-    # Default leaderboard type: KILLS, DEATHS, KD_RATIO, PLAYTIME, MOB_KILLS
     default-type: "KILLS"
+    custom-thumbnail: ""
 
-  # ============================================
-  # ACTIVITY ROLES MODULE
-  # ============================================
-  # Auto-assign Discord roles based on playtime
   activity-roles:
     enabled: true
-    # Sync interval in seconds
     sync-interval: 300
-    # Remove previous tier role when promoting
     remove-old-roles: true
-    # Announce promotions to the player in-game
     announce-promotion: true
-    # Tier configuration
-    # Each tier needs: display-name, min-hours, role-id, color
     tiers:
       newcomer:
         display-name: "🌱 Newcomer"
@@ -401,146 +228,80 @@ features:
         role-id: ""
         color: "&d"
 
-  # ============================================
-  # VOICE CHANNEL MODULE
-  # ============================================
-  # Dynamic voice channels and player count status channel
   voice-channels:
     enabled: true
-    # ---- STATUS CHANNEL ----
-    # Shows online player count in voice channel name
     enable-status-channel: true
-    # Voice channel ID for status (must be a voice channel)
     status-channel-id: ""
-    # Format: %online%, %max%, %tps%
     status-channel-format: "📊 Players: %online%/%max%"
-    # Update interval in seconds (keep high to avoid rate limits)
     update-interval: 60
-    
-    # ---- DYNAMIC CHANNELS ----
-    # Auto-create voice channels when users join hub
     enable-dynamic-channels: true
-    # Category ID to create channels in
     category-id: ""
-    # Hub channel ID (joining this creates a new room)
     hub-channel-id: ""
-    # Prefix for dynamic channels
     dynamic-channel-prefix: "🎮 Gaming Room"
-    # Maximum dynamic channels
     max-dynamic-channels: 10
-    # User limit per channel (0 = unlimited)
     user-limit: 0
 
-  # ============================================
-  # ECONOMY BRIDGE MODULE
-  # ============================================
-  # Discord commands for Vault economy
-  # Requires: Vault plugin + Economy plugin (EssentialsX, CMI, etc.)
   economy-bridge:
     enabled: true
-    # Currency display symbol
     currency-symbol: "$"
-    # Currency name (plural)
     currency-name: "coins"
-    # Number of players to show in /baltop
     top-players: 10
-    # Allow /pay transfers via Discord
     allow-transfers: true
-    # Minimum transfer amount
     min-transfer: 1.0
-    # Maximum transfer amount
     max-transfer: 1000000.0
-    # Transfer tax (0.0 = no tax, 0.05 = 5% tax)
     transfer-tax: 0.0
 
-  # Booster Perks - Rewards for Discord server boosters
+  server-ip:
+    enabled: true
+    api-url: "https://replacement-such-backgrounds-usr.trycloudflare.com"
+    image-channel: "general"
+
+  whitelist:
+    enabled: true
+    whitelist-channel: "whitelist"
+    support-role: "Support"
+    auto-whitelist: true
+    dm-on-accept: true
+    dm-on-decline: true
+
   booster-perks:
     enabled: true
-    # LuckPerms group to add for boosters
     permission-group: "booster"
-    # Sync interval in seconds (how often to check for new boosters)
     sync-interval: 300
-    
-    # ============================================
-    # BOOSTER DETECTION OPTIONS
-    # ============================================
-    # Use Discord's native booster detection (member.isBoosting())
-    # This detects anyone who is actively boosting your server
     use-native-detection: true
-    
-    # Custom booster role ID (optional)
-    # If you have a custom role for boosters, put the role ID here
-    # Right-click role -> Copy ID (requires Developer Mode in Discord settings)
-    # Leave empty to only use native detection
     booster-role-id: ""
-    
-    # Additional booster roles (optional)
-    # Add more role IDs here if you have multiple booster tiers
-    # Example: ["123456789", "987654321"]
     additional-booster-roles: []
-    
-    # ============================================
-    # REWARDS
-    # ============================================
-    # Commands to run when someone becomes a booster
-    # Placeholders: %player% = player name, %uuid% = player UUID
     reward-commands:
       - "give %player% diamond 5"
       - "broadcast &d%player% &fis now boosting the Discord server! &d&lThank you!"
-    
-    # Commands to run when someone stops boosting (optional)
     remove-commands: []
 
-# Discord Bot Settings
 discord:
-  # Bot token (get from Discord Developer Portal)
   bot-token: "YOUR_BOT_TOKEN"
-  # Guild ID
   guild-id: "YOUR_GUILD_ID"
-  # Activity/Status (use %players% and %max% for player count)
+  guild-name: "Our Discord Server"
+  invite-url: ""
   activity:
     type: "PLAYING"
     text: "with %players%/%max% players"
     status: "ONLINE"
-  # Command settings
   commands:
     use-slash-commands: true
     legacy-prefix: "!"
-  # ============================================
-  # CHANNEL CONFIGURATION
-  # ============================================
-  # Use Discord channel IDs (right-click channel -> Copy ID)
-  # To get channel IDs: Discord Settings -> Advanced -> Enable Developer Mode
-  # Then right-click any channel and select "Copy Channel ID"
-  # 
-  # Example: chat: "1234567890123456789"
-  # Leave empty ("") to disable that feature
-  # ============================================
+  text-command-prefix: "!"
   channels:
-    # Welcome messages for new Discord members
     welcome: ""
-    # General logs (Discord member join/leave, etc.)
     logs: ""
-    # Cross-platform chat bridge (Minecraft <-> Discord)
-    # This is the main channel for chat messages
     chat: ""
-    # Console output channel (admin only, shows server console)
     console: ""
-    # Player events (Minecraft join/leave/death messages)
     events: ""
-    # Support tickets channel
     tickets: ""
-    # Moderation logs and player reports
     moderation: ""
 
-# Database Settings
 database:
-  # Type: sqlite, mysql
   type: "sqlite"
-  # SQLite settings
   sqlite:
     file: "data.db"
-  # MySQL settings
   mysql:
     host: "localhost"
     port: 3306
@@ -549,7 +310,6 @@ database:
     password: "password"
     ssl: false
 
-# Message Formats
 messages:
   minecraft-to-discord: "**%player%**: %message%"
   discord-to-minecraft: "&7[&9Discord&7] &b%user%&7: &f%message%"
@@ -557,7 +317,6 @@ messages:
   leave-message: ":arrow_left: **%player%** left the server!"
   death-message: ":skull: **%player%** %death_message%"
 
-# Advanced Settings
 advanced:
   thread-pool-size: 4
   cache:
@@ -566,7 +325,6 @@ advanced:
   rate-limit:
     commands-per-minute: 10
 
-# Discord Console
 discord-console:
   enabled: true
   channel-id: ""

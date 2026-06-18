@@ -1,0 +1,156 @@
+general:
+  prefix: <gradient:#55FFFF:#5555FF>XDiscord</gradient> &8» &r
+  reload: <gradient:#55FF55:#00AA00>配置重载成功!</gradient>
+  reload-success: <gradient:#55FF55:#00AA00>配置重载成功!</gradient>
+  reload-failed: <gradient:#FF5555:#AA0000>配置重载失败。</gradient> &7请检查控制台错误。
+  no-permission: <gradient:#FF5555:#AA0000>访问被拒绝</gradient> &7您没有权限
+  player-only: <gradient:#FFAA00:#FF5555>此命令</gradient> &7只能由玩家使用。
+  unknown-command: '&7未知命令。使用 &e/xdiscord help &7获取帮助。'
+errors:
+  no-permission: <gradient:#FF5555:#AA0000>访问被拒绝!</gradient> &7您没有权限。
+  player-not-found: <gradient:#FF5555:#FFAA00>未找到玩家!</gradient> &7'%player%' 不在线。
+  invalid-usage: '<gradient:#FFAA00:#FF5555>用法无效!</gradient> &7正确: &e%usage%'
+  not-verified: <gradient:#FFAA00:#FF5555>需要验证!</gradient> &7使用 &e/verify &7关联账户。
+  already-verified: <gradient:#55FF55:#55FFFF>已验证!</gradient> &7您的账户已关联。
+  verification-failed: <gradient:#FF5555:#AA0000>验证失败!</gradient> &7请重试。
+  cooldown: <gradient:#FFAA00:#FF5555>冷却中!</gradient> &7请稍后再试。
+  feature-disabled: <gradient:#AAAAAA:#555555>功能已禁用!</gradient> &7此功能当前已关闭。
+  discord-not-linked: <gradient:#5555FF:#AA00AA>需要Discord!</gradient> &7请先使用 &e/verify &7关联。
+  cannot-report-admin: <gradient:#FF5555:#AA0000>无法举报管理员!</gradient> &7您不能举报服务器管理员。
+  module-not-available: <gradient:#FF5555:#FFAA00>模块不可用!</gradient> &7此功能当前不可用。
+  ticket-create-failed: <gradient:#FF5555:#AA0000>错误!</gradient> &7创建工单失败。请重试。
+  unknown-subcommand: <gradient:#FF5555:#FFAA00>未知子命令!</gradient> &7'%sub%' 不是有效的子命令。
+  invalid-discord-id: <gradient:#FF5555:#FFAA00>格式无效!</gradient> &7Discord ID 必须是数字 snowflake。
+  whitelist-submission-failed: <gradient:#FF5555:#AA0000>错误!</gradient> &7发送白名单请求失败。
+  chat-filtered: '&cYour message was blocked by the chat filter.'
+  spam: '&cPlease don''t spam the chat!'
+  max-tickets: '&cYou have reached the maximum number of open tickets!'
+success:
+  verified: <gradient:#55FF55:#55FFFF>成功!</gradient> &7您的账户现已关联到Discord!
+  ticket-created: <gradient:#55FF55:#55FFFF>工单已创建!</gradient> &7请查看Discord获取更新。
+  report-sent: <gradient:#55FF55:#00AA00>举报已发送!</gradient> &7管理员已收到通知。
+  announcement-sent: <gradient:#FFAA00:#FF5555>公告已发送!</gradient> &7广播完成。
+  debug-enabled: <gradient:#55FF55:#55FFFF>调试模式已启用!</gradient> &7将显示详细日志。
+  debug-disabled: <gradient:#AAAAAA:#555555>调试模式已禁用!</gradient> &7仅显示重要消息。
+  language-changed: <gradient:#55FF55:#55FFFF>语言已更改!</gradient> &7您的语言现在设置为 &e%language%&7。
+  announcements-muted: '&aAnnouncements muted!'
+  announcements-unmuted: '&aAnnouncements unmuted!'
+verification:
+  code-generated: <gradient:#55FFFF:#5555FF>验证码</gradient> &8» &e&l%code%
+  code-expired: <gradient:#FF5555:#AA0000>验证码已过期!</gradient> &7请生成新的。
+  code-invalid: <gradient:#FF5555:#FFAA00>验证码无效!</gradient> &7请检查并重试。
+  instructions: '&7在Discord中使用此代码通过 &e/verify &7进行关联。'
+  already-linked: <gradient:#FFAA00:#FF5555>已关联!</gradient> &7此Discord已关联到另一个账户。
+  already-verified: <gradient:#55FF55:#55FFFF>已验证!</gradient> &7您的账户已关联。
+  success: <gradient:#55FF55:#55FFFF>验证完成!</gradient> &7账户现已关联!
+  required: <gradient:#FFAA00:#FF5555>需要验证!</gradient> &7请关联您的Discord账户。
+  kick-message: '<gradient:#FF5555:#AA0000>需要验证!</gradient>
+
+    &7您必须在 &e%minutes% &7分钟内验证!'
+tickets:
+  created: '<gradient:#55FFFF:#5555FF>工单 #%id%</gradient> &7已创建! 工作人员将尽快协助。'
+  closed: '<gradient:#AAAAAA:#555555>工单 #%id%</gradient> &7已关闭。'
+  not-found: <gradient:#FF5555:#AA0000>未找到!</gradient> &7工单不存在。
+  max-tickets: <gradient:#FFAA00:#FF5555>已达上限!</gradient> &7已达到最大开放工单数。
+support:
+  no-message: <gradient:#FF5555:#FFAA00>缺少消息!</gradient> &7请为您的工单提供消息。
+  created: <gradient:#55FF55:#55FFFF>支持工单已创建!</gradient> &7请查看Discord。
+  usage: '&eUsage: /support <message>'
+report:
+  must-verify: <gradient:#FFAA00:#FF5555>需要验证!</gradient> &7您需要验证 Discord 账户才能举报玩家。在 Discord 中使用 &e/verify &7。
+  success: '<gradient:#55FF55:#00AA00>举报 #%id%</gradient> &7已提交针对 &e%player% &7的举报!'
+  cooldown: <gradient:#FFAA00:#FF5555>冷却中!</gradient> &7请稍后再举报。
+  self-report: <gradient:#FF5555:#AA0000>错误!</gradient> &7您不能举报自己!
+  usage: '&eUsage: /report <player> <reason>'
+announcement:
+  no-message: <gradient:#FF5555:#FFAA00>缺少消息!</gradient> &7请提供公告内容。
+  sent: <gradient:#55FF55:#55FFFF>公告已发送!</gradient> &7已广播到所有平台。
+chat:
+  discord-to-minecraft: '&8[<gradient:#5555FF:#7289DA>Discord</gradient>&8] &b%user%&8: &f%message%'
+  minecraft-to-discord: '**%player%**: %message%'
+  filtered: <gradient:#FF5555:#AA0000>消息已屏蔽!</gradient> &7聊天过滤器已激活。
+  spam-warning: <gradient:#FFAA00:#FF5555>慢一点!</gradient> &7不要刷屏聊天。
+events:
+  player-join: <gradient:#55FF55:#55FFFF>+</gradient> &7%player% 加入了
+  player-leave: <gradient:#FF5555:#FFAA00>-</gradient> &7%player% 离开了
+  first-join: <rainbow>欢迎!</rainbow> &e%player% &7首次加入!
+stats:
+  header: <gradient:#FFAA00:#FF5555>━━━ %player% 的统计 ━━━</gradient>
+  kills: '&8▸ <gradient:#FF5555:#FFAA00>击杀</gradient>&8: &f%value%'
+  deaths: '&8▸ <gradient:#AAAAAA:#555555>死亡</gradient>&8: &f%value%'
+  kd-ratio: '&8▸ <gradient:#55FFFF:#5555FF>K/D比率</gradient>&8: &f%value%'
+  mob-kills: '&8▸ <gradient:#55FF55:#00AA00>生物击杀</gradient>&8: &f%value%'
+  playtime: '&8▸ <gradient:#AA00AA:#FF55FF>游戏时间</gradient>&8: &f%value%'
+  not-found: <gradient:#FF5555:#AA0000>未找到!</gradient> &7玩家统计不可用。
+moderation:
+  ban-success: <gradient:#FF5555:#AA0000>已封禁!</gradient> &e%player% &7已被封禁。
+  kick-success: <gradient:#FFAA00:#FF5555>已踢出!</gradient> &e%player% &7已被踢出。
+  mute-success: <gradient:#AAAAAA:#555555>已禁言!</gradient> &e%player% &7已被禁言。
+  unmute-success: <gradient:#55FF55:#55FFFF>已解除禁言!</gradient> &e%player% &7可以再次发言。
+  warn-success: <gradient:#FFAA00:#FF5555>已警告!</gradient> &e%player% &7已被警告。
+help:
+  header:
+  - ''
+  - <gradient:#55FFFF:#5555FF>━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━</gradient>
+  - '       <gradient:#55FFFF:#5555FF>&lXDiscordUltimate</gradient> &8- &7帮助'
+  - <gradient:#55FFFF:#5555FF>━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━</gradient>
+  - ''
+  footer:
+  - ''
+  - <gradient:#55FFFF:#5555FF>━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━</gradient>
+  - '  &7使用 <gradient:#55FFFF:#5555FF>/xdiscord help</gradient> &7查看命令'
+  - <gradient:#55FFFF:#5555FF>━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━</gradient>
+  - ''
+  verify: '  <gradient:#55FF55:#55FFFF>▸</gradient> &e/verify &8- &7关联Discord账户'
+  support: '  <gradient:#55FF55:#55FFFF>▸</gradient> &e/support <msg> &8- &7创建工单'
+  stats: '  <gradient:#55FF55:#55FFFF>▸</gradient> &e/stats [player] &8- &7查看统计'
+  report: '  <gradient:#55FF55:#55FFFF>▸</gradient> &e/report <player> <reason> &8- &7举报玩家'
+  must-verify: <gradient:#FFAA00:#FF5555>需要验证!</gradient> &7您需要验证 Discord 账户才能举报玩家。在 Discord 中使用 &e/verify &7。
+  help: '  <gradient:#55FF55:#55FFFF>▸</gradient> &e/help &8- &7显示此菜单'
+commands:
+  verify: 将您的Discord账户与Minecraft关联
+  support: 创建支持工单以获取工作人员帮助
+  report: 向Discord管理员举报玩家
+  must-verify: <gradient:#FFAA00:#FF5555>需要验证!</gradient> &7您需要验证 Discord 账户才能举报玩家。在 Discord 中使用 &e/verify &7。
+  discord: 获取Discord服务器邀请链接
+  embed: 向Discord发送自定义嵌入消息
+  announce: 向Discord和游戏内广播公告
+discord:
+  commands:
+    help:
+      description: 显示所有机器人的命令和功能
+    status:
+      description: 显示实时服务器状态,包括TPS和玩家数量
+    players:
+      description: 列出所有在线玩家及其世界
+    server:
+      description: 显示详细的服务器信息
+    ping:
+      description: 检查机器人延迟和响应时间
+    tps:
+      description: 显示服务器性能(TPS/MSPT)
+    verify:
+      description: 将您的Discord账户关联到Minecraft
+    stats:
+      description: 查看玩家统计和成就
+      option-player: 要查找的玩家名称
+    console:
+      description: 在服务器上执行命令(仅限管理员)
+      option-command: 要执行的命令
+    announce:
+      description: 向所有玩家广播公告
+      option-message: 公告消息
+      option-title: 公告的可选标题
+    online:
+      description: 快速查看谁在线
+    info:
+      description: 显示插件信息和版本
+server-control:
+  restart-scheduled: <gradient:#FF5555:#FFAA00>服务器重启</gradient> &7将在 &e%time% &7秒后!
+  stopping: <gradient:#FF5555:#AA0000>服务器正在停止...</gradient> &7再见!
+info:
+  sending-test-welcome: '&bSending test welcome DM...'
+  reloading-welcome-dm: '&bReloading welcome DM module...'
+  reload-start: '&bReloading configuration...'
+  plugin-info: <gradient:#55FFFF:#5555FF>=== XDiscordUltimate 信息 ===</gradient>
+  plugin-version: '&7版本: &e%version%'

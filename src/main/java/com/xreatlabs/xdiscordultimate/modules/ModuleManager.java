@@ -18,6 +18,8 @@ import com.xreatlabs.xdiscordultimate.modules.leaderboard.LeaderboardModule;
 import com.xreatlabs.xdiscordultimate.modules.activityroles.ActivityRolesModule;
 import com.xreatlabs.xdiscordultimate.modules.voicechannel.VoiceChannelModule;
 import com.xreatlabs.xdiscordultimate.modules.economy.EconomyBridgeModule;
+import com.xreatlabs.xdiscordultimate.modules.serverip.ServerIPModule;
+import com.xreatlabs.xdiscordultimate.modules.whitelist.WhitelistModule;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -40,7 +42,7 @@ public class ModuleManager {
         // Register core modules
         registerModule("chat-bridge", new ChatBridgeModule(plugin));
         registerModule("server-logging", new ServerLoggingModule(plugin));
-        
+
         // Register other modules
         registerModule("verification", new VerificationModule(plugin));
         registerModule("server-control", new ServerControlModule(plugin));
@@ -53,29 +55,65 @@ public class ModuleManager {
         registerModule("server-status", new ServerStatusModule(plugin));
         registerModule("booster-perks", new BoosterPerksModule(plugin));
         registerModule("welcome-dm", new WelcomeDMModule(plugin));
-        
+
         // New advanced modules
         registerModule("leaderboard", new LeaderboardModule(plugin));
         registerModule("activity-roles", new ActivityRolesModule(plugin));
         registerModule("voice-channels", new VoiceChannelModule(plugin));
         registerModule("economy-bridge", new EconomyBridgeModule(plugin));
-        
+        registerModule("server-ip", new ServerIPModule(plugin));
+        registerModule("whitelist", new WhitelistModule(plugin));
+
         // Enable modules based on configuration
         for (Map.Entry<String, Module> entry : modules.entrySet()) {
             String moduleName = entry.getKey();
             Module module = entry.getValue();
-            
-            if (isModuleEnabled(moduleName)) {
-                try {
-                    module.enable();
-                    plugin.getLogger().info("Enabled module: " + module.getName());
-                } catch (Exception e) {
-                    plugin.getLogger().log(Level.SEVERE, "Failed to enable module: " + module.getName(), e);
-                }
-            } else {
+
+            // Check if module is enabled in config
+            if (!isModuleEnabled(moduleName)) {
                 plugin.getLogger().info("Module disabled in config: " + module.getName());
+                continue;
+            }
+
+            // Check module dependencies
+            if (!checkDependencies(module)) {
+                plugin.getLogger().warning("Skipping module '" + module.getName() + "' due to unmet dependencies.");
+                continue;
+            }
+
+            // Enable the module
+            try {
+                module.enable();
+                if (module.isEnabled()) {
+                    plugin.getLogger().info("Enabled module: " + module.getName());
+                } else {
+                    plugin.getLogger().warning("Module did not enable: " + module.getName());
+                }
+            } catch (Exception e) {
+                plugin.getLogger().log(Level.SEVERE, "Failed to enable module: " + module.getName(), e);
             }
         }
+    }
+
+    /**
+     * Check if a module's dependencies are satisfied.
+     * @param module The module to check
+     * @return true if all dependencies are enabled
+     */
+    private boolean checkDependencies(Module module) {
+        DependsOn dependsOn = module.getClass().getAnnotation(DependsOn.class);
+        if (dependsOn == null) {
+            return true; // No dependencies
+        }
+
+        for (String dependency : dependsOn.value()) {
+            if (!isModuleEnabled(dependency)) {
+                plugin.getLogger().warning("Module '" + module.getName() + "' requires '" + dependency + "' which is disabled.");
+                return false;
+            }
+        }
+
+        return true;
     }
     
     /**
@@ -114,17 +152,33 @@ public class ModuleManager {
     }
     
     /**
-     * Reload all modules
+     * Reload all modules (full restart)
      */
     public void reloadModules() {
         // Disable all modules
         disableModules();
-        
+
         // Clear module list
         modules.clear();
-        
+
         // Reload modules
         loadModules();
+    }
+
+    /**
+     * Reload cached configuration in all modules without restarting them
+     */
+    public void reloadModuleConfigs() {
+        for (Module module : modules.values()) {
+            if (module.isEnabled()) {
+                try {
+                    module.reloadConfig();
+                } catch (Exception e) {
+                    plugin.getLogger().log(Level.SEVERE,
+                        "Error reloading config for module: " + module.getName(), e);
+                }
+            }
+        }
     }
     
     /**

@@ -4,12 +4,13 @@ import net.byteflux.libby.BukkitLibraryManager;
 import net.byteflux.libby.Library;
 import net.byteflux.libby.logging.LogLevel;
 import org.bukkit.plugin.java.JavaPlugin;
+import java.util.logging.Level;
 
 public class LibraryManager {
-    
+
     private final JavaPlugin plugin;
     private final BukkitLibraryManager libraryManager;
-    
+
     public LibraryManager(JavaPlugin plugin) {
         this.plugin = plugin;
         this.libraryManager = new BukkitLibraryManager(plugin);
@@ -60,17 +61,15 @@ public class LibraryManager {
             loadLibrary("com.mysql", "mysql-connector-j", "8.0.33");
             loadLibrary("org.postgresql", "postgresql", "42.6.0");
             
-            // Logging
+            // SLF4J API (JDA needs an SLF4J binding; the server already provides one)
             loadLibrary("org.slf4j", "slf4j-api", "2.0.9");
-            loadLibrary("ch.qos.logback", "logback-classic", "1.4.11");
-            loadLibrary("org.apache.logging.log4j", "log4j-core", "2.17.1");
-            loadLibrary("org.apache.logging.log4j", "log4j-api", "2.17.1");
-            
+            // Do NOT load logback-classic, log4j-core, or log4j-api at runtime - the server
+            // already provides a Log4j binding and loading extra bindings causes conflicts.
+
             plugin.getLogger().info("All runtime dependencies loaded successfully!");
             
         } catch (Exception e) {
-            plugin.getLogger().severe("Failed to load runtime dependencies: " + e.getMessage());
-            e.printStackTrace();
+            plugin.getLogger().log(Level.SEVERE, "Failed to load runtime dependencies", e);
             throw new RuntimeException("Critical dependency loading failure", e);
         }
     }

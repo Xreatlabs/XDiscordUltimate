@@ -18,8 +18,8 @@ public class UpdateChecker {
     private final String currentVersion;
     private final OkHttpClient httpClient;
     
-    // GitHub API URL for releases
-    private static final String GITHUB_API_URL = "https://api.github.com/repos/xreatlabs/xdiscordultimate/releases/latest";
+    // GitHub API URL for releases (must match the exact repository casing)
+    private static final String GITHUB_API_URL = "https://api.github.com/repos/Xreatlabs/XDiscordUltimate/releases/latest";
     // Spigot resource ID (change this to your actual resource ID when published)
     private static final int SPIGOT_RESOURCE_ID = 12345;
     private static final String SPIGOT_API_URL = "https://api.spigotmc.org/legacy/update.php?resource=" + SPIGOT_RESOURCE_ID;
@@ -45,15 +45,14 @@ public class UpdateChecker {
                         plugin.getLogger().warning("A new version of XDiscordUltimate is available!");
                         plugin.getLogger().warning("Current version: " + currentVersion);
                         plugin.getLogger().warning("Latest version: " + latestVersion);
-                        plugin.getLogger().warning("Download at: https://github.com/xreatlabs/xdiscordultimate/releases");
+                        plugin.getLogger().warning("Download at: https://github.com/Xreatlabs/XDiscordUltimate/releases");
                         plugin.getLogger().warning("========================================");
                     });
                 } else {
                     plugin.getLogger().info("XDiscordUltimate v" + currentVersion + " is up to date!");
                 }
             } catch (Exception e) {
-                // Silently fail - don't spam console with update check errors
-                plugin.getLogger().info("XDiscordUltimate v" + currentVersion + " loaded");
+                plugin.getLogger().log(Level.WARNING, "Update check failed: " + e.getMessage());
             }
         });
     }

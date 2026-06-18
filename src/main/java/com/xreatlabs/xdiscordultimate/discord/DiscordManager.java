@@ -1,6 +1,7 @@
 package com.xreatlabs.xdiscordultimate.discord;
 
 import com.xreatlabs.xdiscordultimate.XDiscordUltimate;
+import com.xreatlabs.xdiscordultimate.utils.DiscordRateLimiter;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.JDABuilder;
 import net.dv8tion.jda.api.entities.Activity;
@@ -19,71 +20,131 @@ import java.util.concurrent.CompletableFuture;
 import java.util.logging.Level;
 
 public class DiscordManager {
-    
+
     private final XDiscordUltimate plugin;
     private JDA jda;
     private Guild mainGuild;
     private boolean ready = false;
     private BukkitTask statusTask;
-    
+    private final DiscordRateLimiter rateLimiter;
+    private DiscordListener discordListener;
+
     public DiscordManager(XDiscordUltimate plugin) {
         this.plugin = plugin;
+        // Rate limiter: 50 requests per minute per channel, 5 per second burst
+        this.rateLimiter = new DiscordRateLimiter(50, 5);
     }
     
     /**
-     * Initialize the Discord bot
+     * Validate Discord bot token format
+     * Discord tokens follow the pattern: base64_encoded_string.base64_encoded_string.base64_encoded_string
+     * or for newer bot tokens: BASE64_CHARACTERS.BASE64_CHARACTERS.BASE64_CHARACTERS
+     */
+    private boolean isValidTokenFormat(String token) {
+        if (token == null || token.isEmpty()) {
+            return false;
+        }
+
+        // Check for placeholder values
+        if (token.contains("YOUR_") || token.equals("REPLACE_WITH_YOUR_BOT_TOKEN") ||
+            token.equals("BOT_TOKEN_HERE") || token.equals("token")) {
+            return false;
+        }
+
+        // Discord bot tokens are typically 59+ characters with dots separating parts
+        // Format: base64.base64.base64 (approximately 24.34.28 characters or similar)
+        String[] parts = token.split("\\.");
+        if (parts.length != 3) {
+            return false;
+        }
+
+        // Each part should be base64-like (alphanumeric, +, /, =, -, _)
+        // Discord token parts vary in length; the middle metadata section is often short
+        for (String part : parts) {
+            if (!part.matches("^[A-Za-z0-9+/=_\\-]+$")) {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    /**
+     * Initialize the Discord bot asynchronously. The JDA connection and blocking
+     * awaitReady() call happen off the server thread, while the returned future is
+     * completed on the main thread so callers can safely touch Bukkit state.
      */
     public CompletableFuture<Boolean> initialize() {
-        CompletableFuture<Boolean> future = new CompletableFuture<>();
-        
         String token = plugin.getConfigManager().getBotToken();
-        if (token == null || token.isEmpty() || token.equals("YOUR_BOT_TOKEN")) {
-            plugin.getLogger().severe("Discord bot token not configured!");
-            future.complete(false);
-            return future;
+
+        if (token == null || token.isEmpty()) {
+            plugin.getLogger().severe("Discord bot token is not configured!");
+            plugin.getLogger().severe("Please set 'discord.bot-token' in config.yml");
+            return CompletableFuture.completedFuture(false);
         }
-        
-        try {
-            // Configure intents - need GUILD_PRESENCES for booster detection
-            EnumSet<GatewayIntent> intents = EnumSet.of(
-                GatewayIntent.GUILD_MEMBERS,
-                GatewayIntent.GUILD_MESSAGES,
-                GatewayIntent.GUILD_MESSAGE_REACTIONS,
-                GatewayIntent.GUILD_VOICE_STATES,
-                GatewayIntent.GUILD_EMOJIS_AND_STICKERS,
-                GatewayIntent.GUILD_PRESENCES,
-                GatewayIntent.MESSAGE_CONTENT,
-                GatewayIntent.DIRECT_MESSAGES
-            );
-            
-            // Build JDA - only enable cache flags that have corresponding intents
-            jda = JDABuilder.createDefault(token)
-                .setActivity(Activity.playing("Minecraft"))
-                .setEnabledIntents(intents)
-                .setMemberCachePolicy(MemberCachePolicy.ALL)
-                .setChunkingFilter(ChunkingFilter.ALL)
-                .enableCache(CacheFlag.VOICE_STATE, CacheFlag.EMOJI, CacheFlag.ROLE_TAGS)
-                .disableCache(CacheFlag.SCHEDULED_EVENTS) // Explicitly disable scheduled events cache
-                .addEventListeners(new DiscordListener(plugin))
-                .build();
-            
-            // Wait for ready
-            jda.awaitReady();
-            
+
+        if (!isValidTokenFormat(token)) {
+            plugin.getLogger().severe("Invalid Discord bot token format!");
+            plugin.getLogger().severe("Tokens should follow the format: BASE64.BASE64.BASE64");
+            plugin.getLogger().severe("Get your token from: https://discord.com/developers/applications");
+            plugin.getLogger().severe("Current token (first 10 chars): " +
+                (token.length() > 10 ? token.substring(0, 10) + "..." : token));
+            return CompletableFuture.completedFuture(false);
+        }
+
+        return CompletableFuture.supplyAsync(() -> {
+            try {
+                // Configure intents - need GUILD_PRESENCES for booster detection
+                EnumSet<GatewayIntent> intents = EnumSet.of(
+                    GatewayIntent.GUILD_MEMBERS,
+                    GatewayIntent.GUILD_MESSAGES,
+                    GatewayIntent.GUILD_MESSAGE_REACTIONS,
+                    GatewayIntent.GUILD_VOICE_STATES,
+                    GatewayIntent.GUILD_EMOJIS_AND_STICKERS,
+                    GatewayIntent.GUILD_PRESENCES,
+                    GatewayIntent.MESSAGE_CONTENT,
+                    GatewayIntent.DIRECT_MESSAGES
+                );
+
+                // Build JDA - only enable cache flags that have corresponding intents
+                discordListener = new DiscordListener(plugin);
+                JDA builtJda = JDABuilder.createDefault(token)
+                    .setActivity(Activity.playing("Minecraft"))
+                    .setEnabledIntents(intents)
+                    .setMemberCachePolicy(MemberCachePolicy.ALL)
+                    .setChunkingFilter(ChunkingFilter.ALL)
+                    .enableCache(CacheFlag.VOICE_STATE, CacheFlag.EMOJI, CacheFlag.ROLE_TAGS)
+                    .disableCache(CacheFlag.SCHEDULED_EVENTS) // Explicitly disable scheduled events cache
+                    .addEventListeners(discordListener)
+                    .build();
+
+                // Wait for ready off the server thread
+                builtJda.awaitReady();
+                this.jda = builtJda;
+                return true;
+            } catch (Exception e) {
+                plugin.getLogger().log(Level.SEVERE, "Failed to initialize Discord bot", e);
+                return false;
+            }
+        }).thenApplyAsync(success -> {
+            if (!success || jda == null) {
+                return false;
+            }
+
             // Get main guild - try multiple methods
             String guildId = plugin.getConfigManager().getGuildId();
-            
+
             // Clean up guild ID (remove quotes, spaces, etc.)
             if (guildId != null) {
                 guildId = guildId.trim().replace("\"", "").replace("'", "");
             }
-            
+
             plugin.getLogger().info("Attempting to connect to guild ID: " + guildId);
-            
+
             if (guildId != null && !guildId.isEmpty() && !guildId.equals("YOUR_GUILD_ID")) {
                 // Method 1: Direct lookup by ID
                 mainGuild = jda.getGuildById(guildId);
-                
+
                 // Method 2: If not found, list available guilds for debugging
                 if (mainGuild == null) {
                     plugin.getLogger().warning("Could not find guild with ID: " + guildId);
@@ -91,7 +152,7 @@ public class DiscordManager {
                     for (Guild g : jda.getGuilds()) {
                         plugin.getLogger().info("  - " + g.getName() + " (ID: " + g.getId() + ")");
                     }
-                    
+
                     // Method 3: If only in one guild, use that
                     if (jda.getGuilds().size() == 1) {
                         mainGuild = jda.getGuilds().get(0);
@@ -116,23 +177,23 @@ public class DiscordManager {
                     plugin.getLogger().severe("Bot is not in any guilds! Invite the bot to your Discord server first.");
                 }
             }
-            
+
             // Update activity
             updateActivity();
-            
+
             // Start status update task (every 60 seconds)
             startStatusUpdater();
-            
+
             ready = true;
             plugin.getLogger().info("Discord bot connected successfully!");
-            future.complete(true);
             
-        } catch (Exception e) {
-            plugin.getLogger().log(Level.SEVERE, "Failed to initialize Discord bot", e);
-            future.complete(false);
-        }
-        
-        return future;
+            // Register slash commands now that mainGuild is resolved
+            if (discordListener != null) {
+                discordListener.registerSlashCommands();
+            }
+            
+            return true;
+        }, command -> Bukkit.getScheduler().runTask(plugin, command));
     }
     
     /**
@@ -160,6 +221,54 @@ public class DiscordManager {
             ready = false;
             plugin.getLogger().info("Discord bot disconnected");
         }
+        rateLimiter.clear();
+    }
+
+    /**
+     * Send a message to a channel with rate limiting.
+     * @param channelId Discord channel ID
+     * @param message Message content
+     * @return CompletableFuture that completes when sent
+     */
+    public CompletableFuture<Boolean> sendMessage(String channelId, String message) {
+        if (!rateLimiter.tryAcquire("channel:" + channelId)) {
+            plugin.getLogger().fine("Rate limit reached for channel: " + channelId);
+            return CompletableFuture.completedFuture(false);
+        }
+
+        if (jda == null || !ready) {
+            return CompletableFuture.completedFuture(false);
+        }
+
+        try {
+            TextChannel channel = jda.getTextChannelById(channelId);
+            if (channel == null) {
+                return CompletableFuture.completedFuture(false);
+            }
+
+            CompletableFuture<Boolean> future = new CompletableFuture<>();
+            channel.sendMessage(message).queue(
+                success -> future.complete(true),
+                error -> {
+                    future.complete(false);
+                    // Reset rate limiter on rate limit error
+                    if (error.toString().contains("429")) {
+                        rateLimiter.reset("channel:" + channelId);
+                    }
+                }
+            );
+            return future;
+        } catch (Exception e) {
+            plugin.getLogger().log(Level.WARNING, "Failed to send message to channel " + channelId, e);
+            return CompletableFuture.completedFuture(false);
+        }
+    }
+
+    /**
+     * Get the rate limiter for external use
+     */
+    public DiscordRateLimiter getRateLimiter() {
+        return rateLimiter;
     }
     
     /**
@@ -214,18 +323,7 @@ public class DiscordManager {
     public boolean isReady() {
         return ready && jda != null && jda.getStatus() == JDA.Status.CONNECTED;
     }
-    
-    /**
-     * Get text channel by name
-     */
-    public TextChannel getTextChannel(String name) {
-        if (mainGuild == null) return null;
-        
-        return mainGuild.getTextChannelsByName(name, true).stream()
-            .findFirst()
-            .orElse(null);
-    }
-    
+
     /**
      * Get text channel by ID
      */
@@ -247,66 +345,63 @@ public class DiscordManager {
             // Try discord.channels.console as fallback
             channelId = plugin.getConfig().getString("discord.channels.console", "");
         }
-        if (channelId == null || channelId.isEmpty()) {
-            return null;
-        }
         return getTextChannelById(channelId);
     }
-    
+
     // ============================================
     // CONFIGURED CHANNEL HELPERS
     // ============================================
-    
+
+    /**
+     * Generic channel getter by config path
+     * @param configPath The configuration path (e.g., "discord.channels.chat")
+     * @return The TextChannel or null if not found
+     */
+    public TextChannel getChannel(String configPath) {
+        String channelId = plugin.getConfig().getString(configPath, "");
+        return getTextChannelById(channelId);
+    }
+
     /**
      * Get the welcome channel for new Discord members
      */
     public TextChannel getWelcomeChannel() {
-        String channelId = plugin.getConfig().getString("discord.channels.welcome", "");
-        return getTextChannelById(channelId);
+        return getChannel("discord.channels.welcome");
     }
-    
+
     /**
      * Get the logs channel for server logs
      */
     public TextChannel getLogsChannel() {
-        String channelId = plugin.getConfig().getString("discord.channels.logs", "");
-        return getTextChannelById(channelId);
+        return getChannel("discord.channels.logs");
     }
-    
+
     /**
      * Get the chat channel for Minecraft <-> Discord chat
      */
     public TextChannel getChatChannel() {
-        String channelId = plugin.getConfig().getString("discord.channels.chat", "");
-        return getTextChannelById(channelId);
+        return getChannel("discord.channels.chat");
     }
-    
+
     /**
      * Get the events channel for player join/leave/death
      */
     public TextChannel getEventsChannel() {
-        String channelId = plugin.getConfig().getString("discord.channels.events", "");
-        if (channelId == null || channelId.isEmpty()) {
-            // Fallback to chat channel
-            return getChatChannel();
-        }
-        return getTextChannelById(channelId);
+        return getChannel("discord.channels.events");
     }
-    
+
     /**
      * Get the tickets channel
      */
     public TextChannel getTicketsChannel() {
-        String channelId = plugin.getConfig().getString("discord.channels.tickets", "");
-        return getTextChannelById(channelId);
+        return getChannel("discord.channels.tickets");
     }
-    
+
     /**
      * Get the moderation channel for reports and mod logs
      */
     public TextChannel getModerationChannel() {
-        String channelId = plugin.getConfig().getString("discord.channels.moderation", "");
-        return getTextChannelById(channelId);
+        return getChannel("discord.channels.moderation");
     }
     
     /**

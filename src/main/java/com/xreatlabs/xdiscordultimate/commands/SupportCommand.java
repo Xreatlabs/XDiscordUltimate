@@ -10,7 +10,9 @@ import org.bukkit.entity.Player;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class SupportCommand implements CommandExecutor, TabCompleter {
     
@@ -26,82 +28,72 @@ public class SupportCommand implements CommandExecutor, TabCompleter {
             plugin.getMessageManager().sendMessage(sender, "general.player-only");
             return true;
         }
-        
+
         Player player = (Player) sender;
-        
-        // Check if tickets feature is enabled
+
         if (!plugin.getConfigManager().isFeatureEnabled("tickets")) {
             plugin.getMessageManager().sendMessage(player, "errors.feature-disabled");
             return true;
         }
-        
-        // Check if player is verified
+
         if (!plugin.getAdminUtils().isVerified(player)) {
             plugin.getMessageManager().sendMessage(player, "errors.discord-not-linked");
             return true;
         }
-        
-        // Check if player provided a message
+
         if (args.length == 0) {
             plugin.getMessageManager().sendMessage(player, "support.no-message");
-            plugin.getMessageManager().sendInfo(player, "Usage: /support <your message>");
+            plugin.getMessageManager().sendInfo(player, "support.usage");
             return true;
         }
-        
-        // Get the ticket module
+
         TicketModule ticketModule = plugin.getModuleManager().getModule(TicketModule.class);
         if (ticketModule == null || !ticketModule.isEnabled()) {
-            plugin.getMessageManager().sendError(player, "Ticket module is not available!");
+            plugin.getMessageManager().sendError(player, "errors.module-not-available");
             return true;
         }
-        
-        // Check if player has permission
+
         if (!player.hasPermission("xdiscord.support")) {
             plugin.getMessageManager().sendMessage(player, "errors.no-permission");
             return true;
         }
-        
-        // Check if player has too many open tickets
+
         plugin.getDatabaseManager().getOpenTicketsCount(player.getUniqueId())
             .thenAccept(openCount -> {
                 int maxTickets = plugin.getConfig().getInt("features.tickets.max-open-tickets", 3);
                 if (openCount >= maxTickets) {
-                    plugin.getMessageManager().sendError(player,
-                        "You have reached the maximum number of open tickets (" + maxTickets + ")");
+                    Map<String, String> placeholders = new HashMap<>();
+                    placeholders.put("%max%", String.valueOf(maxTickets));
+                    plugin.getMessageManager().sendError(player, "errors.max-tickets", placeholders);
                     plugin.getMessageManager().sendRawMessage(player, "&7Please wait for current tickets to be resolved.");
                     return;
                 }
-                
-                // Combine args into message
+
                 String message = String.join(" ", args);
-                
-                // Create ticket
+
                 ticketModule.createTicket(player, message);
-                
-                // Send confirmation
-                plugin.getMessageManager().sendRawMessage(player, "<gradient:#55FF55:#55FFFF>✅ Support ticket created!</gradient>");
-                plugin.getMessageManager().sendRawMessage(player, "&7Your ticket will be handled by our support team.");
+
+                plugin.getMessageManager().sendSuccess(player, "success.ticket-created");
                 plugin.getMessageManager().sendRawMessage(player, "&7Check Discord for updates on your ticket.");
             })
             .exceptionally(throwable -> {
                 plugin.getLogger().severe("Error checking open tickets count: " + throwable.getMessage());
-                plugin.getMessageManager().sendError(player, "An error occurred while creating your ticket.");
+                plugin.getMessageManager().sendError(player, "errors.ticket-create-failed");
                 return null;
             });
-        
+
         return true;
     }
-    
+
     @Override
     public List<String> onTabComplete(CommandSender sender, Command command, String alias, String[] args) {
         if (!(sender instanceof Player)) {
             return new ArrayList<>();
         }
-        
+
         List<String> completions = new ArrayList<>();
-        
+
         if (args.length == 1) {
-            // Suggest common support topics
             completions.addAll(Arrays.asList(
                 "I need help with",
                 "Bug report:",
@@ -113,7 +105,7 @@ public class SupportCommand implements CommandExecutor, TabCompleter {
                 "Griefing report"
             ));
         }
-        
+
         return completions;
     }
 }

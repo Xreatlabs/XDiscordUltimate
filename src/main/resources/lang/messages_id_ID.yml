@@ -1,0 +1,156 @@
+general:
+  prefix: <gradient:#55FFFF:#5555FF>XDiscord</gradient> &8» &r
+  reload: <gradient:#55FF55:#00AA00>Konfigurasi berhasil dimuat ulang!</gradient>
+  reload-success: <gradient:#55FF55:#00AA00>Konfigurasi berhasil dimuat ulang!</gradient>
+  reload-failed: <gradient:#FF5555:#AA0000>Gagal memuat ulang konfigurasi.</gradient> &7Periksa konsol untuk kesalahan.
+  no-permission: <gradient:#FF5555:#AA0000>Akses Ditolak</gradient> &7Anda tidak memiliki izin
+  player-only: <gradient:#FFAA00:#FF5555>Perintah ini</gradient> &7hanya dapat digunakan oleh pemain.
+  unknown-command: '&7Perintah tidak dikenal. Gunakan &e/xdiscord help &7untuk bantuan.'
+errors:
+  no-permission: <gradient:#FF5555:#AA0000>Akses Ditolak!</gradient> &7Anda tidak memiliki izin.
+  player-not-found: <gradient:#FF5555:#FFAA00>Pemain Tidak Ditemukan!</gradient> &7'%player%' tidak online.
+  invalid-usage: '<gradient:#FFAA00:#FF5555>Penggunaan Tidak Valid!</gradient> &7Yang benar: &e%usage%'
+  not-verified: <gradient:#FFAA00:#FF5555>Verifikasi Diperlukan!</gradient> &7Gunakan &e/verify &7untuk menghubungkan akun.
+  already-verified: <gradient:#55FF55:#55FFFF>Sudah Terverifikasi!</gradient> &7Akun Anda telah terhubung.
+  verification-failed: <gradient:#FF5555:#AA0000>Verifikasi Gagal!</gradient> &7Silakan coba lagi.
+  cooldown: <gradient:#FFAA00:#FF5555>Cooldown!</gradient> &7Silakan tunggu sebelum menggunakan lagi.
+  feature-disabled: <gradient:#AAAAAA:#555555>Fitur Dinonaktifkan!</gradient> &7Fitur ini saat ini dimatikan.
+  discord-not-linked: <gradient:#5555FF:#AA00AA>Discord Diperlukan!</gradient> &7Hubungkan terlebih dahulu dengan &e/verify &7.
+  cannot-report-admin: <gradient:#FF5555:#AA0000>Tidak Bisa Lapor Admin!</gradient> &7Anda tidak dapat melaporkan administrator server.
+  module-not-available: <gradient:#FF5555:#FFAA00>Modul Tidak Tersedia!</gradient> &7Fitur ini saat ini tidak tersedia.
+  ticket-create-failed: <gradient:#FF5555:#AA0000>Error!</gradient> &7Gagal membuat tiket. Silakan coba lagi.
+  unknown-subcommand: <gradient:#FF5555:#FFAA00>Subcommand Tidak Dikenal!</gradient> &7'%sub%' bukan subcommand yang valid.
+  invalid-discord-id: <gradient:#FF5555:#FFAA00>Format Tidak Valid!</gradient> &7Discord ID harus berupa snowflake numerik.
+  whitelist-submission-failed: <gradient:#FF5555:#AA0000>Error!</gradient> &7Gagal mengirim permintaan whitelist.
+  chat-filtered: '&cYour message was blocked by the chat filter.'
+  spam: '&cPlease don''t spam the chat!'
+  max-tickets: '&cYou have reached the maximum number of open tickets!'
+success:
+  verified: <gradient:#55FF55:#55FFFF>Sukses!</gradient> &7Akun Anda sekarang terhubung ke Discord!
+  ticket-created: <gradient:#55FF55:#55FFFF>Ticket Dibuat!</gradient> &7Periksa Discord untuk pembaruan.
+  report-sent: <gradient:#55FF55:#00AA00>Laporan Terkirim!</gradient> &7Moderator telah diberitahu.
+  announcement-sent: <gradient:#FFAA00:#FF5555>Pengumuman Terkirim!</gradient> &7Siaran selesai.
+  debug-enabled: <gradient:#55FF55:#55FFFF>Mode Debug Diaktifkan!</gradient> &7Log detail akan ditampilkan.
+  debug-disabled: <gradient:#AAAAAA:#555555>Mode Debug Dinonaktifkan!</gradient> &7Hanya pesan penting yang ditampilkan.
+  language-changed: <gradient:#55FF55:#55FFFF>Bahasa Diubah!</gradient> &7Bahasa Anda sekarang diatur ke &e%language%&7.
+  announcements-muted: '&aAnnouncements muted!'
+  announcements-unmuted: '&aAnnouncements unmuted!'
+verification:
+  code-generated: <gradient:#55FFFF:#5555FF>Kode Verifikasi</gradient> &8» &e&l%code%
+  code-expired: <gradient:#FF5555:#AA0000>Kode Kadaluarsa!</gradient> &7Buat kode baru.
+  code-invalid: <gradient:#FF5555:#FFAA00>Kode Tidak Valid!</gradient> &7Periksa dan coba lagi.
+  instructions: '&7Gunakan kode ini di Discord dengan &e/verify &7untuk menghubungkan.'
+  already-linked: <gradient:#FFAA00:#FF5555>Sudah Terhubung!</gradient> &7Discord ini terhubung ke akun lain.
+  already-verified: <gradient:#55FF55:#55FFFF>Sudah Terverifikasi!</gradient> &7Akun Anda telah terhubung.
+  success: <gradient:#55FF55:#55FFFF>Verifikasi Selesai!</gradient> &7Akun sekarang terhubung!
+  required: <gradient:#FFAA00:#FF5555>Verifikasi Diperlukan!</gradient> &7Hubungkan akun Discord Anda.
+  kick-message: '<gradient:#FF5555:#AA0000>Verifikasi Diperlukan!</gradient>
+
+    &7Anda harus memverifikasi dalam &e%minutes% &7menit!'
+tickets:
+  created: '<gradient:#55FFFF:#5555FF>Tiket #%id%</gradient> &7dibuat! Staf akan segera membantu.'
+  closed: '<gradient:#AAAAAA:#555555>Tiket #%id%</gradient> &7telah ditutup.'
+  not-found: <gradient:#FF5555:#AA0000>Tidak Ditemukan!</gradient> &7Tiket tidak ada.
+  max-tickets: <gradient:#FFAA00:#FF5555>Batas Tercapai!</gradient> &7Mencapai jumlah tiket terbuka maksimum.
+support:
+  no-message: <gradient:#FF5555:#FFAA00>Pesan Hilang!</gradient> &7Sediakan pesan untuk tiket Anda.
+  created: <gradient:#55FF55:#55FFFF>Tiket Dukungan Dibuat!</gradient> &7Periksa Discord.
+  usage: '&eUsage: /support <message>'
+report:
+  must-verify: <gradient:#FFAA00:#FF5555>Verifikasi Diperlukan!</gradient> &7Anda harus memverifikasi akun Discord untuk melaporkan pemain. Gunakan &e/verify &7di Discord.
+  success: '<gradient:#55FF55:#00AA00>Laporan #%id%</gradient> &7terhadap &e%player% &7terkirim!'
+  cooldown: <gradient:#FFAA00:#FF5555>Cooldown!</gradient> &7Tunggu sebelum melapori lagi.
+  self-report: <gradient:#FF5555:#AA0000>Error!</gradient> &7Anda tidak dapat melapori diri sendiri!
+  usage: '&eUsage: /report <player> <reason>'
+announcement:
+  no-message: <gradient:#FF5555:#FFAA00>Pesan Hilang!</gradient> &7Sediakan konten pengumuman.
+  sent: <gradient:#55FF55:#55FFFF>Pengumuman Terkirim!</gradient> &7Disiarkan ke semua platform.
+chat:
+  discord-to-minecraft: '&8[<gradient:#5555FF:#7289DA>Discord</gradient>&8] &b%user%&8: &f%message%'
+  minecraft-to-discord: '**%player%**: %message%'
+  filtered: <gradient:#FF5555:#AA0000>Pesan Diblokir!</gradient> &7Filter chat diaktifkan.
+  spam-warning: <gradient:#FFAA00:#FF5555>Pelan-pelan!</gradient> &7Jangan spam chat.
+events:
+  player-join: <gradient:#55FF55:#55FFFF>+</gradient> &7%player% bergabung
+  player-leave: <gradient:#FF5555:#FFAA00>-</gradient> &7%player% pergi
+  first-join: <rainbow>Selamat Datang!</rainbow> &e%player% &7bergabung untuk pertama kali!
+stats:
+  header: <gradient:#FFAA00:#FF5555>━━━ Statistik %player% ━━━</gradient>
+  kills: '&8▸ <gradient:#FF5555:#FFAA00>Kills</gradient>&8: &f%value%'
+  deaths: '&8▸ <gradient:#AAAAAA:#555555>Kematian</gradient>&8: &f%value%'
+  kd-ratio: '&8▸ <gradient:#55FFFF:#5555FF>Rasio K/D</gradient>&8: &f%value%'
+  mob-kills: '&8▸ <gradient:#55FF55:#00AA00>Kills Mob</gradient>&8: &f%value%'
+  playtime: '&8▸ <gradient:#AA00AA:#FF55FF>Waktu Bermain</gradient>&8: &f%value%'
+  not-found: <gradient:#FF5555:#AA0000>Tidak Ditemukan!</gradient> &7Statistik pemain tidak tersedia.
+moderation:
+  ban-success: <gradient:#FF5555:#AA0000>Diban!</gradient> &e%player% &7telah diban.
+  kick-success: <gradient:#FFAA00:#FF5555>Dikick!</gradient> &e%player% &7telah dikick.
+  mute-success: <gradient:#AAAAAA:#555555>Dibisukan!</gradient> &e%player% &7telah dibisukan.
+  unmute-success: <gradient:#55FF55:#55FFFF>Unbute!</gradient> &e%player% &7dapat berbicara lagi.
+  warn-success: <gradient:#FFAA00:#FF5555>Diperingatkan!</gradient> &e%player% &7telah diperingatkan.
+help:
+  header:
+  - ''
+  - <gradient:#55FFFF:#5555FF>━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━</gradient>
+  - '       <gradient:#55FFFF:#5555FF>&lXDiscordUltimate</gradient> &8- &7Bantuan'
+  - <gradient:#55FFFF:#5555FF>━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━</gradient>
+  - ''
+  footer:
+  - ''
+  - <gradient:#55FFFF:#5555FF>━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━</gradient>
+  - '  &7Gunakan <gradient:#55FFFF:#5555FF>/xdiscord help</gradient> &7untuk perintah'
+  - <gradient:#55FFFF:#5555FF>━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━</gradient>
+  - ''
+  verify: '  <gradient:#55FF55:#55FFFF>▸</gradient> &e/verify &8- &7Hubungkan akun Discord'
+  support: '  <gradient:#55FF55:#55FFFF>▸</gradient> &e/support <msg> &8- &7Buat tiket'
+  stats: '  <gradient:#55FF55:#55FFFF>▸</gradient> &e/stats [player] &8- &7Lihat statistik'
+  report: '  <gradient:#55FF55:#55FFFF>▸</gradient> &e/report <player> <reason> &8- &7Laporkan pemain'
+  must-verify: <gradient:#FFAA00:#FF5555>Verifikasi Diperlukan!</gradient> &7Anda harus memverifikasi akun Discord untuk melaporkan pemain. Gunakan &e/verify &7di Discord.
+  help: '  <gradient:#55FF55:#55FFFF>▸</gradient> &e/help &8- &7Tampilkan menu ini'
+commands:
+  verify: Hubungkan akun Discord Anda dengan Minecraft
+  support: Buat tiket dukungan untuk bantuan staf
+  report: Laporkan pemain ke moderator Discord
+  must-verify: <gradient:#FFAA00:#FF5555>Verifikasi Diperlukan!</gradient> &7Anda harus memverifikasi akun Discord untuk melaporkan pemain. Gunakan &e/verify &7di Discord.
+  discord: Dapatkan tautan undangan server Discord
+  embed: Kirim embed kustom ke Discord
+  announce: Siarakan pengumuman ke Discord dan dalam game
+discord:
+  commands:
+    help:
+      description: Tampilkan semua perintah dan fitur bot
+    status:
+      description: Tampilkan status server real-time dengan TPS dan jumlah pemain
+    players:
+      description: Daftar semua pemain online dengan dunia mereka
+    server:
+      description: Tampilkan informasi server terperinci
+    ping:
+      description: Periksa latensi bot dan waktu respons
+    tps:
+      description: Tampilkan performa server (TPS/MSPT)
+    verify:
+      description: Hubungkan akun Discord Anda ke Minecraft
+    stats:
+      description: Lihat statistik dan pencapaian pemain
+      option-player: Nama pemain untuk dicari
+    console:
+      description: Jalankan perintah di server (Admin Only)
+      option-command: Perintah untuk dijalankan
+    announce:
+      description: Siarakan pengumuman ke semua pemain
+      option-message: Pesan pengumuman
+      option-title: Judul opsional untuk pengumuman
+    online:
+      description: Tampilan cepat siapa yang online
+    info:
+      description: Tampilkan info dan versi plugin
+server-control:
+  restart-scheduled: <gradient:#FF5555:#FFAA00>Restart Server</gradient> &7dalam &e%time% &7detik!
+  stopping: <gradient:#FF5555:#AA0000>Server Berhenti...</gradient> &7Sampai jumpa!
+info:
+  sending-test-welcome: '&bSending test welcome DM...'
+  reloading-welcome-dm: '&bReloading welcome DM module...'
+  reload-start: '&bReloading configuration...'
+  plugin-info: <gradient:#55FFFF:#5555FF>=== Informasi XDiscordUltimate ===</gradient>
+  plugin-version: '&7Versi: &e%version%'

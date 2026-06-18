@@ -1,0 +1,156 @@
+general:
+  prefix: <gradient:#55FFFF:#5555FF>XDiscord</gradient> &8» &r
+  reload: <gradient:#55FF55:#00AA00>Configuratie succesvol herladen!</gradient>
+  reload-success: <gradient:#55FF55:#00AA00>Configuratie succesvol herladen!</gradient>
+  reload-failed: <gradient:#FF5555:#AA0000>Herladen configuratie mislukt.</gradient> &7Controleer de console op fouten.
+  no-permission: <gradient:#FF5555:#AA0000>Toegang Geweigerd</gradient> &7Je hebt geen toestemming
+  player-only: <gradient:#FFAA00:#FF5555>Dit commando</gradient> &7kan alleen door spelers worden gebruikt.
+  unknown-command: '&7Onbekend commando. Gebruik &e/xdiscord help &7voor hulp.'
+errors:
+  no-permission: <gradient:#FF5555:#AA0000>Toegang Geweigerd!</gradient> &7Je hebt geen toestemming.
+  player-not-found: <gradient:#FF5555:#FFAA00>Speler Niet Gevonden!</gradient> &7'%player%' is niet online.
+  invalid-usage: '<gradient:#FFAA00:#FF5555>Ongeldig Gebruik!</gradient> &7Correct: &e%usage%'
+  not-verified: <gradient:#FFAA00:#FF5555>Verificatie Vereist!</gradient> &7Gebruik &e/verify &7om accounts te koppelen.
+  already-verified: <gradient:#55FF55:#55FFFF>Al Geverifieerd!</gradient> &7Je account is gekoppeld.
+  verification-failed: <gradient:#FF5555:#AA0000>Verificatie Mislukt!</gradient> &7Probeer het opnieuw.
+  cooldown: <gradient:#FFAA00:#FF5555>Cooldown!</gradient> &7Wacht alstublieft voor opnieuw gebruik.
+  feature-disabled: <gradient:#AAAAAA:#555555>Functie Uitgeschakeld!</gradient> &7Deze functie is momenteel uit.
+  discord-not-linked: <gradient:#5555FF:#AA00AA>Discord Vereist!</gradient> &7Koppel eerst met &e/verify &7.
+  cannot-report-admin: <gradient:#FF5555:#AA0000>Kan Admins Niet Rapporteren!</gradient> &7Je kunt serverbeheerders niet rapporteren.
+  module-not-available: <gradient:#FF5555:#FFAA00>Module Niet Beschikbaar!</gradient> &7Deze functie is momenteel niet beschikbaar.
+  ticket-create-failed: <gradient:#FF5555:#AA0000>Fout!</gradient> &7Ticket aanmaken mislukt. Probeer het opnieuw.
+  unknown-subcommand: <gradient:#FF5555:#FFAA00>Onbekend Subcommando!</gradient> &7'%sub%' is geen geldig subcommando.
+  invalid-discord-id: <gradient:#FF5555:#FFAA00>Ongeldig Formaat!</gradient> &7Discord ID moet een numerieke snowflake zijn.
+  whitelist-submission-failed: <gradient:#FF5555:#AA0000>Fout!</gradient> &7Whitelist-verzoek verzenden mislukt.
+  chat-filtered: '&cYour message was blocked by the chat filter.'
+  spam: '&cPlease don''t spam the chat!'
+  max-tickets: '&cYou have reached the maximum number of open tickets!'
+success:
+  verified: <gradient:#55FF55:#55FFFF>Succes!</gradient> &7Je account is nu gekoppeld aan Discord!
+  ticket-created: <gradient:#55FF55:#55FFFF>Ticket Aangemaakt!</gradient> &7Controleer Discord voor updates.
+  report-sent: <gradient:#55FF55:#00AA00>Melding Verzonden!</gradient> &7Moderators zijn op de hoogte gesteld.
+  announcement-sent: <gradient:#FFAA00:#FF5555>Aankondiging Verzonden!</gradient> &7Uitzending voltooid.
+  debug-enabled: <gradient:#55FF55:#55FFFF>Debug-modus Ingeschakeld!</gradient> &7Gedetailleerde logs worden weergegeven.
+  debug-disabled: <gradient:#AAAAAA:#555555>Debug-modus Uitgeschakeld!</gradient> &7Alleen belangrijke berichten worden weergegeven.
+  language-changed: <gradient:#55FF55:#55FFFF>Taal Gewijzigd!</gradient> &7Je taal is nu ingesteld op &e%language%&7.
+  announcements-muted: '&aAnnouncements muted!'
+  announcements-unmuted: '&aAnnouncements unmuted!'
+verification:
+  code-generated: <gradient:#55FFFF:#5555FF>Verificatiecode</gradient> &8» &e&l%code%
+  code-expired: <gradient:#FF5555:#AA0000>Code Verlopen!</gradient> &7Genereer een nieuwe.
+  code-invalid: <gradient:#FF5555:#FFAA00>Ongeldige Code!</gradient> &7Controleer en probeer opnieuw.
+  instructions: '&7Gebruik deze code in Discord met &e/verify &7om te koppelen.'
+  already-linked: <gradient:#FFAA00:#FF5555>Al Gekoppeld!</gradient> &7Deze Discord is gekoppeld aan een ander account.
+  already-verified: <gradient:#55FF55:#55FFFF>Al Geverifieerd!</gradient> &7Je account is gekoppeld.
+  success: <gradient:#55FF55:#55FFFF>Verificatie Voltooid!</gradient> &7Accounts zijn nu gekoppeld!
+  required: <gradient:#FFAA00:#FF5555>Verificatie Vereist!</gradient> &7Koppel je Discord-account.
+  kick-message: '<gradient:#FF5555:#AA0000>Verificatie Vereist!</gradient>
+
+    &7Je moet verifiëren binnen &e%minutes% &7minuten!'
+tickets:
+  created: '<gradient:#55FFFF:#5555FF>Ticket #%id%</gradient> &7aangemaakt! Staff helpt zo.'
+  closed: '<gradient:#AAAAAA:#555555>Ticket #%id%</gradient> &7is gesloten.'
+  not-found: <gradient:#FF5555:#AA0000>Niet Gevonden!</gradient> &7Ticket bestaat niet.
+  max-tickets: <gradient:#FFAA00:#FF5555>Limiet Bereikt!</gradient> &7Maximaal aantal open tickets bereikt.
+support:
+  no-message: <gradient:#FF5555:#FFAA00>Bericht Ontbreekt!</gradient> &7Voeg een bericht toe voor je ticket.
+  created: <gradient:#55FF55:#55FFFF>Ondersteuningsticket Aangemaakt!</gradient> &7Controleer Discord.
+  usage: '&eUsage: /support <message>'
+report:
+  must-verify: <gradient:#FFAA00:#FF5555>Verificatie Vereist!</gradient> &7Je moet je Discord-account verifiëren om spelers te rapporteren. Gebruik &e/verify &7in Discord.
+  success: '<gradient:#55FF55:#00AA00>Melding #%id%</gradient> &7tegen &e%player% &7verzonden!'
+  cooldown: <gradient:#FFAA00:#FF5555>Cooldown!</gradient> &7Wacht voordat je opnieuw meldt.
+  self-report: <gradient:#FF5555:#AA0000>Fout!</gradient> &7Je kunt jezelf niet melden!
+  usage: '&eUsage: /report <player> <reason>'
+announcement:
+  no-message: <gradient:#FF5555:#FFAA00>Bericht Ontbreekt!</gradient> &7Voeg de inhoud van de aankondiging toe.
+  sent: <gradient:#55FF55:#55FFFF>Aankondiging Verzonden!</gradient> &7Verzonden naar alle platforms.
+chat:
+  discord-to-minecraft: '&8[<gradient:#5555FF:#7289DA>Discord</gradient>&8] &b%user%&8: &f%message%'
+  minecraft-to-discord: '**%player%**: %message%'
+  filtered: <gradient:#FF5555:#AA0000>Bericht Geblokkeerd!</gradient> &7Chatfilter geactiveerd.
+  spam-warning: <gradient:#FFAA00:#FF5555>Rustig Aan!</gradient> &7Spam niet in de chat.
+events:
+  player-join: <gradient:#55FF55:#55FFFF>+</gradient> &7%player% is toegetreden
+  player-leave: <gradient:#FF5555:#FFAA00>-</gradient> &7%player% is vertrokken
+  first-join: <rainbow>Welkom!</rainbow> &e%player% &7is voor het eerst toegetreden!
+stats:
+  header: <gradient:#FFAA00:#FF5555>━━━ %player% Statistieken ━━━</gradient>
+  kills: '&8▸ <gradient:#FF5555:#FFAA00>Kills</gradient>&8: &f%value%'
+  deaths: '&8▸ <gradient:#AAAAAA:#555555>Doden</gradient>&8: &f%value%'
+  kd-ratio: '&8▸ <gradient:#55FFFF:#5555FF>K/D Ratio</gradient>&8: &f%value%'
+  mob-kills: '&8▸ <gradient:#55FF55:#00AA00>Mob Kills</gradient>&8: &f%value%'
+  playtime: '&8▸ <gradient:#AA00AA:#FF55FF>Speeltijd</gradient>&8: &f%value%'
+  not-found: <gradient:#FF5555:#AA0000>Niet Gevonden!</gradient> &7Spelerstatistieken niet beschikbaar.
+moderation:
+  ban-success: <gradient:#FF5555:#AA0000>Verbannen!</gradient> &e%player% &7is verbannen.
+  kick-success: <gradient:#FFAA00:#FF5555>Gekickt!</gradient> &e%player% &7is gekickt.
+  mute-success: <gradient:#AAAAAA:#555555>Gedempt!</gradient> &e%player% &7is gedempt.
+  unmute-success: <gradient:#55FF55:#55FFFF>Ontdempt!</gradient> &e%player% &7kan weer praten.
+  warn-success: <gradient:#FFAA00:#FF5555>Gewaarschuwd!</gradient> &e%player% &7is gewaarschuwd.
+help:
+  header:
+  - ''
+  - <gradient:#55FFFF:#5555FF>━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━</gradient>
+  - '       <gradient:#55FFFF:#5555FF>&lXDiscordUltimate</gradient> &8- &7Help'
+  - <gradient:#55FFFF:#5555FF>━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━</gradient>
+  - ''
+  footer:
+  - ''
+  - <gradient:#55FFFF:#5555FF>━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━</gradient>
+  - '  &7Gebruik <gradient:#55FFFF:#5555FF>/xdiscord help</gradient> &7voor commando''s'
+  - <gradient:#55FFFF:#5555FF>━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━</gradient>
+  - ''
+  verify: '  <gradient:#55FF55:#55FFFF>▸</gradient> &e/verify &8- &7Koppel Discord-account'
+  support: '  <gradient:#55FF55:#55FFFF>▸</gradient> &e/support <msg> &8- &7Maak ticket'
+  stats: '  <gradient:#55FF55:#55FFFF>▸</gradient> &e/stats [player] &8- &7Bekijk statistieken'
+  report: '  <gradient:#55FF55:#55FFFF>▸</gradient> &e/report <player> <reason> &8- &7Rapporteer speler'
+  must-verify: <gradient:#FFAA00:#FF5555>Verificatie Vereist!</gradient> &7Je moet je Discord-account verifiëren om spelers te rapporteren. Gebruik &e/verify &7in Discord.
+  help: '  <gradient:#55FF55:#55FFFF>▸</gradient> &e/help &8- &7Toon dit menu'
+commands:
+  verify: Koppel je Discord-account met Minecraft
+  support: Maak een ondersteuningsticket voor stafhulp
+  report: Rapporteer een speler aan Discord-moderators
+  must-verify: <gradient:#FFAA00:#FF5555>Verificatie Vereist!</gradient> &7Je moet je Discord-account verifiëren om spelers te rapporteren. Gebruik &e/verify &7in Discord.
+  discord: Krijg de Discord-server uitnodigingslink
+  embed: Stuur een aangepaste embed naar Discord
+  announce: Zend een aankondiging uit naar Discord en in-game
+discord:
+  commands:
+    help:
+      description: Toon alle bot-commando's en functies
+    status:
+      description: Toon real-time serverstatus met TPS en aantal spelers
+    players:
+      description: Lijst alle online spelers met hun werelden
+    server:
+      description: Toon gedetailleerde serverinformatie
+    ping:
+      description: Controleer bot-latentie en reactietijd
+    tps:
+      description: Toon serverprestaties (TPS/MSPT)
+    verify:
+      description: Koppel je Discord-account aan Minecraft
+    stats:
+      description: Bekijk spelerstatistieken en prestaties
+      option-player: Spelernaam om op te zoeken
+    console:
+      description: Voer een commando uit op de server (Alleen Admin)
+      option-command: Het uit te voeren commando
+    announce:
+      description: Zend een aankondiging uit naar alle spelers
+      option-message: De aankondigingsmelding
+      option-title: Optionele titel voor de aankondiging
+    online:
+      description: Snel overzicht van wie online is
+    info:
+      description: Toon plugin-informatie en versie
+server-control:
+  restart-scheduled: <gradient:#FF5555:#FFAA00>Server Herstart</gradient> &7over &e%time% &7seconden!
+  stopping: <gradient:#FF5555:#AA0000>Server Wordt Gestopt...</gradient> &7Tot ziens!
+info:
+  sending-test-welcome: '&bSending test welcome DM...'
+  reloading-welcome-dm: '&bReloading welcome DM module...'
+  reload-start: '&bReloading configuration...'
+  plugin-info: <gradient:#55FFFF:#5555FF>=== XDiscordUltimate Informatie ===</gradient>
+  plugin-version: '&7Versie: &e%version%'

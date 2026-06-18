@@ -11,13 +11,13 @@ import java.util.UUID;
 import java.util.logging.Level;
 
 public class AdminUtils {
-    
+
     private final XDiscordUltimate plugin;
-    private final List<String> adminIDs;
-    
+    private final java.util.List<String> adminIDs = new java.util.ArrayList<>();
+
     public AdminUtils(XDiscordUltimate plugin) {
         this.plugin = plugin;
-        this.adminIDs = plugin.getConfig().getStringList("adminIDs");
+        this.adminIDs.addAll(plugin.getConfig().getStringList("adminIDs"));
     }
     
     /**

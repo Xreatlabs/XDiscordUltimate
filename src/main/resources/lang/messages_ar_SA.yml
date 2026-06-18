@@ -1,0 +1,156 @@
+general:
+  prefix: <gradient:#55FFFF:#5555FF>XDiscord</gradient> &8» &r
+  reload: <gradient:#55FF55:#00AA00>تم إعادة تحميل التكوين بنجاح!</gradient>
+  reload-success: <gradient:#55FF55:#00AA00>تم إعادة تحميل التكوين بنجاح!</gradient>
+  reload-failed: <gradient:#FF5555:#AA0000>فشل إعادة تحميل التكوين.</gradient> &7تحقق من وحدة التحكم بحثًا عن الأخطاء.
+  no-permission: <gradient:#FF5555:#AA0000>تم رفض الوصول</gradient> &7ليس لديك إذن
+  player-only: <gradient:#FFAA00:#FF5555>هذا الأمر</gradient> &7لا يمكن استخدامه إلا بواسطة اللاعبين.
+  unknown-command: '&7أمر غير معروف. استخدم &e/xdiscord help &7للحصول على المساعدة.'
+errors:
+  no-permission: <gradient:#FF5555:#AA0000>تم رفض الوصول!</gradient> &7ليس لديك إذن.
+  player-not-found: <gradient:#FF5555:#FFAA00>اللاعب غير موجود!</gradient> &7'%player%' غير متصل.
+  invalid-usage: '<gradient:#FFAA00:#FF5555>استخدام غير صالح!</gradient> &7الصحيح: &e%usage%'
+  not-verified: <gradient:#FFAA00:#FF5555>مطلوب التحقق!</gradient> &7استخدم &e/verify &7لربط الحسابات.
+  already-verified: <gradient:#55FF55:#55FFFF>تم التحقق بالفعل!</gradient> &7حسابك مرتبط.
+  verification-failed: <gradient:#FF5555:#AA0000>فشل التحقق!</gradient> &7يرجى المحاولة مرة أخرى.
+  cooldown: <gradient:#FFAA00:#FF5555>فترة التبريد!</gradient> &7يرجى الانتظار قبل الاستخدام مرة أخرى.
+  feature-disabled: <gradient:#AAAAAA:#555555>الميزة معطلة!</gradient> &7هذه الميزة معطلة حاليًا.
+  discord-not-linked: <gradient:#5555FF:#AA00AA>مطلوب Discord!</gradient> &7اربط أولًا باستخدام &e/verify &7.
+  cannot-report-admin: <gradient:#FF5555:#AA0000>لا يمكن الإبلاغ عن الإدارة!</gradient> &7لا يمكنك الإبلاغ عن إداريي الخادم.
+  module-not-available: <gradient:#FF5555:#FFAA00>الوحدة غير متاحة!</gradient> &7هذه الميزة غير متاحة حالياً.
+  ticket-create-failed: <gradient:#FF5555:#AA0000>خطأ!</gradient> &7فشل إنشاء التذكرة. يرجى المحاولة مرة أخرى.
+  unknown-subcommand: <gradient:#FF5555:#FFAA00>أمر فرعي غير معروف!</gradient> &7'%sub%' ليس أمرًا فرعيًا صالحًا.
+  invalid-discord-id: <gradient:#FF5555:#FFAA00>تنسيق غير صالح!</gradient> &7يجب أن يكون معرف Discord رقم snowflake.
+  whitelist-submission-failed: <gradient:#FF5555:#AA0000>خطأ!</gradient> &7فشل إرسال طلب القائمة البيضاء.
+  chat-filtered: '&cYour message was blocked by the chat filter.'
+  spam: '&cPlease don''t spam the chat!'
+  max-tickets: '&cYou have reached the maximum number of open tickets!'
+success:
+  verified: <gradient:#55FF55:#55FFFF>نجاح!</gradient> &7حسابك مرتبط الآن بـ Discord!
+  ticket-created: <gradient:#55FF55:#55FFFF>تم إنشاء التذكرة!</gradient> &7تحقق من Discord للحصول على التحديثات.
+  report-sent: <gradient:#55FF55:#00AA00>تم إرسال البلاغ!</gradient> &7تم إخطار المشرفين.
+  announcement-sent: <gradient:#FFAA00:#FF5555>تم إرسال الإعلان!</gradient> &7اكتمل البث.
+  debug-enabled: <gradient:#55FF55:#55FFFF>وضع التصحيح مفعّل!</gradient> &7سيتم عرض السجلات التفصيلية.
+  debug-disabled: <gradient:#AAAAAA:#555555>وضع التصحيح معطّل!</gradient> &7سيتم عرض الرسائل المهمة فقط.
+  language-changed: <gradient:#55FF55:#55FFFF>تم تغيير اللغة!</gradient> &7لغتك الآن مضبوطة على &e%language%&7.
+  announcements-muted: '&aAnnouncements muted!'
+  announcements-unmuted: '&aAnnouncements unmuted!'
+verification:
+  code-generated: <gradient:#55FFFF:#5555FF>رمز التحقق</gradient> &8» &e&l%code%
+  code-expired: <gradient:#FF5555:#AA0000>رمز منتهي!</gradient> &7قم بإنشاء رمز جديد.
+  code-invalid: <gradient:#FF5555:#FFAA00>رمز غير صالح!</gradient> &7تحقق وحاول مرة أخرى.
+  instructions: '&7استخدم هذا الرمز في Discord مع &e/verify &7للربط.'
+  already-linked: <gradient:#FFAA00:#FF5555>مرتبط بالفعل!</gradient> &7هذا Discord مرتبط بحساب آخر.
+  already-verified: <gradient:#55FF55:#55FFFF>تم التحقق بالفعل!</gradient> &7حسابك مرتبط.
+  success: <gradient:#55FF55:#55FFFF>اكتمل التحقق!</gradient> &7الحسابات مرتبطة الآن!
+  required: <gradient:#FFAA00:#FF5555>مطلوب التحقق!</gradient> &7اربط حساب Discord الخاص بك.
+  kick-message: '<gradient:#FF5555:#AA0000>مطلوب التحقق!</gradient>
+
+    &7يجب أن تتحقق خلال &e%minutes% &7دقائق!'
+tickets:
+  created: '<gradient:#55FFFF:#5555FF>التذكرة #%id%</gradient> &7تم إنشاؤها! سيساعدك الموظفون قريبًا.'
+  closed: '<gradient:#AAAAAA:#555555>التذكرة #%id%</gradient> &7تم إغلاقها.'
+  not-found: <gradient:#FF5555:#AA0000>غير موجود!</gradient> &7التذكرة غير موجودة.
+  max-tickets: <gradient:#FFAA00:#FF5555>تم الوصول إلى الحد الأقصى!</gradient> &7تم الوصول إلى الحد الأقصى من التذاكر المفتوحة.
+support:
+  no-message: <gradient:#FF5555:#FFAA00>الرسالة مفقودة!</gradient> &7قدم رسالة لتذكرتك.
+  created: <gradient:#55FF55:#55FFFF>تم إنشاء تذكرة الدعم!</gradient> &7تحقق من Discord.
+  usage: '&eUsage: /support <message>'
+report:
+  must-verify: <gradient:#FFAA00:#FF5555>التحقق مطلوب!</gradient> &7يجب أن تتحقق من حساب Discord الخاص بك للإبلاغ عن اللاعبين. استخدم &e/verify &7في Discord.
+  success: '<gradient:#55FF55:#00AA00>بلاغ #%id%</gradient> &7تم إرساله ضد &e%player% &7!'
+  cooldown: <gradient:#FFAA00:#FF5555>فترة التبريد!</gradient> &7انتظر قبل الإبلاغ مرة أخرى.
+  self-report: <gradient:#FF5555:#AA0000>خطأ!</gradient> &7لا يمكنك الإبلاغ عن نفسك!
+  usage: '&eUsage: /report <player> <reason>'
+announcement:
+  no-message: <gradient:#FF5555:#FFAA00>الرسالة مفقودة!</gradient> &7قدم محتوى الإعلان.
+  sent: <gradient:#55FF55:#55FFFF>تم إرسال الإعلان!</gradient> &7تم بثه إلى جميع المنصات.
+chat:
+  discord-to-minecraft: '&8[<gradient:#5555FF:#7289DA>Discord</gradient>&8] &b%user%&8: &f%message%'
+  minecraft-to-discord: '**%player%**: %message%'
+  filtered: <gradient:#FF5555:#AA0000>تم حظر الرسالة!</gradient> &7تم تنشيط مرشح الدردشة.
+  spam-warning: <gradient:#FFAA00:#FF5555>بطء!</gradient> &7لا ترسل رسائل غير مرغوب فيها في الدردشة.
+events:
+  player-join: <gradient:#55FF55:#55FFFF>+</gradient> &7انضم %player%
+  player-leave: <gradient:#FF5555:#FFAA00>-</gradient> &7غادر %player%
+  first-join: <rainbow>مرحبًا!</rainbow> &e%player% &7انضم لأول مرة!
+stats:
+  header: <gradient:#FFAA00:#FF5555>━━━ إحصائيات %player% ━━━</gradient>
+  kills: '&8▸ <gradient:#FF5555:#FFAA00>قتال</gradient>&8: &f%value%'
+  deaths: '&8▸ <gradient:#AAAAAA:#555555>وفيات</gradient>&8: &f%value%'
+  kd-ratio: '&8▸ <gradient:#55FFFF:#5555FF>نسبة K/D</gradient>&8: &f%value%'
+  mob-kills: '&8▸ <gradient:#55FF55:#00AA00>قتال الوحوش</gradient>&8: &f%value%'
+  playtime: '&8▸ <gradient:#AA00AA:#FF55FF>وقت اللعب</gradient>&8: &f%value%'
+  not-found: <gradient:#FF5555:#AA0000>غير موجود!</gradient> &7إحصائيات اللاعب غير متاحة.
+moderation:
+  ban-success: <gradient:#FF5555:#AA0000>تم حظره!</gradient> &e%player% &7تم حظره.
+  kick-success: <gradient:#FFAA00:#FF5555>تم طرده!</gradient> &e%player% &7تم طرده.
+  mute-success: <gradient:#AAAAAA:#555555>تم كتمه!</gradient> &e%player% &7تم كتمه.
+  unmute-success: <gradient:#55FF55:#55FFFF>تم إلغاء الكتم!</gradient> &e%player% &7يمكن التحدث مرة أخرى.
+  warn-success: <gradient:#FFAA00:#FF5555>تم تحذيره!</gradient> &e%player% &7تم تحذيره.
+help:
+  header:
+  - ''
+  - <gradient:#55FFFF:#5555FF>━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━</gradient>
+  - '       <gradient:#55FFFF:#5555FF>&lXDiscordUltimate</gradient> &8- &7مساعدة'
+  - <gradient:#55FFFF:#5555FF>━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━</gradient>
+  - ''
+  footer:
+  - ''
+  - <gradient:#55FFFF:#5555FF>━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━</gradient>
+  - '  &7استخدم <gradient:#55FFFF:#5555FF>/xdiscord help</gradient> &7للأوامر'
+  - <gradient:#55FFFF:#5555FF>━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━</gradient>
+  - ''
+  verify: '  <gradient:#55FF55:#55FFFF>▸</gradient> &e/verify &8- &7ربط حساب Discord'
+  support: '  <gradient:#55FF55:#55FFFF>▸</gradient> &e/support <msg> &8- &7إنشاء تذكرة'
+  stats: '  <gradient:#55FF55:#55FFFF>▸</gradient> &e/stats [player] &8- &7عرض الإحصائيات'
+  report: '  <gradient:#55FF55:#55FFFF>▸</gradient> &e/report <player> <reason> &8- &7الإبلاغ عن لاعب'
+  must-verify: <gradient:#FFAA00:#FF5555>التحقق مطلوب!</gradient> &7يجب أن تتحقق من حساب Discord الخاص بك للإبلاغ عن اللاعبين. استخدم &e/verify &7في Discord.
+  help: '  <gradient:#55FF55:#55FFFF>▸</gradient> &e/help &8- &7عرض هذه القائمة'
+commands:
+  verify: اربط حساب Discord مع Minecraft
+  support: أنشئ تذكرة دعم للحصول على مساعدة الموظفين
+  report: أبلغ عن لاعب إلى مشرفي Discord
+  must-verify: <gradient:#FFAA00:#FF5555>التحقق مطلوب!</gradient> &7يجب أن تتحقق من حساب Discord الخاص بك للإبلاغ عن اللاعبين. استخدم &e/verify &7في Discord.
+  discord: احصل على رابط دعوة خادم Discord
+  embed: أرسل تضمين مخصص إلى Discord
+  announce: أذن إعلانًا لـ Discord وفي اللعبة
+discord:
+  commands:
+    help:
+      description: عرض جميع أوامر وميزات البوت
+    status:
+      description: عرض حالة الخادم في الوقت الفعلي مع TPS وعدد اللاعبين
+    players:
+      description: سرد جميع اللاعبين المتصلين مع عوالمهم
+    server:
+      description: عرض معلومات مفصلة عن الخادم
+    ping:
+      description: التحقق من زمن الانتقال واستجابة البوت
+    tps:
+      description: عرض أداء الخادم (TPS/MSPT)
+    verify:
+      description: اربط حساب Discord بـ Minecraft
+    stats:
+      description: عرض إحصائيات وإنجازات اللاعبين
+      option-player: اسم اللاعب للبحث
+    console:
+      description: تنفيذ أمر على الخادم (مسؤول فقط)
+      option-command: الأمر المطلوب تنفيذه
+    announce:
+      description: بث إعلان لجميع اللاعبين
+      option-message: رسالة الإعلان
+      option-title: عنوان اختياري للإعلان
+    online:
+      description: عرض سريع لمن هو متصل
+    info:
+      description: عرض معلومات وإصدار المكون الإضافي
+server-control:
+  restart-scheduled: <gradient:#FF5555:#FFAA00>إعادة تشغيل الخادم</gradient> &7خلال &e%time% &7ثواني!
+  stopping: <gradient:#FF5555:#AA0000>جارٍ إيقاف الخادم...</gradient> &7أراك قريبًا!
+info:
+  sending-test-welcome: '&bSending test welcome DM...'
+  reloading-welcome-dm: '&bReloading welcome DM module...'
+  reload-start: '&bReloading configuration...'
+  plugin-info: <gradient:#55FFFF:#5555FF>=== معلومات XDiscordUltimate ===</gradient>
+  plugin-version: '&7الإصدار: &e%version%'

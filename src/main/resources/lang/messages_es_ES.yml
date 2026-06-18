@@ -1,0 +1,168 @@
+general:
+  prefix: <gradient:#55FFFF:#5555FF>XDiscord</gradient> &8» &r
+  reload: <gradient:#55FF55:#00AA00>¡Configuración recargada exitosamente!</gradient>
+  reload-success: <gradient:#55FF55:#00AA00>¡Configuración recargada exitosamente!</gradient>
+  reload-failed: <gradient:#FF5555:#AA0000>Error al recargar la configuración.</gradient> &7Verifica la consola para errores.
+  no-permission: <gradient:#FF5555:#AA0000>Acceso Denegado</gradient> &7No tienes permiso
+  player-only: <gradient:#FFAA00:#FF5555>Este comando</gradient> &7solo puede ser usado por jugadores.
+  unknown-command: '&7Comando desconocido. Usa &e/xdiscord help &7para ayuda.'
+errors:
+  no-permission: <gradient:#FF5555:#AA0000>¡Acceso Denegado!</gradient> &7No tienes permiso.
+  player-not-found: <gradient:#FF5555:#FFAA00>¡Jugador No Encontrado!</gradient> &7'%player%' no está en línea.
+  invalid-usage: '<gradient:#FFAA00:#FF5555>¡Uso Inválido!</gradient> &7Correcto: &e%usage%'
+  not-verified: <gradient:#FFAA00:#FF5555>¡Verificación Requerida!</gradient> &7Usa &e/verify &7para vincular cuentas.
+  already-verified: <gradient:#55FF55:#55FFFF>¡Ya Verificado!</gradient> &7Tu cuenta está vinculada.
+  verification-failed: <gradient:#FF5555:#AA0000>¡Verificación Fallida!</gradient> &7Por favor intenta de nuevo.
+  cooldown: <gradient:#FFAA00:#FF5555>¡En Enfriamiento!</gradient> &7Por favor espera antes de usar de nuevo.
+  feature-disabled: <gradient:#AAAAAA:#555555>¡Función Desactivada!</gradient> &7Esta función está actualmente apagada.
+  discord-not-linked: <gradient:#5555FF:#AA00AA>¡Discord Requerido!</gradient> &7Vincula primero con &e/verify &7.
+  cannot-report-admin: <gradient:#FF5555:#AA0000>¡No Puedes Reportar Admins!</gradient> &7No puedes reportar administradores del servidor.
+  module-not-available: <gradient:#FF5555:#FFAA00>¡Módulo No Disponible!</gradient> &7Esta función no está disponible actualmente.
+  max-tickets: <gradient:#FFAA00:#FF5555>¡Límite Alcanzado!</gradient> &7Tienes %max% tickets abiertos. Por favor espera a que se resuelvan los tickets actuales.
+  ticket-create-failed: <gradient:#FF5555:#AA0000>¡Error!</gradient> &7Falló la creación del ticket. Por favor intenta de nuevo.
+  unknown-subcommand: <gradient:#FF5555:#FFAA00>¡Subcomando Desconocido!</gradient> &7'%sub%' no es un subcomando válido.
+  invalid-discord-id: <gradient:#FF5555:#FFAA00>¡Formato Inválido!</gradient> &7El ID de Discord debe ser un snowflake numérico.
+  whitelist-submission-failed: <gradient:#FF5555:#AA0000>¡Error!</gradient> &7Falló el envío de solicitud de whitelist.
+  chat-filtered: '&cYour message was blocked by the chat filter.'
+  spam: '&cPlease don''t spam the chat!'
+success:
+  verified: <gradient:#55FF55:#55FFFF>¡Éxito!</gradient> &7¡Tu cuenta ahora está vinculada a Discord!
+  ticket-created: <gradient:#55FF55:#55FFFF>¡Ticket de Soporte Creado!</gradient> &7Tu ticket será manejado por nuestro equipo de soporte. Revisa Discord para actualizaciones.
+  report-sent: <gradient:#55FF55:#00AA00>¡Reporte Enviado!</gradient> &7Los moderadores han sido notificados.
+  announcement-sent: <gradient:#FFAA00:#FF5555>¡Anuncio Enviado!</gradient> &7Transmisión completa.
+  debug-enabled: <gradient:#55FF55:#55FFFF>¡Modo Debug Activado!</gradient> &7Se mostrarán logs detallados.
+  debug-disabled: <gradient:#AAAAAA:#555555>¡Modo Debug Desactivado!</gradient> &7Solo se mostrarán mensajes importantes.
+  admin-added: <gradient:#55FF55:#55FFFF>¡Admin Agregado!</gradient> &7El ID de Discord &e%id% &7ahora es administrador.
+  admin-removed: <gradient:#55FF55:#55FFFF>¡Admin Eliminado!</gradient> &7El ID de Discord &e%id% &7ya no es administrador.
+  announcements-muted: <gradient:#AAAAAA:#555555>¡Anuncios Silenciados!</gradient> &7Ya no recibirás anuncios.
+  announcements-unmuted: <gradient:#55FF55:#55FFFF>¡Anuncios Activados!</gradient> &7Volverás a recibir anuncios.
+  embed-sent: <gradient:#55FF55:#55FFFF>¡Embed Enviado!</gradient> &7Enviado exitosamente al canal &e#%channel%&7.
+  welcome-dm-reloaded: <gradient:#55FF55:#55FFFF>¡Recargado!</gradient> &7El módulo de DM de bienvenida ha sido recargado.
+  config-reloading: <gradient:#55FFFF:#5555FF>Recargando...</gradient> &7La configuración del plugin se está recargando.
+  language-changed: <gradient:#55FF55:#55FFFF>¡Idioma Cambiado!</gradient> &7Tu idioma ahora está configurado en &e%language%&7.
+info:
+  sending-test-welcome: <gradient:#55FFFF:#5555FF>Enviando Prueba...</gradient> &7Enviando DM de bienvenida de prueba a &e%player%&7...
+  reloading-welcome-dm: <gradient:#55FFFF:#5555FF>Recargando Módulo...</gradient> &7El módulo de DM de bienvenida se está recargando.
+  reload-start: <gradient:#55FFFF:#5555FF>Recargando...</gradient> &7La configuración del plugin se está recargando.
+  plugin-info: <gradient:#55FFFF:#5555FF>=== Información de XDiscordUltimate ===</gradient>
+  plugin-version: '&7Versión: &e%version%'
+  plugin-author: '&7Autor: &eXreaLabs'
+  plugin-description: '&7Descripción: &e%description%'
+  plugin-features: '&7Características:'
+  plugin-feature-1: '&7• Integración Discord-Minecraft'
+  plugin-feature-2: '&7• Sistema de verificación de jugadores'
+  plugin-feature-3: '&7• Sistema de reportes y tickets'
+  plugin-feature-4: '&7• Funciones de voz/TTS'
+  plugin-feature-5: '&7• Acceso a consola de admin'
+  plugin-help-reminder: '&7¡Usa &b/help &7para abrir el menú de ayuda de nuevo!'
+verification:
+  code-generated: <gradient:#55FFFF:#5555FF>Código de Verificación</gradient> &8» &e&l%code%
+  code-expired: <gradient:#FF5555:#AA0000>¡Código Expirado!</gradient> &7Genera uno nuevo.
+  code-invalid: <gradient:#FF5555:#FFAA00>¡Código Inválido!</gradient> &7Verifica e intenta de nuevo.
+  instructions: '&7Usa este código en Discord con &e/verify &7para vincular.'
+  already-linked: <gradient:#FFAA00:#FF5555>¡Ya Vinculado!</gradient> &7Este Discord está vinculado a otra cuenta.
+  already-verified: <gradient:#55FF55:#55FFFF>¡Ya Verificado!</gradient> &7Tu cuenta está vinculada.
+  success: <gradient:#55FF55:#55FFFF>¡Verificación Completa!</gradient> &7¡Las cuentas ahora están vinculadas!
+  required: <gradient:#FFAA00:#FF5555>¡Verificación Requerida!</gradient> &7Vincula tu cuenta de Discord.
+  kick-message: '<gradient:#FF5555:#AA0000>¡Verificación Requerida!</gradient>
+
+    &7¡Debes verificar dentro de &e%minutes% &7minutos!'
+tickets:
+  created: '<gradient:#55FFFF:#5555FF>¡Ticket #%id%</gradient> &7creado! &7El staff ayudará pronto.'
+  closed: '<gradient:#AAAAAA:#555555>Ticket #%id%</gradient> &7ha sido cerrado.'
+  not-found: <gradient:#FF5555:#AA0000>¡No Encontrado!</gradient> &7El ticket no existe.
+  max-tickets: <gradient:#FFAA00:#FF5555>¡Límite Alcanzado!</gradient> &7Máximo de tickets abiertos alcanzado.
+support:
+  no-message: <gradient:#FF5555:#FFAA00>¡Mensaje Faltante!</gradient> &7Proporciona un mensaje para tu ticket.
+  created: <gradient:#55FF55:#55FFFF>¡Ticket de Soporte Creado!</gradient> &7Revisa Discord.
+  usage: '&7Uso: &e/support <tu mensaje>'
+report:
+  success: '<gradient:#55FF55:#00AA00>¡Reporte #%id%</gradient> &7contra &e%player% &7enviado!'
+  cooldown: <gradient:#FFAA00:#FF5555>¡En Enfriamiento!</gradient> &7Espera antes de reportar de nuevo.
+  self-report: <gradient:#FF5555:#AA0000>¡Error!</gradient> &7¡No puedes reportarte a ti mismo!
+  usage: '&7Uso: &e/report <jugador> <razón>'
+  must-verify: <gradient:#FFAA00:#FF5555>¡Verificación Requerida!</gradient> &7Debes verificar tu cuenta de Discord para reportar jugadores. Usa &e/verify &7en Discord.
+announcement:
+  no-message: <gradient:#FF5555:#FFAA00>¡Mensaje Faltante!</gradient> &7Proporciona el contenido del anuncio.
+  sent: <gradient:#55FF55:#55FFFF>¡Anuncio Enviado!</gradient> &7Transmitido a todas las plataformas.
+chat:
+  discord-to-minecraft: '&8[<gradient:#5555FF:#7289DA>Discord</gradient>&8] &b%user%&8: &f%message%'
+  minecraft-to-discord: '**%player%**: %message%'
+  filtered: <gradient:#FF5555:#AA0000>¡Mensaje Bloqueado!</gradient> &7Filtro de chat activado.
+  spam-warning: <gradient:#FFAA00:#FF5555>¡Más Despacio!</gradient> &7No spamees el chat.
+events:
+  player-join: <gradient:#55FF55:#55FFFF>+</gradient> &7%player% se unió
+  player-leave: <gradient:#FF5555:#FFAA00>-</gradient> &7%player% salió
+  first-join: <rainbow>¡Bienvenido!</rainbow> &e%player% &7se unió por primera vez!
+stats:
+  header: <gradient:#FFAA00:#FF5555>━━━ Estadísticas de %player% ━━━</gradient>
+  kills: '&8▸ <gradient:#FF5555:#FFAA00>Kills</gradient>&8: &f%value%'
+  deaths: '&8▸ <gradient:#AAAAAA:#555555>Muertes</gradient>&8: &f%value%'
+  kd-ratio: '&8▸ <gradient:#55FFFF:#5555FF>Ratio K/D</gradient>&8: &f%value%'
+  mob-kills: '&8▸ <gradient:#55FF55:#00AA00>Kills de Mobs</gradient>&8: &f%value%'
+  playtime: '&8▸ <gradient:#AA00AA:#FF55FF>Tiempo de Juego</gradient>&8: &f%value%'
+  not-found: <gradient:#FF5555:#AA0000>¡No Encontrado!</gradient> &7Estadísticas del jugador no disponibles.
+moderation:
+  ban-success: <gradient:#FF5555:#AA0000>¡Baneado!</gradient> &e%player% &7ha sido baneado.
+  kick-success: <gradient:#FFAA00:#FF5555>¡Kickeado!</gradient> &e%player% &7ha sido kickeado.
+  mute-success: <gradient:#AAAAAA:#555555>¡Silenciado!</gradient> &e%player% &7ha sido silenciado.
+  unmute-success: <gradient:#55FF55:#55FFFF>¡Dessilenciado!</gradient> &e%player% &7puede hablar de nuevo.
+  warn-success: <gradient:#FFAA00:#FF5555>¡Advertido!</gradient> &e%player% &7ha sido advertido.
+help:
+  header:
+  - ''
+  - <gradient:#55FFFF:#5555FF>━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━</gradient>
+  - '       <gradient:#55FFFF:#5555FF>&lXDiscordUltimate</gradient> &8- &7Ayuda'
+  - <gradient:#55FFFF:#5555FF>━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━</gradient>
+  - ''
+  footer:
+  - ''
+  - <gradient:#55FFFF:#5555FF>━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━</gradient>
+  - '  &7Usa <gradient:#55FFFF:#5555FF>/xdiscord help</gradient> &7para comandos'
+  - <gradient:#55FFFF:#5555FF>━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━</gradient>
+  - ''
+  verify: '  <gradient:#55FF55:#55FFFF>▸</gradient> &e/verify &8- &7Vincular cuenta Discord'
+  support: '  <gradient:#55FF55:#55FFFF>▸</gradient> &e/support <msg> &8- &7Crear ticket'
+  stats: '  <gradient:#55FF55:#55FFFF>▸</gradient> &e/stats [player] &8- &7Ver estadísticas'
+  report: '  <gradient:#55FF55:#55FFFF>▸</gradient> &e/report <player> <reason> &8- &7Reportar jugador'
+  help: '  <gradient:#55FF55:#55FFFF>▸</gradient> &e/help &8- &7Mostrar este menú'
+commands:
+  verify: Vincula tu cuenta de Discord con Minecraft
+  support: Crea un ticket de soporte para asistencia del staff
+  report: Reporta un jugador a los moderadores de Discord
+  discord: Obtén el enlace de invitación del servidor Discord
+  embed: Envía un embed personalizado a Discord
+  announce: Transmite un anuncio a Discord y en el juego
+discord:
+  commands:
+    help:
+      description: Mostrar todos los comandos y características del bot
+    status:
+      description: Mostrar estado del servidor en tiempo real con TPS y conteo de jugadores
+    players:
+      description: Listar todos los jugadores en línea con sus mundos
+    server:
+      description: Mostrar información detallada del servidor
+    ping:
+      description: Verificar latencia del bot y tiempo de respuesta
+    tps:
+      description: Mostrar rendimiento del servidor (TPS/MSPT)
+    verify:
+      description: Vincula tu cuenta de Discord a Minecraft
+    stats:
+      description: Ver estadísticas y logros de jugadores
+      option-player: Nombre del jugador a buscar
+    console:
+      description: Ejecutar un comando en el servidor (Solo Admin)
+      option-command: El comando a ejecutar
+    announce:
+      description: Transmitir un anuncio a todos los jugadores
+      option-message: El mensaje de anuncio
+      option-title: Título opcional para el anuncio
+    online:
+      description: Vista rápida de quién está en línea
+    info:
+      description: Mostrar información y versión del plugin
+server-control:
+  restart-scheduled: <gradient:#FF5555:#FFAA00>Reinicio del Servidor</gradient> &7en &e%time% &7segundos!
+  stopping: <gradient:#FF5555:#AA0000>Deteniendo el Servidor...</gradient> &7¡Hasta pronto!

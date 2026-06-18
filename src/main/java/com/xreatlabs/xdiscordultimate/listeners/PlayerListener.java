@@ -58,7 +58,7 @@ public class PlayerListener implements Listener {
         }.runTaskLater(plugin, 20L); // 1 second delay
         
         // Log first join
-        if (isFirstJoin) {
+        if (isFirstJoin && plugin.getConfig().getBoolean("general.debug", false)) {
             plugin.getLogger().info("First time player joined: " + player.getName());
         }
         
@@ -122,7 +122,9 @@ public class PlayerListener implements Listener {
             }
         }
         
-        plugin.getLogger().info("Player death: " + deathMessage);
+        if (plugin.getConfig().getBoolean("general.debug", false)) {
+            plugin.getLogger().info("Player death: " + deathMessage);
+        }
     }
     
     @EventHandler(priority = EventPriority.MONITOR)

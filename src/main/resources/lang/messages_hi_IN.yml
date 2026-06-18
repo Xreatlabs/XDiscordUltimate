@@ -1,0 +1,156 @@
+general:
+  prefix: <gradient:#55FFFF:#5555FF>XDiscord</gradient> &8» &r
+  reload: <gradient:#55FF55:#00AA00>कॉन्फ़िगरेशन सफलतापूर्वी पुनः लोड हुआ!</gradient>
+  reload-success: <gradient:#55FF55:#00AA00>कॉन्फ़िगरेशन सफलतापूर्वी पुनः लोड हुआ!</gradient>
+  reload-failed: <gradient:#FF5555:#AA0000>कॉन्फ़िगरेशन पुनः लोड करने में विफल।</gradient> &7त्रुटियों के लिए कंसोल की जांच करें।
+  no-permission: <gradient:#FF5555:#AA0000>पहुंच अस्वीकृत</gradient> &7आपके पास अनुमति नहीं है
+  player-only: <gradient:#FFAA00:#FF5555>यह आदेश</gradient> &7केवल खिलाड़ियों द्वारा उपयोग किया जा सकता है।
+  unknown-command: '&7अज्ञात आदेश। सहायता के लिए &e/xdiscord help &7 का उपयोग करें।'
+errors:
+  no-permission: <gradient:#FF5555:#AA0000>पहुंच अस्वीकृत!</gradient> &7आपके पास अनुमति नहीं है।
+  player-not-found: <gradient:#FF5555:#FFAA00>खिलाड़ी नहीं मिला!</gradient> &7'%player%' ऑनलाइन नहीं है।
+  invalid-usage: '<gradient:#FFAA00:#FF5555>अमान्य उपयोग!</gradient> &7सही: &e%usage%'
+  not-verified: <gradient:#FFAA00:#FF5555>सत्यापन आवश्यक!</gradient> &7खाते लिंक करने के लिए &e/verify &7 का उपयोग करें।
+  already-verified: <gradient:#55FF55:#55FFFF>पहले से सत्यापित!</gradient> &7आपका खाता लिंक है।
+  verification-failed: <gradient:#FF5555:#AA0000>सत्यापन विफल!</gradient> &7कृपया पुनः प्रयास करें।
+  cooldown: <gradient:#FFAA00:#FF5555>कूलडाउन!</gradient> &7कृपया पुनः उपयोग करने से पहले प्रतीक्षा करें।
+  feature-disabled: <gradient:#AAAAAA:#555555>सुविधा अक्षम!</gradient> &7यह सुविधा वर्तमान में बंद है।
+  discord-not-linked: <gradient:#5555FF:#AA00AA>Discord आवश्यक!</gradient> &7पहले &e/verify &7 से लिंक करें।
+  cannot-report-admin: <gradient:#FF5555:#AA0000>एडमिन की रिपोर्ट नहीं कर सकते!</gradient> &7आप सर्वर व्यवस्थापकों की रिपोर्ट नहीं कर सकते।
+  module-not-available: <gradient:#FF5555:#FFAA00>मॉड्यूल उपलब्ध नहीं!</gradient> &7यह सुविधा वर्तमान में उपलब्ध नहीं है।
+  ticket-create-failed: <gradient:#FF5555:#AA0000>त्रुटि!</gradient> &7टिकट बनाने में विफल। कृपया पुनः प्रयास करें।
+  unknown-subcommand: <gradient:#FF5555:#FFAA00>अज्ञात उप-कमांड!</gradient> &7'%sub%' एक मान्य उप-कमांड नहीं है।
+  invalid-discord-id: <gradient:#FF5555:#FFAA00>अमान्य प्रारूप!</gradient> &7Discord ID एक संख्यात्मक snowflake होना चाहिए।
+  whitelist-submission-failed: <gradient:#FF5555:#AA0000>त्रुटि!</gradient> &7व्हाइटलिस्ट अनुरोध भेजने में विफल।
+  chat-filtered: '&cYour message was blocked by the chat filter.'
+  spam: '&cPlease don''t spam the chat!'
+  max-tickets: '&cYou have reached the maximum number of open tickets!'
+success:
+  verified: <gradient:#55FF55:#55FFFF>सफलता!</gradient> &7आपका खाता अब Discord से लिंक है!
+  ticket-created: <gradient:#55FF55:#55FFFF>टिकट बनाया गया!</gradient> &7अपडेट के लिए Discord की जांच करें।
+  report-sent: <gradient:#55FF55:#00AA00>रिपोर्ट भेजा गया!</gradient> &7मॉडरेटर्स को सूचित किया गया है।
+  announcement-sent: <gradient:#FFAA00:#FF5555>घोषणा भेजी गई!</gradient> &7प्रसारण पूर्ण।
+  debug-enabled: <gradient:#55FF55:#55FFFF>डीबग मोड सक्षम!</gradient> &7विस्तृत लॉग प्रदर्शित होंगे।
+  debug-disabled: <gradient:#AAAAAA:#555555>डीबग मोड अक्षम!</gradient> &7केवल महत्वपूर्ण संदेश प्रदर्शित होंगे।
+  language-changed: <gradient:#55FF55:#55FFFF>भाषा बदली गई!</gradient> &7आपकी भाषा अब &e%language%&7 पर सेट है।
+  announcements-muted: '&aAnnouncements muted!'
+  announcements-unmuted: '&aAnnouncements unmuted!'
+verification:
+  code-generated: <gradient:#55FFFF:#5555FF>सत्यापन कोड</gradient> &8» &e&l%code%
+  code-expired: <gradient:#FF5555:#AA0000>कोड समाप्त!</gradient> &7नया कोड जनरेट करें।
+  code-invalid: <gradient:#FF5555:#FFAA00>अमान्य कोड!</gradient> &7जांचें और पुनः प्रयास करें।
+  instructions: '&7लिंक करने के लिए Discord में &e/verify &7 के साथ इस कोड का उपयोग करें।'
+  already-linked: <gradient:#FFAA00:#FF5555>पहले से लिंक!</gradient> &7यह Discord किसी अन्य खाते से लिंक है।
+  already-verified: <gradient:#55FF55:#55FFFF>पहले से सत्यापित!</gradient> &7आपका खाता लिंक है।
+  success: <gradient:#55FF55:#55FFFF>सत्यापन पूर्ण!</gradient> &7खाते अब लिंक हैं!
+  required: <gradient:#FFAA00:#FF5555>सत्यापन आवश्यक!</gradient> &7अपना Discord खाता लिंक करें।
+  kick-message: '<gradient:#FF5555:#AA0000>सत्यापन आवश्यक!</gradient>
+
+    &7आपको &e%minutes% &7मिनट के भीतर सत्यापित होना होगा!'
+tickets:
+  created: '<gradient:#55FFFF:#5555FF>टिकट #%id%</gradient> &7बनाया गया! कर्मचारी जल्द ही मदद करेंगे।'
+  closed: '<gradient:#AAAAAA:#555555>टिकट #%id%</gradient> &7बंद कर दिया गया।'
+  not-found: <gradient:#FF5555:#AA0000>नहीं मिला!</gradient> &7टिकट मौजूद नहीं है।
+  max-tickets: <gradient:#FFAA00:#FF5555>सीमा पूरी!</gradient> &7अधिकतम खुले टिकट सीमा पूरी।
+support:
+  no-message: <gradient:#FF5555:#FFAA00>संदेश अनुपस्थित!</gradient> &7अपने टिकट के लिए एक संदेश प्रदान करें।
+  created: <gradient:#55FF55:#55FFFF>सहायता टिकट बनाया गया!</gradient> &7Discord की जांच करें।
+  usage: '&eUsage: /support <message>'
+report:
+  must-verify: <gradient:#FFAA00:#FF5555>सत्यापन आवश्यक!</gradient> &7खिलाड़ियों की रिपोर्ट करने के लिए आपको अपने Discord खाते को सत्यापित करना होगा। Discord में &e/verify &7 का उपयोग करें।
+  success: '<gradient:#55FF55:#00AA00>रिपोर्ट #%id%</gradient> &7&e%player% &7के खिलाफ भेजा गया!'
+  cooldown: <gradient:#FFAA00:#FF5555>कूलडाउन!</gradient> &7पुनः रिपोर्ट करने से पहले प्रतीक्षा करें।
+  self-report: <gradient:#FF5555:#AA0000>त्रुटि!</gradient> &7आप खुद को रिपोर्ट नहीं कर सकते!
+  usage: '&eUsage: /report <player> <reason>'
+announcement:
+  no-message: <gradient:#FF5555:#FFAA00>संदेश अनुपस्थित!</gradient> &7घोषणा की सामग्री प्रदान करें।
+  sent: <gradient:#55FF55:#55FFFF>घोषणा भेजी गई!</gradient> &7सभी प्लेटफॉर्म पर प्रसारित।
+chat:
+  discord-to-minecraft: '&8[<gradient:#5555FF:#7289DA>Discord</gradient>&8] &b%user%&8: &f%message%'
+  minecraft-to-discord: '**%player%**: %message%'
+  filtered: <gradient:#FF5555:#AA0000>संदेश अवरुद्ध!</gradient> &7चैट फ़िल्टर सक्रिय।
+  spam-warning: <gradient:#FFAA00:#FF5555>धीरे करें!</gradient> &7चैट में स्पैम न करें।
+events:
+  player-join: <gradient:#55FF55:#55FFFF>+</gradient> &7%player% शामिल हुए
+  player-leave: <gradient:#FF5555:#FFAA00>-</gradient> &7%player% छोड़ गए
+  first-join: <rainbow>स्वागत है!</rainbow> &e%player% &7पहली बार शामिल हुए!
+stats:
+  header: <gradient:#FFAA00:#FF5555>━━━ %player% के आँकड़े ━━━</gradient>
+  kills: '&8▸ <gradient:#FF5555:#FFAA00>मार</gradient>&8: &f%value%'
+  deaths: '&8▸ <gradient:#AAAAAA:#555555>मृत्यु</gradient>&8: &f%value%'
+  kd-ratio: '&8▸ <gradient:#55FFFF:#5555FF>K/D अनुपात</gradient>&8: &f%value%'
+  mob-kills: '&8▸ <gradient:#55FF55:#00AA00>मोब मार</gradient>&8: &f%value%'
+  playtime: '&8▸ <gradient:#AA00AA:#FF55FF>खेलने का समय</gradient>&8: &f%value%'
+  not-found: <gradient:#FF5555:#AA0000>नहीं मिला!</gradient> &7खिलाड़ी आँकड़े अनुपलब्ध।
+moderation:
+  ban-success: <gradient:#FF5555:#AA0000>प्रतिबंधित!</gradient> &e%player% &7प्रतिबंधित हो गए।
+  kick-success: <gradient:#FFAA00:#FF5555>निकाला गया!</gradient> &e%player% &7निकाल दिया गया।
+  mute-success: <gradient:#AAAAAA:#555555>मूक किया गया!</gradient> &e%player% &7मूक कर दिया गया।
+  unmute-success: <gradient:#55FF55:#55FFFF>अनमूक किया गया!</gradient> &e%player% &7फिर बोल सकते हैं।
+  warn-success: <gradient:#FFAA00:#FF5555>चेतावनी दी गई!</gradient> &e%player% &7को चेतावनी दी गई।
+help:
+  header:
+  - ''
+  - <gradient:#55FFFF:#5555FF>━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━</gradient>
+  - '       <gradient:#55FFFF:#5555FF>&lXDiscordUltimate</gradient> &8- &7सहायता'
+  - <gradient:#55FFFF:#5555FF>━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━</gradient>
+  - ''
+  footer:
+  - ''
+  - <gradient:#55FFFF:#5555FF>━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━</gradient>
+  - '  &7आदेशों के लिए <gradient:#55FFFF:#5555FF>/xdiscord help</gradient> का उपयोग करें'
+  - <gradient:#55FFFF:#5555FF>━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━</gradient>
+  - ''
+  verify: '  <gradient:#55FF55:#55FFFF>▸</gradient> &e/verify &8- &7Discord खाता लिंक करें'
+  support: '  <gradient:#55FF55:#55FFFF>▸</gradient> &e/support <msg> &8- &7टिकट बनाएं'
+  stats: '  <gradient:#55FF55:#55FFFF>▸</gradient> &e/stats [player] &8- &7आँकड़े देखें'
+  report: '  <gradient:#55FF55:#55FFFF>▸</gradient> &e/report <player> <reason> &8- &7खिलाड़ी रिपोर्ट करें'
+  must-verify: <gradient:#FFAA00:#FF5555>सत्यापन आवश्यक!</gradient> &7खिलाड़ियों की रिपोर्ट करने के लिए आपको अपने Discord खाते को सत्यापित करना होगा। Discord में &e/verify &7 का उपयोग करें।
+  help: '  <gradient:#55FF55:#55FFFF>▸</gradient> &e/help &8- &7यह मेनू दिखाएं'
+commands:
+  verify: अपने Discord खाते को Minecraft से लिंक करें
+  support: कर्मचारी सहायता के लिए सहायता टिकट बनाएं
+  report: Discord मॉडरेटर्स को खिलाड़ी की रिपोर्ट करें
+  must-verify: <gradient:#FFAA00:#FF5555>सत्यापन आवश्यक!</gradient> &7खिलाड़ियों की रिपोर्ट करने के लिए आपको अपने Discord खाते को सत्यापित करना होगा। Discord में &e/verify &7 का उपयोग करें।
+  discord: Discord सर्वर आमंत्रण लिंक प्राप्त करें
+  embed: Discord में कस्टम एम्बेड भेजें
+  announce: Discord और गेम में घोषणा प्रसारित करें
+discord:
+  commands:
+    help:
+      description: सभी बॉट आदेशों और सुविधाओं को दिखाएं
+    status:
+      description: TPS और खिलाड़ी संख्या के साथ रीयल-टाइम सर्वर स्थिति दिखाएं
+    players:
+      description: अपनी दुनियाओं के साथ सभी ऑनलाइन खिलाड़ियों की सूची बनाएं
+    server:
+      description: विस्तृत सर्वर जानकारी दिखाएं
+    ping:
+      description: बॉट विलंब और प्रतिक्रिया समय की जांच करें
+    tps:
+      description: सर्वर प्रदर्शन दिखाएं (TPS/MSPT)
+    verify:
+      description: अपने Discord खाते को Minecraft से लिंक करें
+    stats:
+      description: खिलाड़ी आँकड़े और उपलब्धियां देखें
+      option-player: खोजने के लिए खिलाड़ी नाम
+    console:
+      description: सर्वर पर आदेश चलाएं (केवल व्यवस्थापक)
+      option-command: चलाने के लिए आदेश
+    announce:
+      description: सभी खिलाड़ियों को घोषणा प्रसारित करें
+      option-message: घोषणा संदेश
+      option-title: घोषणा के लिए वैकल्पिक शीर्षक
+    online:
+      description: कौन ऑनलाइन है इसका त्वरिट अवलोकन
+    info:
+      description: प्लगइन जानकारी और संस्करण दिखाएं
+server-control:
+  restart-scheduled: <gradient:#FF5555:#FFAA00>सर्वर पुनरारंभ</gradient> &7&e%time% &7सेकंड में!
+  stopping: <gradient:#FF5555:#AA0000>सर्वर रुक रहा है...</gradient> &7फिर मिलेंगे!
+info:
+  sending-test-welcome: '&bSending test welcome DM...'
+  reloading-welcome-dm: '&bReloading welcome DM module...'
+  reload-start: '&bReloading configuration...'
+  plugin-info: <gradient:#55FFFF:#5555FF>=== XDiscordUltimate जानकारी ===</gradient>
+  plugin-version: '&7संस्करण: &e%version%'

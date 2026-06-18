@@ -1,0 +1,5 @@
+# Player Language Preferences
+# Format: UUID: locale
+# Players can set their language with /language <locale>
+# If a player is not listed, they will use the server default
+players: {}

@@ -65,19 +65,17 @@ public class ActivityRolesModule extends Module implements Listener {
     public void onDiscordReady() {
         startSyncTask();
         info("Activity roles connected to Discord");
-        
-        // Initial sync
+
         Bukkit.getScheduler().runTaskLaterAsynchronously(plugin, this::syncAllPlayers, 100L);
     }
 
     private void loadConfiguration() {
         tiers.clear();
-        
-        syncInterval = getConfig().getInt("sync-interval", 300); // 5 minutes
+
+        syncInterval = getConfig().getInt("sync-interval", 300);
         removeOldRoles = getConfig().getBoolean("remove-old-roles", true);
         announcePromotion = getConfig().getBoolean("announce-promotion", true);
 
-        // Load tiers from config
         if (getConfig().contains("tiers")) {
             for (String tierName : getConfig().getConfigurationSection("tiers").getKeys(false)) {
                 String path = "tiers." + tierName;
@@ -85,14 +83,13 @@ public class ActivityRolesModule extends Module implements Listener {
                 String roleId = getConfig().getString(path + ".role-id", "");
                 String displayName = getConfig().getString(path + ".display-name", tierName);
                 String color = getConfig().getString(path + ".color", "&7");
-                
+
                 if (!roleId.isEmpty()) {
                     tiers.add(new ActivityTier(tierName, displayName, minHours, roleId, color));
                 }
             }
         }
 
-        // Default tiers if none configured
         if (tiers.isEmpty()) {
             info("No tiers configured, using defaults (you need to set role IDs in config)");
             tiers.add(new ActivityTier("newcomer", "🌱 Newcomer", 0, "", "&a"));
@@ -102,7 +99,6 @@ public class ActivityRolesModule extends Module implements Listener {
             tiers.add(new ActivityTier("legend", "🏆 Legend", 500, "", "&d"));
         }
 
-        // Sort tiers by min hours (highest first for matching)
         tiers.sort((a, b) -> Long.compare(b.minHours, a.minHours));
     }
 
@@ -140,18 +136,16 @@ public class ActivityRolesModule extends Module implements Listener {
 
     @EventHandler
     public void onPlayerJoin(PlayerJoinEvent event) {
-        // Sync role on join
         Bukkit.getScheduler().runTaskLaterAsynchronously(plugin, () -> {
             Guild guild = plugin.getDiscordManager().getMainGuild();
             if (guild != null) {
                 syncPlayerRole(event.getPlayer(), guild);
             }
-        }, 40L); // 2 second delay
+        }, 40L);
     }
 
     @EventHandler
     public void onPlayerQuit(PlayerQuitEvent event) {
-        // Update role on quit (they may have gained playtime)
         Bukkit.getScheduler().runTaskAsynchronously(plugin, () -> {
             Guild guild = plugin.getDiscordManager().getMainGuild();
             if (guild != null) {
@@ -161,18 +155,16 @@ public class ActivityRolesModule extends Module implements Listener {
     }
 
     private void syncPlayerRole(OfflinePlayer player, Guild guild) {
-        // Check if player is verified/linked
         String discordId = plugin.getDatabaseManager().getDiscordIdSync(player.getUniqueId());
         if (discordId == null) {
-            return; // Player not linked
+            return;
         }
 
         Member member = guild.getMemberById(discordId);
         if (member == null) {
-            return; // Member not in guild
+            return;
         }
 
-        // Get player playtime
         long playtimeMinutes;
         try {
             long playtimeTicks = player.getStatistic(Statistic.PLAY_ONE_MINUTE);
@@ -184,17 +176,16 @@ public class ActivityRolesModule extends Module implements Listener {
 
         long playtimeHours = playtimeMinutes / 60;
 
-        // Find appropriate tier
         ActivityTier newTier = null;
         for (ActivityTier tier : tiers) {
             if (playtimeHours >= tier.minHours && !tier.roleId.isEmpty()) {
                 newTier = tier;
-                break; // Tiers are sorted highest first
+                break;
             }
         }
 
         if (newTier == null) {
-            return; // No tier matches
+            return;
         }
 
         Role newRole = guild.getRoleById(newTier.roleId);
@@ -203,12 +194,10 @@ public class ActivityRolesModule extends Module implements Listener {
             return;
         }
 
-        // Check if player already has this role
         if (member.getRoles().contains(newRole)) {
-            return; // Already has correct role
+            return;
         }
 
-        // Remove old tier roles if configured
         if (removeOldRoles) {
             for (ActivityTier tier : tiers) {
                 if (!tier.roleId.isEmpty() && !tier.roleId.equals(newTier.roleId)) {
@@ -223,15 +212,13 @@ public class ActivityRolesModule extends Module implements Listener {
             }
         }
 
-        // Add new role
         final ActivityTier finalNewTier = newTier;
         final long finalPlaytimeHours = playtimeHours;
         guild.addRoleToMember(member, newRole).queue(
             success -> {
-                info("Assigned role " + newRole.getName() + " to " + member.getEffectiveName() + 
+                info("Assigned role " + newRole.getName() + " to " + member.getEffectiveName() +
                      " (" + finalPlaytimeHours + " hours playtime)");
-                
-                // Check for promotion
+
                 String lastTier = lastTierCache.get(player.getUniqueId());
                 if (lastTier != null && !lastTier.equals(finalNewTier.name)) {
                     onPlayerPromotion(player, finalNewTier);
@@ -245,7 +232,6 @@ public class ActivityRolesModule extends Module implements Listener {
     private void onPlayerPromotion(OfflinePlayer player, ActivityTier newTier) {
         if (!announcePromotion) return;
 
-        // Notify in Minecraft if online
         if (player.isOnline()) {
             Player onlinePlayer = player.getPlayer();
             if (onlinePlayer != null) {
@@ -264,9 +250,7 @@ public class ActivityRolesModule extends Module implements Listener {
             }
         }
 
-        // Send to Discord chat channel
         if (plugin.getModuleManager().getModule("chat-bridge") != null) {
-            // Could send promotion message to Discord here
             debug("Player " + player.getName() + " promoted to " + newTier.displayName);
         }
     }

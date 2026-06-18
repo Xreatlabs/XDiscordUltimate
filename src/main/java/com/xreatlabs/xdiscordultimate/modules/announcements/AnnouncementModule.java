@@ -4,8 +4,15 @@ import com.xreatlabs.xdiscordultimate.XDiscordUltimate;
 import com.xreatlabs.xdiscordultimate.modules.Module;
 import com.xreatlabs.xdiscordultimate.utils.ColorUtils;
 import net.dv8tion.jda.api.EmbedBuilder;
+import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.channel.concrete.TextChannel;
 import net.dv8tion.jda.api.entities.emoji.Emoji;
+import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
+import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
+import net.dv8tion.jda.api.interactions.commands.OptionType;
+import net.dv8tion.jda.api.interactions.commands.build.Commands;
+import net.dv8tion.jda.api.interactions.commands.build.SlashCommandData;
+import net.dv8tion.jda.api.interactions.commands.build.SubcommandData;
 import net.dv8tion.jda.api.interactions.components.buttons.Button;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -21,6 +28,7 @@ import org.bukkit.scheduler.BukkitTask;
 import java.awt.*;
 import java.time.Instant;
 import java.util.*;
+import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Collectors;
@@ -81,6 +89,167 @@ public class AnnouncementModule extends Module implements Listener {
         
         info("Announcements module disabled");
     }
+
+    @Override
+    public List<SlashCommandData> getSlashCommands() {
+        return Collections.singletonList(
+            Commands.slash("announcement", "Server announcements")
+                .addSubcommands(
+                    new SubcommandData("list", "View scheduled announcements"),
+                    new SubcommandData("send", "Send a custom announcement")
+                        .addOption(OptionType.STRING, "message", "Announcement message", true)
+                        .addOption(OptionType.STRING, "title", "Announcement title", false),
+                    new SubcommandData("test", "Send a test announcement to verify the module is working")
+                )
+        );
+    }
+
+    @Override
+    public boolean handleSlashCommand(SlashCommandInteractionEvent event) {
+        if (!"announcement".equals(event.getName())) {
+            return false;
+        }
+
+        String subcommand = event.getSubcommandName();
+        if ("list".equals(subcommand)) {
+            listAnnouncementsSlash(event);
+            return true;
+        }
+
+        if ("send".equals(subcommand)) {
+            sendAnnouncementSlash(event);
+            return true;
+        }
+
+        if ("test".equals(subcommand)) {
+            handleTestSlash(event);
+            return true;
+        }
+
+        return false;
+    }
+
+    private void handleTestSlash(SlashCommandInteractionEvent event) {
+        Member member = event.getMember();
+        if (member == null || !canSendAnnouncements(member)) {
+            event.reply("You don't have permission to send test announcements!").setEphemeral(true).queue();
+            return;
+        }
+
+        event.reply("📣 Sending test announcement...").setEphemeral(true).queue();
+        String testMessage = "This is a **test announcement** from XDiscordUltimate. "
+            + "If you can see this in Minecraft chat and the configured Discord channel, "
+            + "the announcement module is working correctly!";
+        makeAnnouncement(null, "Test Announcement", testMessage);
+        info("Test announcement dispatched by " + event.getUser().getName());
+    }
+
+    @Override
+    public boolean handleTextCommand(MessageReceivedEvent event, String command, String args) {
+        if (!"announcement".equals(command)) {
+            return false;
+        }
+
+        String trimmed = args.trim();
+        String subcommand = trimmed.isEmpty() ? "list" : trimmed.split(" ", 2)[0].toLowerCase();
+        String subArgs = trimmed.isEmpty() ? "" : (trimmed.split(" ", 2).length > 1 ? trimmed.split(" ", 2)[1] : "");
+
+        if ("list".equals(subcommand)) {
+            event.getChannel().sendMessageEmbeds(buildAnnouncementsListEmbed().build()).queue();
+            return true;
+        }
+
+        if ("send".equals(subcommand)) {
+            sendAnnouncementText(event, subArgs.trim());
+            return true;
+        }
+
+        event.getMessage().reply("Usage: `!announcement list` or `!announcement send <message>`").queue();
+        return true;
+    }
+
+    private void sendAnnouncementText(MessageReceivedEvent event, String args) {
+        if (args.trim().isEmpty()) {
+            event.getMessage().reply("Usage: `!announcement send <message>`").queue();
+            return;
+        }
+
+        Member member = event.getMember();
+        if (member == null || !canSendAnnouncements(member)) {
+            event.getMessage().reply("You don't have permission to send announcements!").queue();
+            return;
+        }
+
+        makeAnnouncement(null, "Announcement", args.trim());
+        event.getMessage().reply("Announcement sent to all players!").queue();
+    }
+
+    private boolean canSendAnnouncements(Member member) {
+        java.util.List<String> adminIds = plugin.getConfig().getStringList("adminIDs");
+        if (adminIds.contains(member.getId())) {
+            return true;
+        }
+
+        java.util.List<String> allowedRoles = plugin.getConfig().getStringList("announcements.allowed-roles");
+        final java.util.List<String> announceRoles = (allowedRoles == null || allowedRoles.isEmpty())
+            ? java.util.Arrays.asList("admin", "moderator", "staff")
+            : allowedRoles;
+
+        return member.getRoles().stream().anyMatch(role -> {
+            String roleName = role.getName().toLowerCase();
+            String roleId = role.getId();
+            return announceRoles.stream().anyMatch(allowed ->
+                allowed.equalsIgnoreCase(roleName) || allowed.equals(roleId));
+        });
+    }
+
+    private void listAnnouncementsSlash(SlashCommandInteractionEvent event) {
+        event.replyEmbeds(buildAnnouncementsListEmbed().build()).setEphemeral(true).queue();
+    }
+
+    private EmbedBuilder buildAnnouncementsListEmbed() {
+        EmbedBuilder embed = new EmbedBuilder()
+            .setTitle("📢 Scheduled Announcements")
+            .setColor(Color.YELLOW)
+            .setFooter("XDiscordUltimate • " + announcements.size() + " announcement(s) configured", null)
+            .setTimestamp(Instant.now());
+
+        if (announcements.isEmpty()) {
+            embed.setDescription("No scheduled announcements configured.\nUse `/announce test` to test the module.");
+            return embed;
+        }
+
+        for (Announcement announcement : announcements.values()) {
+            String status = announcement.enabled ? "✅" : "❌";
+            String destinations = (announcement.sendToMinecraft ? "MC " : "")
+                + (announcement.sendToDiscord ? "Discord" : "");
+            if (destinations.isEmpty()) destinations = "None";
+
+            String fieldName = status + " " + announcement.id + " — "
+                + (announcement.title.isEmpty() ? "(no title)" : announcement.title);
+            String fieldValue = "Interval: `" + announcement.interval + "s` • "
+                + "Targets: `" + destinations + "` • "
+                + "Messages: `" + announcement.messages.size() + "`";
+            embed.addField(fieldName, fieldValue, false);
+        }
+
+        return embed;
+    }
+
+    private void sendAnnouncementSlash(SlashCommandInteractionEvent event) {
+        Member member = event.getMember();
+        if (member == null || !canSendAnnouncements(member)) {
+            event.reply("You don't have permission to send announcements!").setEphemeral(true).queue();
+            return;
+        }
+
+        String message = event.getOption("message").getAsString();
+        String title = event.getOption("title") != null ? event.getOption("title").getAsString() : "Announcement";
+        makeAnnouncement(null, title, message);
+        event.reply("Announcement sent!\n**Title:** " + title + "\n**Message:** " + message)
+            .setEphemeral(true)
+            .queue();
+    }
     
     private void loadConfiguration() {
         org.bukkit.configuration.ConfigurationSection config = getConfig();
@@ -89,14 +258,14 @@ public class AnnouncementModule extends Module implements Listener {
             announcementChannel = config.getString("default-channel", "announcements");
             enableAutoAnnouncements = true;
             enableJoinAnnouncements = true;
-            enableDiscordSync = config.getBoolean("show-title", true);
+            enableDiscordSync = config.getBoolean("send-to-discord", false);
             announcementPrefix = ColorUtils.parse("<gradient:#FFD700:#FFA500>✦ Announcement</gradient> &8» &r");
         } else {
             warning("Config section not found, using defaults");
             announcementChannel = "announcements";
             enableAutoAnnouncements = true;
             enableJoinAnnouncements = true;
-            enableDiscordSync = true;
+            enableDiscordSync = false;
             announcementPrefix = ColorUtils.parse("<gradient:#FFD700:#FFA500>✦ Announcement</gradient> &8» &r");
         }
         
@@ -116,8 +285,7 @@ public class AnnouncementModule extends Module implements Listener {
         }
         
         if (section == null) {
-            // Create default announcements
-            createDefaultAnnouncements();
+            info("No announcements configured.");
             return;
         }
         
@@ -140,78 +308,6 @@ public class AnnouncementModule extends Module implements Listener {
             announcements.put(key, announcement);
             debug("Loaded announcement: " + key + " (MC: " + announcement.sendToMinecraft + ", Discord: " + announcement.sendToDiscord + ")");
         }
-    }
-    
-    private void createDefaultAnnouncements() {
-        // Server info
-        announcements.put("server-info", new Announcement(
-            "server-info",
-            "Server Information",
-            Arrays.asList(
-                "&bWelcome to our server!",
-                "&eWebsite: &fexample.com",
-                "&eDiscord: &fdiscord.gg/example",
-                "&eStore: &fstore.example.com"
-            ),
-            600, // 10 minutes
-            true,
-            null,
-            true,  // minecraft
-            true,  // discord
-            "#00BFFF"
-        ));
-        
-        // Vote reminder
-        announcements.put("vote", new Announcement(
-            "vote",
-            "Vote Reminder",
-            Arrays.asList(
-                "&6Support the server by voting!",
-                "&eVote Link 1: &fexample.com/vote1",
-                "&eVote Link 2: &fexample.com/vote2",
-                "&aYou'll receive rewards for voting!"
-            ),
-            900, // 15 minutes
-            true,
-            null,
-            true,  // minecraft
-            true,  // discord
-            "#FFD700"
-        ));
-        
-        // Discord reminder
-        announcements.put("discord", new Announcement(
-            "discord",
-            "Join our Discord!",
-            Arrays.asList(
-                "&dJoin our Discord community!",
-                "&eLink: &fdiscord.gg/example",
-                "&aGet updates, chat with players, and more!"
-            ),
-            1200, // 20 minutes
-            true,
-            null,
-            true,  // minecraft
-            true,  // discord
-            "#7289DA"
-        ));
-        
-        // Tips (Minecraft only)
-        announcements.put("tips", new Announcement(
-            "tips",
-            "Server Tips",
-            Arrays.asList(
-                "&aDid you know?",
-                "&7Use &e/help &7to view available commands",
-                "&7Use &e/discord &7to get our Discord invite"
-            ),
-            1800, // 30 minutes
-            true,
-            null,
-            true,   // minecraft
-            false,  // discord (disabled - MC only)
-            "#55FF55"
-        ));
     }
     
     private void startAutoAnnouncements() {
@@ -308,54 +404,93 @@ public class AnnouncementModule extends Module implements Listener {
         if (announcement.sendToMinecraft) {
             sendMinecraftAnnouncement(announcement);
         }
-        
+
         // Send to Discord (if enabled for this announcement)
         if (enableDiscordSync && announcement.sendToDiscord) {
             sendDiscordAnnouncement(announcement);
         }
+
+        info("Delivered announcement '" + announcement.id + "'"
+            + " (MC=" + (announcement.sendToMinecraft)
+            + ", Discord=" + (enableDiscordSync && announcement.sendToDiscord) + ")");
     }
     
     private void sendMinecraftAnnouncement(Announcement announcement) {
-        // Build the message
+        // Build the message with simple formatting (no complex gradients for compatibility)
         List<String> formattedMessages = new ArrayList<>();
-        
-        // Add header
-        formattedMessages.add(ColorUtils.parse("<gradient:#FFD700:#FFA500>━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━</gradient>"));
+
+        // Calculate title width for centering
+        String titleText = announcement.title.isEmpty() ? "ANNOUNCEMENT" : announcement.title;
+        int titleWidth = titleText.length();
+        int totalWidth = 40; // Reduced from 46 for better chat fit
+        int padding = (totalWidth - titleWidth - 4) / 2; // 4 for "  * " and "  *"
+
+        // Top border
+        formattedMessages.add(ColorUtils.parse("&8&l╔════════════════════════════════════╗"));
+
+        // Title line with centered text and star icons
         if (!announcement.title.isEmpty()) {
-            formattedMessages.add(announcementPrefix + ColorUtils.parse("&e" + announcement.title));
+            StringBuilder titleLine = new StringBuilder();
+            titleLine.append("&8&l║ &6&l⭐ ");
+            titleLine.append(titleText);
+            titleLine.append(" &6&l⭐ &8&l║");
+            formattedMessages.add(ColorUtils.parse(titleLine.toString()));
+        }
+
+        // Divider line
+        formattedMessages.add(ColorUtils.parse("&8&l╠════════════════════════════════════╣"));
+        formattedMessages.add("");
+
+        // Add messages (simple & color codes for compatibility)
+        for (String message : announcement.messages) {
+            // Wrap message with borders
+            String wrapped = wrapMessageInBorder(message, totalWidth);
+            formattedMessages.add(ColorUtils.parse(wrapped));
             formattedMessages.add("");
         }
-        
-        // Add messages (supports gradients, hex colors, etc.)
-        for (String message : announcement.messages) {
-            formattedMessages.add(ColorUtils.parse(message));
-        }
-        
-        // Add footer
-        formattedMessages.add(ColorUtils.parse("<gradient:#FFD700:#FFA500>━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━</gradient>"));
-        
+
+        // Bottom border
+        formattedMessages.add(ColorUtils.parse("&8&l╚════════════════════════════════════╝"));
+
         // Send to players
         for (Player player : Bukkit.getOnlinePlayers()) {
             // Check if player has muted announcements
             if (mutedPlayers.contains(player.getUniqueId())) {
                 continue;
             }
-            
+
             // Check permission
             if (announcement.permission != null && !player.hasPermission(announcement.permission)) {
                 continue;
             }
-            
+
             // Send messages
             for (String line : formattedMessages) {
                 player.sendMessage(line);
             }
-            
+
             // Play sound
             if (announcementSound != null) {
                 player.playSound(player.getLocation(), announcementSound, 1.0f, 1.0f);
             }
         }
+    }
+
+    /**
+     * Wrap a message in a bordered box format
+     * Note: Returns raw color codes - caller must parse the result
+     */
+    private String wrapMessageInBorder(String message, int totalWidth) {
+        StringBuilder sb = new StringBuilder();
+        sb.append("&8&l║ &e");
+        sb.append(message);
+        // Calculate remaining space (strip color codes to get actual visible length)
+        String strippedMessage = ChatColor.stripColor(message);
+        int remaining = totalWidth - 5 - strippedMessage.length();
+        sb.append("&8&l");
+        for (int i = 0; i < Math.max(0, remaining); i++) sb.append(" ");
+        sb.append("║");
+        return sb.toString();
     }
     
     private void sendAnnouncementToPlayer(Player player, Announcement announcement) {
@@ -499,13 +634,13 @@ public class AnnouncementModule extends Module implements Listener {
      */
     public void toggleAnnouncementMute(Player player) {
         UUID uuid = player.getUniqueId();
-        
+
         if (mutedPlayers.contains(uuid)) {
             mutedPlayers.remove(uuid);
-            plugin.getMessageManager().sendSuccess(player, "Announcements unmuted!");
+            plugin.getMessageManager().sendSuccess(player, "success.announcements-unmuted");
         } else {
             mutedPlayers.add(uuid);
-            plugin.getMessageManager().sendSuccess(player, "Announcements muted!");
+            plugin.getMessageManager().sendSuccess(player, "success.announcements-muted");
         }
     }
     
@@ -583,9 +718,9 @@ public class AnnouncementModule extends Module implements Listener {
         List<String> mutedList = mutedPlayers.stream()
             .map(UUID::toString)
             .collect(Collectors.toList());
-        
+
         getConfig().set("muted-players", mutedList);
-        // TODO: Implement saveConfig()
+        plugin.saveConfig();
     }
     
     /**

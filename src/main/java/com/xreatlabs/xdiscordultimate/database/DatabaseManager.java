@@ -7,24 +7,23 @@ import org.bukkit.configuration.ConfigurationSection;
 
 import java.io.File;
 import java.sql.*;
-import java.util.UUID;
+import java.util.*;
 import java.util.concurrent.CompletableFuture;
 import java.util.logging.Level;
 
 public class DatabaseManager {
-    
+
     private final XDiscordUltimate plugin;
     private HikariDataSource dataSource;
     private final String type;
-    
+    private static final int CURRENT_SCHEMA_VERSION = 1;
+    private static final String SCHEMA_VERSION_KEY = "schema_version";
+
     public DatabaseManager(XDiscordUltimate plugin) {
         this.plugin = plugin;
         this.type = plugin.getConfig().getString("database.type", "sqlite");
     }
     
-    /**
-     * Initialize the database connection
-     */
     public void initialize() throws SQLException {
         HikariConfig config = new HikariConfig();
         
@@ -47,18 +46,25 @@ public class DatabaseManager {
         config.setIdleTimeout(600000);
         config.setConnectionTimeout(30000);
         config.setLeakDetectionThreshold(60000);
-        
+
+        // Connection validation
+        config.setConnectionTestQuery("SELECT 1");
+        config.setValidationTimeout(3000);
+
         dataSource = new HikariDataSource(config);
-        
+
+        // Create schema version table first
+        createSchemaVersionTable();
+
         // Create tables
         createTables();
-        
+
+        // Run migrations if needed
+        runMigrations();
+
         plugin.getLogger().info("Database initialized successfully using " + type);
     }
     
-    /**
-     * Setup SQLite configuration
-     */
     private void setupSQLite(HikariConfig config) {
         File dataFolder = plugin.getDataFolder();
         if (!dataFolder.exists()) {
@@ -72,9 +78,6 @@ public class DatabaseManager {
         config.setDriverClassName("org.sqlite.JDBC");
     }
     
-    /**
-     * Setup MySQL configuration
-     */
     private void setupMySQL(HikariConfig config) {
         ConfigurationSection mysql = plugin.getConfig().getConfigurationSection("database.mysql");
         
@@ -98,27 +101,110 @@ public class DatabaseManager {
         config.addDataSourceProperty("useServerPrepStmts", "true");
     }
     
-    /**
-     * Setup PostgreSQL configuration
-     */
     private void setupPostgreSQL(HikariConfig config) {
         ConfigurationSection postgres = plugin.getConfig().getConfigurationSection("database.postgresql");
-        
+
         String host = postgres.getString("host", "localhost");
         int port = postgres.getInt("port", 5432);
         String database = postgres.getString("database", "xdiscord");
         String username = postgres.getString("username", "postgres");
         String password = postgres.getString("password", "");
-        
+
         config.setJdbcUrl("jdbc:postgresql://" + host + ":" + port + "/" + database);
         config.setUsername(username);
         config.setPassword(password);
         config.setDriverClassName("org.postgresql.Driver");
     }
-    
-    /**
-     * Create database tables
-     */
+
+    private void createSchemaVersionTable() throws SQLException {
+        try (Connection conn = getConnection();
+             Statement stmt = conn.createStatement()) {
+            String sql = "CREATE TABLE IF NOT EXISTS schema_versions (" +
+                "version_key VARCHAR(64) PRIMARY KEY," +
+                "version_value INT NOT NULL DEFAULT 0," +
+                "applied_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP" +
+                ")";
+            stmt.execute(sql);
+
+            stmt.execute("INSERT OR IGNORE INTO schema_versions (version_key, version_value) " +
+                "VALUES ('" + SCHEMA_VERSION_KEY + "', 0)");
+        }
+    }
+
+    private int getSchemaVersion() {
+        try (Connection conn = getConnection();
+             Statement stmt = conn.createStatement();
+             ResultSet rs = stmt.executeQuery("SELECT version_value FROM schema_versions WHERE version_key = '" + SCHEMA_VERSION_KEY + "'")) {
+            if (rs.next()) {
+                return rs.getInt("version_value");
+            }
+        } catch (SQLException e) {
+            plugin.getLogger().log(Level.WARNING, "Failed to get schema version", e);
+        }
+        return 0;
+    }
+
+    private void updateSchemaVersion(int version) throws SQLException {
+        try (Connection conn = getConnection();
+             Statement stmt = conn.createStatement()) {
+            stmt.execute("UPDATE schema_versions SET version_value = " + version +
+                ", applied_at = CURRENT_TIMESTAMP WHERE version_key = '" + SCHEMA_VERSION_KEY + "'");
+            plugin.getLogger().info("Database schema updated to version " + version);
+        }
+    }
+
+    private void runMigrations() throws SQLException {
+        int currentVersion = getSchemaVersion();
+
+        if (currentVersion >= CURRENT_SCHEMA_VERSION) {
+            plugin.getLogger().info("Database schema is up to date (version " + currentVersion + ")");
+            return;
+        }
+
+        plugin.getLogger().info("Running database migrations from version " + currentVersion + " to " + CURRENT_SCHEMA_VERSION);
+
+        for (int version = currentVersion + 1; version <= CURRENT_SCHEMA_VERSION; version++) {
+            runMigration(version);
+        }
+    }
+
+    private void runMigration(int version) throws SQLException {
+        plugin.getLogger().info("Running migration to version " + version);
+
+        try (Connection conn = getConnection()) {
+            List<String> statements = getMigrationStatements(version);
+
+            if (statements.isEmpty()) {
+                updateSchemaVersion(version);
+                return;
+            }
+
+            for (String sql : statements) {
+                if (sql == null || sql.trim().isEmpty() || sql.trim().startsWith("--")) {
+                    continue;
+                }
+                try (Statement stmt = conn.createStatement()) {
+                    stmt.execute(sql);
+                }
+            }
+
+            updateSchemaVersion(version);
+        } catch (SQLException e) {
+            plugin.getLogger().log(Level.SEVERE, "Failed to run migration to version " + version, e);
+            throw e;
+        }
+    }
+
+    private List<String> getMigrationStatements(int version) {
+        switch (version) {
+            case 1:
+                return Collections.emptyList();
+            default:
+                plugin.getLogger().warning("No migration defined for version " + version);
+                return Collections.emptyList();
+        }
+    }
+
     private void createTables() throws SQLException {
         try (Connection conn = getConnection()) {
             // Verified users table
@@ -151,22 +237,18 @@ public class DatabaseManager {
                 "FOREIGN KEY (minecraft_uuid) REFERENCES verified_users(minecraft_uuid)" +
                 ")";
             
-            // Ticket messages table
             String ticketMessages = "CREATE TABLE IF NOT EXISTS ticket_messages (" +
                 "id INTEGER PRIMARY KEY " + (type.equals("sqlite") ? "AUTOINCREMENT" : "AUTO_INCREMENT") + "," +
                 "ticket_id INTEGER NOT NULL," +
                 "sender_uuid VARCHAR(36)," +
-                "sender_type VARCHAR(10)," + // PLAYER or STAFF
-                "message TEXT," +
+                "sender_type VARCHAR(10)," +
                 "sent_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP," +
                 "FOREIGN KEY (ticket_id) REFERENCES tickets(id)" +
                 ")";
             
-            // Moderation logs table
             String moderationLogs = "CREATE TABLE IF NOT EXISTS moderation_logs (" +
                 "id INTEGER PRIMARY KEY " + (type.equals("sqlite") ? "AUTOINCREMENT" : "AUTO_INCREMENT") + "," +
-                "action_type VARCHAR(20) NOT NULL," + // BAN, KICK, WARN, MUTE
-                "target_uuid VARCHAR(36) NOT NULL," +
+                "action_type VARCHAR(20) NOT NULL," +
                 "moderator_uuid VARCHAR(36)," +
                 "reason TEXT," +
                 "timestamp TIMESTAMP DEFAULT CURRENT_TIMESTAMP," +
@@ -196,7 +278,6 @@ public class DatabaseManager {
                 "claimed_at TIMESTAMP NULL" +
                 ")";
             
-            // Execute table creation
             try (Statement stmt = conn.createStatement()) {
                 stmt.execute(verifiedUsers);
                 stmt.execute(verificationCodes);
@@ -205,21 +286,17 @@ public class DatabaseManager {
                 stmt.execute(moderationLogs);
                 stmt.execute(playerStats);
                 stmt.execute(activityRewards);
-                
-                // Create indexes for better performance
+
                 stmt.execute("CREATE INDEX IF NOT EXISTS idx_discord_id ON verified_users(discord_id)");
                 stmt.execute("CREATE INDEX IF NOT EXISTS idx_verification_code ON verification_codes(code)");
                 stmt.execute("CREATE INDEX IF NOT EXISTS idx_verification_expires ON verification_codes(expires_at)");
                 stmt.execute("CREATE INDEX IF NOT EXISTS idx_ticket_status ON tickets(status)");
-                stmt.execute("CREATE INDEX IF NOT EXISTS idx_mod_target ON moderation_logs(target_uuid)");
+                stmt.execute("CREATE INDEX IF NOT EXISTS idx_mod_moderator ON moderation_logs(moderator_uuid)");
                 stmt.execute("CREATE INDEX IF NOT EXISTS idx_mod_active ON moderation_logs(active)");
             }
         }
     }
-    
-    /**
-     * Get a database connection
-     */
+
     public Connection getConnection() throws SQLException {
         if (dataSource == null) {
             throw new SQLException("Database not initialized!");
@@ -227,9 +304,6 @@ public class DatabaseManager {
         return dataSource.getConnection();
     }
     
-    /**
-     * Execute an async database operation
-     */
     public <T> CompletableFuture<T> executeAsync(DatabaseOperation<T> operation) {
         return CompletableFuture.supplyAsync(() -> {
             try {
@@ -241,10 +315,7 @@ public class DatabaseManager {
         });
     }
     
-    /**
-     * Link a Discord account with Minecraft
-     */
-    public CompletableFuture<Boolean> linkAccount(UUID minecraftUuid, String discordId, 
+    public CompletableFuture<Boolean> linkAccount(UUID minecraftUuid, String discordId,
                                                   String minecraftName, String discordName) {
         return executeAsync(() -> {
             String sql;
@@ -280,9 +351,6 @@ public class DatabaseManager {
         });
     }
     
-    /**
-     * Get Discord ID from Minecraft UUID
-     */
     public CompletableFuture<String> getDiscordId(UUID minecraftUuid) {
         return executeAsync(() -> {
             String sql = "SELECT discord_id FROM verified_users WHERE minecraft_uuid = ?";
@@ -302,9 +370,6 @@ public class DatabaseManager {
         });
     }
     
-    /**
-     * Get Minecraft UUID from Discord ID
-     */
     public CompletableFuture<UUID> getMinecraftUuid(String discordId) {
         return executeAsync(() -> {
             String sql = "SELECT minecraft_uuid FROM verified_users WHERE discord_id = ?";
@@ -325,16 +390,38 @@ public class DatabaseManager {
     }
     
     /**
+     * Get Minecraft UUID from Discord ID (synchronous version for use in async contexts)
+     */
+    public UUID getMinecraftUuidSync(String discordId) {
+        String sql = "SELECT minecraft_uuid FROM verified_users WHERE discord_id = ?";
+
+        try (Connection conn = getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+
+            stmt.setString(1, discordId);
+
+            try (ResultSet rs = stmt.executeQuery()) {
+                if (rs.next()) {
+                    return UUID.fromString(rs.getString("minecraft_uuid"));
+                }
+            }
+        } catch (SQLException e) {
+            plugin.getLogger().warning("Database error in getMinecraftUuidSync: " + e.getMessage());
+        }
+        return null;
+    }
+
+    /**
      * Get Discord ID from Minecraft UUID (synchronous version for use in async contexts)
      */
     public String getDiscordIdSync(UUID minecraftUuid) {
         String sql = "SELECT discord_id FROM verified_users WHERE minecraft_uuid = ?";
-        
+
         try (Connection conn = getConnection();
              PreparedStatement stmt = conn.prepareStatement(sql)) {
-            
+
             stmt.setString(1, minecraftUuid.toString());
-            
+
             try (ResultSet rs = stmt.executeQuery()) {
                 if (rs.next()) {
                     return rs.getString("discord_id");
@@ -344,6 +431,13 @@ public class DatabaseManager {
             plugin.getLogger().warning("Database error in getDiscordIdSync: " + e.getMessage());
         }
         return null;
+    }
+
+    /**
+     * Check if a Discord user is linked to a Minecraft account (synchronous version)
+     */
+    public boolean isDiscordLinkedSync(String discordId) {
+        return getMinecraftUuidSync(discordId) != null;
     }
     
     /**
@@ -359,17 +453,78 @@ public class DatabaseManager {
     public CompletableFuture<Boolean> isDiscordLinked(String discordId) {
         return executeAsync(() -> {
             String sql = "SELECT 1 FROM verified_users WHERE discord_id = ?";
-            
+
             try (Connection conn = getConnection();
                  PreparedStatement stmt = conn.prepareStatement(sql)) {
-                
+
                 stmt.setString(1, discordId);
-                
+
                 try (ResultSet rs = stmt.executeQuery()) {
                     return rs.next();
                 }
             }
         });
+    }
+
+    /**
+     * Fetch the linked account info (minecraft name, discord name, verified_at) for a Discord user.
+     * Returns null if the Discord user is not linked.
+     */
+    public LinkedAccountInfo getLinkedAccountInfoSync(String discordId) {
+        String sql = "SELECT minecraft_uuid, minecraft_name, discord_name, verified_at FROM verified_users WHERE discord_id = ?";
+
+        try (Connection conn = getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+
+            stmt.setString(1, discordId);
+
+            try (ResultSet rs = stmt.executeQuery()) {
+                if (rs.next()) {
+                    String uuidStr = rs.getString("minecraft_uuid");
+                    UUID minecraftUuid = null;
+                    try {
+                        if (uuidStr != null) minecraftUuid = UUID.fromString(uuidStr);
+                    } catch (IllegalArgumentException ignored) {
+                    }
+                    return new LinkedAccountInfo(
+                        discordId,
+                        rs.getString("discord_name"),
+                        rs.getString("minecraft_name"),
+                        minecraftUuid,
+                        rs.getTimestamp("verified_at")
+                    );
+                }
+            }
+        } catch (SQLException e) {
+            plugin.getLogger().warning("Database error in getLinkedAccountInfoSync: " + e.getMessage());
+        }
+        return null;
+    }
+
+    /**
+     * Immutable snapshot of a linked Discord/Minecraft account, used for verification embeds.
+     */
+    public static class LinkedAccountInfo {
+        private final String discordId;
+        private final String discordName;
+        private final String minecraftName;
+        private final UUID minecraftUuid;
+        private final Timestamp linkedAt;
+
+        public LinkedAccountInfo(String discordId, String discordName, String minecraftName,
+                                 UUID minecraftUuid, Timestamp linkedAt) {
+            this.discordId = discordId;
+            this.discordName = discordName;
+            this.minecraftName = minecraftName;
+            this.minecraftUuid = minecraftUuid;
+            this.linkedAt = linkedAt;
+        }
+
+        public String getDiscordId() { return discordId; }
+        public String getDiscordName() { return discordName; }
+        public String getMinecraftName() { return minecraftName; }
+        public UUID getMinecraftUuid() { return minecraftUuid; }
+        public Timestamp getLinkedAt() { return linkedAt; }
     }
     
     /**
@@ -469,12 +624,12 @@ public class DatabaseManager {
     public CompletableFuture<String> getMinecraftName(String discordId) {
         return executeAsync(() -> {
             String sql = "SELECT minecraft_name FROM verified_users WHERE discord_id = ?";
-            
+
             try (Connection conn = getConnection();
                  PreparedStatement stmt = conn.prepareStatement(sql)) {
-                
+
                 stmt.setString(1, discordId);
-                
+
                 try (ResultSet rs = stmt.executeQuery()) {
                     if (rs.next()) {
                         return rs.getString("minecraft_name");
@@ -482,6 +637,24 @@ public class DatabaseManager {
                 }
             }
             return null;
+        });
+    }
+
+    /**
+     * Update the stored Discord display name for a linked Discord account
+     */
+    public CompletableFuture<Boolean> updateDiscordName(String discordId, String newDiscordName) {
+        return executeAsync(() -> {
+            String sql = "UPDATE verified_users SET discord_name = ? WHERE discord_id = ?";
+
+            try (Connection conn = getConnection();
+                 PreparedStatement stmt = conn.prepareStatement(sql)) {
+
+                stmt.setString(1, newDiscordName);
+                stmt.setString(2, discordId);
+
+                return stmt.executeUpdate() > 0;
+            }
         });
     }
     
@@ -615,16 +788,47 @@ public class DatabaseManager {
     }
     
     /**
+     * Unlink (delete) a verified account by Minecraft UUID.
+     * Returns true if a row was deleted.
+     */
+    public CompletableFuture<Boolean> unlinkAccount(UUID minecraftUuid) {
+        return executeAsync(() -> {
+            String sql = "DELETE FROM verified_users WHERE minecraft_uuid = ?";
+            try (Connection conn = getConnection();
+                 PreparedStatement stmt = conn.prepareStatement(sql)) {
+                stmt.setString(1, minecraftUuid.toString());
+                return stmt.executeUpdate() > 0;
+            }
+        });
+    }
+
+    /**
      * Store verification code for Discord user
      */
-    public void storeVerificationCode(String discordId, String code, String username) {
-        String sql = "INSERT OR REPLACE INTO verification_codes (discord_id, code, username, created_at, expires_at) VALUES (?, ?, ?, ?, ?)";
+    public void storeVerificationCode(String discordId, String code, String username, int expiryMinutes) {
+        String sql;
+        switch (type.toLowerCase()) {
+            case "mysql":
+                sql = "INSERT INTO verification_codes (discord_id, code, username, created_at, expires_at) " +
+                      "VALUES (?, ?, ?, ?, ?) ON DUPLICATE KEY UPDATE " +
+                      "code = VALUES(code), username = VALUES(username), created_at = VALUES(created_at), expires_at = VALUES(expires_at)";
+                break;
+            case "postgresql":
+                sql = "INSERT INTO verification_codes (discord_id, code, username, created_at, expires_at) " +
+                      "VALUES (?, ?, ?, ?, ?) ON CONFLICT(discord_id) DO UPDATE SET " +
+                      "code = EXCLUDED.code, username = EXCLUDED.username, created_at = EXCLUDED.created_at, expires_at = EXCLUDED.expires_at";
+                break;
+            case "sqlite":
+            default:
+                sql = "INSERT OR REPLACE INTO verification_codes (discord_id, code, username, created_at, expires_at) VALUES (?, ?, ?, ?, ?)";
+                break;
+        }
         
         try (Connection conn = getConnection();
              PreparedStatement stmt = conn.prepareStatement(sql)) {
             
             long now = System.currentTimeMillis();
-            long expires = now + (10 * 60 * 1000); // 10 minutes
+            long expires = now + (expiryMinutes * 60L * 1000L);
             
             stmt.setString(1, discordId);
             stmt.setString(2, code);

@@ -2,6 +2,8 @@ package com.xreatlabs.xdiscordultimate.modules.moderation;
 
 import com.xreatlabs.xdiscordultimate.XDiscordUltimate;
 import com.xreatlabs.xdiscordultimate.modules.Module;
+import com.xreatlabs.xdiscordultimate.utils.ColorUtils;
+import com.xreatlabs.xdiscordultimate.utils.EmbedUtils;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.Role;
@@ -15,7 +17,6 @@ import net.dv8tion.jda.api.events.guild.member.update.GuildMemberUpdateTimeOutEv
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import org.bukkit.BanList;
 import org.bukkit.Bukkit;
-import com.xreatlabs.xdiscordultimate.utils.ColorUtils;
 import org.bukkit.ChatColor;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.command.CommandSender;
@@ -285,108 +286,100 @@ public class ModerationModule extends Module implements Listener {
     }
     
     private void syncBanToDiscord(OfflinePlayer player, String moderator, String reason, Duration duration) {
-        String discordId = plugin.getDatabaseManager().getDiscordId(player.getUniqueId())
-            .join();
-        
-        if (discordId == null) return;
-        
-        plugin.getDiscordManager().getMainGuild().ban(net.dv8tion.jda.api.entities.UserSnowflake.fromId(discordId), 0, TimeUnit.SECONDS).reason(
-            "Minecraft Ban: " + reason + " (by " + moderator + ")"
-        ).queue(
-            success -> debug("Synced ban to Discord for " + player.getName()),
-            error -> error("Failed to sync ban to Discord: " + error.getMessage())
-        );
+        plugin.getDatabaseManager().getDiscordId(player.getUniqueId())
+            .thenAccept(discordId -> {
+                if (discordId == null) return;
+
+                plugin.getDiscordManager().getMainGuild().ban(
+                    net.dv8tion.jda.api.entities.UserSnowflake.fromId(discordId), 0, TimeUnit.SECONDS
+                ).reason("Minecraft Ban: " + reason + " (by " + moderator + ")")
+                    .queue(
+                        success -> debug("Synced ban to Discord for " + player.getName()),
+                        error -> error("Failed to sync ban to Discord: " + error.getMessage())
+                    );
+            })
+            .exceptionally(throwable -> {
+                error("Failed to sync ban to Discord for " + player.getName(), throwable);
+                return null;
+            });
     }
-    
+
     private void syncKickToDiscord(Player player, String reason) {
-        String discordId = plugin.getDatabaseManager().getDiscordId(player.getUniqueId())
-            .join();
-        
-        if (discordId == null) return;
-        
-        Member member = plugin.getDiscordManager().getMainGuild().getMemberById(discordId);
-        if (member != null) {
-            member.kick("Minecraft Kick: " + reason).queue(
-                success -> debug("Synced kick to Discord for " + player.getName()),
-                error -> debug("Failed to sync kick to Discord: " + error.getMessage())
-            );
-        }
-    }
-    
-    private void syncMuteToDiscord(Player player, String moderator, String reason, Duration duration) {
-        String discordId = plugin.getDatabaseManager().getDiscordId(player.getUniqueId())
-            .join();
-        
-        if (discordId == null) return;
-        
-        Member member = plugin.getDiscordManager().getMainGuild().getMemberById(discordId);
-        if (member != null) {
-            if (duration != null) {
-                // Timeout (Discord's built-in mute)
-                member.timeoutFor(duration).reason(
-                    "Minecraft Mute: " + reason + " (by " + moderator + ")"
-                ).queue(
-                    success -> debug("Synced timeout to Discord for " + player.getName()),
-                    error -> error("Failed to sync timeout to Discord: " + error.getMessage())
-                );
-            } else {
-                // Add muted role
-                Role mutedDiscordRole = plugin.getDiscordManager().getMainGuild()
-                    .getRolesByName(mutedRole, true).stream()
-                    .findFirst().orElse(null);
-                
-                if (mutedDiscordRole != null) {
-                    plugin.getDiscordManager().getMainGuild()
-                        .addRoleToMember(member, mutedDiscordRole)
-                        .reason("Minecraft Mute: " + reason + " (by " + moderator + ")")
-                        .queue(
-                            success -> debug("Added muted role to " + player.getName()),
-                            error -> error("Failed to add muted role: " + error.getMessage())
-                        );
+        plugin.getDatabaseManager().getDiscordId(player.getUniqueId())
+            .thenAccept(discordId -> {
+                if (discordId == null) return;
+
+                Member member = plugin.getDiscordManager().getMainGuild().getMemberById(discordId);
+                if (member != null) {
+                    member.kick("Minecraft Kick: " + reason).queue(
+                        success -> debug("Synced kick to Discord for " + player.getName()),
+                        error -> debug("Failed to sync kick to Discord: " + error.getMessage())
+                    );
                 }
-            }
-        }
+            })
+            .exceptionally(throwable -> {
+                error("Failed to sync kick to Discord for " + player.getName(), throwable);
+                return null;
+            });
+    }
+
+    private void syncMuteToDiscord(Player player, String moderator, String reason, Duration duration) {
+        plugin.getDatabaseManager().getDiscordId(player.getUniqueId())
+            .thenAccept(discordId -> {
+                if (discordId == null) return;
+
+                Member member = plugin.getDiscordManager().getMainGuild().getMemberById(discordId);
+                if (member == null) return;
+
+                if (duration != null) {
+                    member.timeoutFor(duration).reason(
+                        "Minecraft Mute: " + reason + " (by " + moderator + ")"
+                    ).queue(
+                        success -> debug("Synced timeout to Discord for " + player.getName()),
+                        error -> error("Failed to sync timeout to Discord: " + error.getMessage())
+                    );
+                } else {
+                    Role mutedDiscordRole = plugin.getDiscordManager().getMainGuild()
+                        .getRolesByName(mutedRole, true).stream()
+                        .findFirst().orElse(null);
+
+                    if (mutedDiscordRole != null) {
+                        plugin.getDiscordManager().getMainGuild()
+                            .addRoleToMember(member, mutedDiscordRole)
+                            .reason("Minecraft Mute: " + reason + " (by " + moderator + ")")
+                            .queue(
+                                success -> debug("Added muted role to " + player.getName()),
+                                error -> error("Failed to add muted role: " + error.getMessage())
+                            );
+                    }
+                }
+            })
+            .exceptionally(throwable -> {
+                error("Failed to sync mute to Discord for " + player.getName(), throwable);
+                return null;
+            });
     }
     
-    private void logModerationAction(String action, String targetName, String targetId, 
+    private void logModerationAction(String action, String targetName, String targetId,
                                    String moderator, String reason, Duration duration) {
         TextChannel logChannel = getLogChannel();
         if (logChannel == null) return;
-        
-        Color color;
-        switch (action) {
-            case "BAN":
-            case "TEMPBAN":
-            case "BAN-IP":
-                color = new Color(255, 0, 0);
-                break;
-            case "KICK":
-                color = new Color(255, 165, 0);
-                break;
-            case "MUTE":
-            case "TEMPMUTE":
-                color = new Color(255, 255, 0);
-                break;
-            case "WARN":
-                color = new Color(255, 192, 203);
-                break;
-            default:
-                color = Color.GRAY;
-        }
-        
+
+        Color color = EmbedUtils.getModerationColor(action);
+
         EmbedBuilder embed = new EmbedBuilder()
             .setColor(color)
-            .setTitle("🔨 Moderation Action: " + action)
+            .setTitle("Moderation Action: " + action)
             .addField("Target", targetName + "\n`" + targetId + "`", true)
             .addField("Moderator", moderator, true)
             .addField("Reason", reason, false)
             .setTimestamp(Instant.now())
             .setFooter("Minecraft → Discord", null);
-        
+
         if (duration != null) {
             embed.addField("Duration", formatDuration(duration), true);
         }
-        
+
         logChannel.sendMessageEmbeds(embed.build()).queue();
     }
     
@@ -397,19 +390,17 @@ public class ModerationModule extends Module implements Listener {
             
             User bannedUser = event.getUser();
             
-            // Get Minecraft UUID
-            UUID minecraftUuid = plugin.getDatabaseManager()
-                .getMinecraftUuid(bannedUser.getId())
-                .join();
-            
+            // Get Minecraft UUID (JDA callback is already async, so a sync DB lookup is safe)
+            UUID minecraftUuid = plugin.getDatabaseManager().getMinecraftUuidSync(bannedUser.getId());
+
             if (minecraftUuid == null) return;
-            
+
             // Check if already banned in Minecraft
             OfflinePlayer player = Bukkit.getOfflinePlayer(minecraftUuid);
             if (Bukkit.getBanList(BanList.Type.NAME).isBanned(player.getName())) {
                 return; // Already banned, probably synced from Minecraft
             }
-            
+
             // Ban in Minecraft
             Bukkit.getScheduler().runTask(plugin, () -> {
                 Bukkit.getBanList(BanList.Type.NAME).addBan(
@@ -442,13 +433,11 @@ public class ModerationModule extends Module implements Listener {
             Member member = event.getMember();
             OffsetDateTime timeoutEnd = event.getNewTimeOutEnd();
             
-            // Get Minecraft UUID
-            UUID minecraftUuid = plugin.getDatabaseManager()
-                .getMinecraftUuid(member.getId())
-                .join();
-            
+            // Get Minecraft UUID (JDA callback is already async, so a sync DB lookup is safe)
+            UUID minecraftUuid = plugin.getDatabaseManager().getMinecraftUuidSync(member.getId());
+
             if (minecraftUuid == null) return;
-            
+
             Player player = Bukkit.getPlayer(minecraftUuid);
             if (player == null) return;
             
@@ -484,11 +473,9 @@ public class ModerationModule extends Module implements Listener {
                 .filter(role -> role.getName().equalsIgnoreCase(mutedRole))
                 .findFirst()
                 .ifPresent(role -> {
-                    // Sync mute to Minecraft
-                    UUID minecraftUuid = plugin.getDatabaseManager()
-                        .getMinecraftUuid(event.getMember().getId())
-                        .join();
-                    
+                    // Sync mute to Minecraft (JDA callback is already async, so a sync DB lookup is safe)
+                    UUID minecraftUuid = plugin.getDatabaseManager().getMinecraftUuidSync(event.getMember().getId());
+
                     if (minecraftUuid != null) {
                         Player player = Bukkit.getPlayer(minecraftUuid);
                         if (player != null) {
@@ -513,11 +500,9 @@ public class ModerationModule extends Module implements Listener {
                 .filter(role -> role.getName().equalsIgnoreCase(mutedRole))
                 .findFirst()
                 .ifPresent(role -> {
-                    // Sync unmute to Minecraft
-                    UUID minecraftUuid = plugin.getDatabaseManager()
-                        .getMinecraftUuid(event.getMember().getId())
-                        .join();
-                    
+                    // Sync unmute to Minecraft (JDA callback is already async, so a sync DB lookup is safe)
+                    UUID minecraftUuid = plugin.getDatabaseManager().getMinecraftUuidSync(event.getMember().getId());
+
                     if (minecraftUuid != null) {
                         Player player = Bukkit.getPlayer(minecraftUuid);
                         if (player != null) {
@@ -537,32 +522,17 @@ public class ModerationModule extends Module implements Listener {
     private void logDiscordModerationAction(String action, User user, String description) {
         TextChannel logChannel = getLogChannel();
         if (logChannel == null) return;
-        
-        Color color;
-        switch (action) {
-            case "BAN":
-                color = new Color(255, 0, 0);
-                break;
-            case "TIMEOUT":
-            case "MUTE":
-                color = new Color(255, 255, 0);
-                break;
-            case "UNTIMEOUT":
-            case "UNMUTE":
-                color = new Color(0, 255, 0);
-                break;
-            default:
-                color = Color.GRAY;
-        }
-        
+
+        Color color = EmbedUtils.getModerationColor(action);
+
         EmbedBuilder embed = new EmbedBuilder()
             .setColor(color)
-            .setTitle("🔄 Discord → Minecraft Sync: " + action)
+            .setTitle("Discord → Minecraft Sync: " + action)
             .addField("User", user.getAsMention() + "\n`" + user.getId() + "`", true)
             .addField("Action", description, false)
             .setTimestamp(Instant.now())
             .setFooter("Discord → Minecraft", user.getAvatarUrl());
-        
+
         logChannel.sendMessageEmbeds(embed.build()).queue();
     }
     
@@ -660,17 +630,18 @@ public class ModerationModule extends Module implements Listener {
      * Check if a player is muted
      */
     public boolean isPlayerMuted(Player player) {
-        String discordId = plugin.getDatabaseManager().getDiscordId(player.getUniqueId())
-            .join();
-        
+        // Synchronous lookup: this is called from sync contexts (commands/placeholders) that must
+        // return a value immediately. The database lookup is bounded and does not use .join().
+        String discordId = plugin.getDatabaseManager().getDiscordIdSync(player.getUniqueId());
+
         if (discordId == null) return false;
-        
+
         Member member = plugin.getDiscordManager().getMainGuild().getMemberById(discordId);
         if (member == null) return false;
-        
+
         // Check timeout
         if (member.isTimedOut()) return true;
-        
+
         // Check muted role
         return member.getRoles().stream()
             .anyMatch(role -> role.getName().equalsIgnoreCase(mutedRole));

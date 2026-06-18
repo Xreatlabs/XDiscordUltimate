@@ -1,0 +1,156 @@
+general:
+  prefix: <gradient:#55FFFF:#5555FF>XDiscord</gradient> &8» &r
+  reload: <gradient:#55FF55:#00AA00>設定が正常にリロードされました！</gradient>
+  reload-success: <gradient:#55FF55:#00AA00>設定が正常にリロードされました！</gradient>
+  reload-failed: <gradient:#FF5555:#AA0000>設定のリロードに失敗しました。</gradient> &7コンソールでエラーを確認してください。
+  no-permission: <gradient:#FF5555:#AA0000>アクセス拒否</gradient> &7権限がありません
+  player-only: <gradient:#FFAA00:#FF5555>このコマンド</gradient> &7はプレイヤーのみ使用できます。
+  unknown-command: '&7不明なコマンド。&e/xdiscord help &7でヘルプを確認してください。'
+errors:
+  no-permission: <gradient:#FF5555:#AA0000>アクセス拒否！</gradient> &7権限がありません。
+  player-not-found: <gradient:#FF5555:#FFAA00>プレイヤーが見つかりません！</gradient> &7'%player%' はオンラインではありません。
+  invalid-usage: '<gradient:#FFAA00:#FF5555>使用方法が間違っています！</gradient> &7正しい方法: &e%usage%'
+  not-verified: <gradient:#FFAA00:#FF5555>認証が必要です！</gradient> &7アカウントをリンクするには &e/verify &7を使用してください。
+  already-verified: <gradient:#55FF55:#55FFFF>既に認証済み！</gradient> &7アカウントは既にリンクされています。
+  verification-failed: <gradient:#FF5555:#AA0000>認証に失敗しました！</gradient> &7もう一度お試しください。
+  cooldown: <gradient:#FFAA00:#FF5555>クールダウン中！</gradient> &7もうしばらくお待ちください。
+  feature-disabled: <gradient:#AAAAAA:#555555>機能が無効です！</gradient> &7この機能は現在無効になっています。
+  discord-not-linked: <gradient:#5555FF:#AA00AA>Discordが必要です！</gradient> &7まず &e/verify &7でリンクしてください。
+  cannot-report-admin: <gradient:#FF5555:#AA0000>管理者を報告できません!</gradient> &7サーバー管理者を報告することはできません。
+  module-not-available: <gradient:#FF5555:#FFAA00>モジュール利用不可!</gradient> &7この機能は現在利用できません。
+  ticket-create-failed: <gradient:#FF5555:#AA0000>エラー!</gradient> &7チケットの作成に失敗しました。もう一度お試しください。
+  unknown-subcommand: <gradient:#FF5555:#FFAA00>不明なサブコマンド!</gradient> &7'%sub%' は有効なサブコマンドではありません。
+  invalid-discord-id: <gradient:#FF5555:#FFAA00>無効な形式!</gradient> &7Discord ID は数値の snowflake である必要があります。
+  whitelist-submission-failed: <gradient:#FF5555:#AA0000>エラー!</gradient> &7ホワイトリストリクエストの送信に失敗しました。
+  chat-filtered: '&cYour message was blocked by the chat filter.'
+  spam: '&cPlease don''t spam the chat!'
+  max-tickets: '&cYou have reached the maximum number of open tickets!'
+success:
+  verified: <gradient:#55FF55:#55FFFF>成功！</gradient> &7アカウントがDiscordとリンクされました！
+  ticket-created: <gradient:#55FF55:#55FFFF>チケット作成済み！</gradient> &7更新についてはDiscordをご確認ください。
+  report-sent: <gradient:#55FF55:#00AA00>レポート送信済み！</gradient> &7モデレーターに通知されました。
+  announcement-sent: <gradient:#FFAA00:#FF5555>お知らせ送信済み！</gradient> &7ブロードキャスト完了。
+  debug-enabled: <gradient:#55FF55:#55FFFF>デバッグモード有効!</gradient> &7詳細なログが表示されます。
+  debug-disabled: <gradient:#AAAAAA:#555555>デバッグモード無効!</gradient> &7重要なメッセージのみが表示されます。
+  language-changed: <gradient:#55FF55:#55FFFF>言語が変更されました!</gradient> &7あなたの言語は &e%language%&7 に設定されました。
+  announcements-muted: '&aAnnouncements muted!'
+  announcements-unmuted: '&aAnnouncements unmuted!'
+verification:
+  code-generated: <gradient:#55FFFF:#5555FF>認証コード</gradient> &8» &e&l%code%
+  code-expired: <gradient:#FF5555:#AA0000>コード期限切れ！</gradient> &7新しいコードを生成してください。
+  code-invalid: <gradient:#FF5555:#FFAA00>無効なコード！</gradient> &7確認してもう一度お試しください。
+  instructions: '&7Discordで &e/verify &7を使用してこのコードを入力してください。'
+  already-linked: <gradient:#FFAA00:#FF5555>既にリンク済み！</gradient> &7このDiscordは別のアカウントにリンクされています。
+  already-verified: <gradient:#55FF55:#55FFFF>既に認証済み！</gradient> &7アカウントはリンクされています。
+  success: <gradient:#55FF55:#55FFFF>認証完了！</gradient> &7アカウントがリンクされました！
+  required: <gradient:#FFAA00:#FF5555>認証が必要です！</gradient> &7Discordアカウントをリンクしてください。
+  kick-message: '<gradient:#FF5555:#AA0000>認証が必要です！</gradient>
+
+    &7&e%minutes% &7分以内に認証してください！'
+tickets:
+  created: '<gradient:#55FFFF:#5555FF>チケット #%id%</gradient> &7作成済み！スタッフが対応します。'
+  closed: '<gradient:#AAAAAA:#555555>チケット #%id%</gradient> &7が閉じられました。'
+  not-found: <gradient:#FF5555:#AA0000>見つかりません！</gradient> &7チケットが存在しません。
+  max-tickets: <gradient:#FFAA00:#FF5555>上限に達しました！</gradient> &7最大チケット数に達しました。
+support:
+  no-message: <gradient:#FF5555:#FFAA00>メッセージがありません！</gradient> &7チケットのメッセージを入力してください。
+  created: <gradient:#55FF55:#55FFFF>サポートチケット作成済み！</gradient> &7Discordをご確認ください。
+  usage: '&eUsage: /support <message>'
+report:
+  must-verify: <gradient:#FFAA00:#FF5555>検証が必要!</gradient> &7プレイヤーを報告するにはDiscordアカウントを検証する必要があります。Discordで &e/verify &7を使用してください。
+  success: '<gradient:#55FF55:#00AA00>レポート #%id%</gradient> &7が &e%player% &7に対して送信されました！'
+  cooldown: <gradient:#FFAA00:#FF5555>クールダウン中！</gradient> &7もうしばらくお待ちください。
+  self-report: <gradient:#FF5555:#AA0000>エラー！</gradient> &7自分自身をレポートすることはできません！
+  usage: '&eUsage: /report <player> <reason>'
+announcement:
+  no-message: <gradient:#FF5555:#FFAA00>メッセージがありません！</gradient> &7お知らせの内容を入力してください。
+  sent: <gradient:#55FF55:#55FFFF>お知らせ送信済み！</gradient> &7すべてのプラットフォームに送信されました。
+chat:
+  discord-to-minecraft: '&8[<gradient:#5555FF:#7289DA>Discord</gradient>&8] &b%user%&8: &f%message%'
+  minecraft-to-discord: '**%player%**: %message%'
+  filtered: <gradient:#FF5555:#AA0000>メッセージがブロックされました！</gradient> &7チャットフィルターが作動しました。
+  spam-warning: <gradient:#FFAA00:#FF5555>ゆっくりお願いします！</gradient> &7スパムしないでください。
+events:
+  player-join: <gradient:#55FF55:#55FFFF>+</gradient> &7%player% が参加しました
+  player-leave: <gradient:#FF5555:#FFAA00>-</gradient> &7%player% が退出しました
+  first-join: <rainbow>ようこそ！</rainbow> &e%player% &7が初参加しました！
+stats:
+  header: <gradient:#FFAA00:#FF5555>━━━ %player% の統計 ━━━</gradient>
+  kills: '&8▸ <gradient:#FF5555:#FFAA00>キル</gradient>&8: &f%value%'
+  deaths: '&8▸ <gradient:#AAAAAA:#555555>死亡</gradient>&8: &f%value%'
+  kd-ratio: '&8▸ <gradient:#55FFFF:#5555FF>K/D比</gradient>&8: &f%value%'
+  mob-kills: '&8▸ <gradient:#55FF55:#00AA00>Mobキル</gradient>&8: &f%value%'
+  playtime: '&8▸ <gradient:#AA00AA:#FF55FF>プレイ時間</gradient>&8: &f%value%'
+  not-found: <gradient:#FF5555:#AA0000>見つかりません！</gradient> &7プレイヤー統計が利用できません。
+moderation:
+  ban-success: <gradient:#FF5555:#AA0000>Ban成功！</gradient> &e%player% &7はBanされました。
+  kick-success: <gradient:#FFAA00:#FF5555>Kick成功！</gradient> &e%player% &7はKickされました。
+  mute-success: <gradient:#AAAAAA:#555555>ミュート成功！</gradient> &e%player% &7はミュートされました。
+  unmute-success: <gradient:#55FF55:#55FFFF>ミュート解除！</gradient> &e%player% &7は再び発言できます。
+  warn-success: <gradient:#FFAA00:#FF5555>警告成功！</gradient> &e%player% &7は警告されました。
+help:
+  header:
+  - ''
+  - <gradient:#55FFFF:#5555FF>━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━</gradient>
+  - '       <gradient:#55FFFF:#5555FF>&lXDiscordUltimate</gradient> &8- &7ヘルプ'
+  - <gradient:#55FFFF:#5555FF>━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━</gradient>
+  - ''
+  footer:
+  - ''
+  - <gradient:#55FFFF:#5555FF>━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━</gradient>
+  - '  &7コマンドは <gradient:#55FFFF:#5555FF>/xdiscord help</gradient> &7で確認'
+  - <gradient:#55FFFF:#5555FF>━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━</gradient>
+  - ''
+  verify: '  <gradient:#55FF55:#55FFFF>▸</gradient> &e/verify &8- &7Discordアカウントをリンク'
+  support: '  <gradient:#55FF55:#55FFFF>▸</gradient> &e/support <msg> &8- &7チケット作成'
+  stats: '  <gradient:#55FF55:#55FFFF>▸</gradient> &e/stats [player] &8- &7統計表示'
+  report: '  <gradient:#55FF55:#55FFFF>▸</gradient> &e/report <player> <reason> &8- &7プレイヤーレポート'
+  must-verify: <gradient:#FFAA00:#FF5555>検証が必要!</gradient> &7プレイヤーを報告するにはDiscordアカウントを検証する必要があります。Discordで &e/verify &7を使用してください。
+  help: '  <gradient:#55FF55:#55FFFF>▸</gradient> &e/help &8- &7このメニューを表示'
+commands:
+  verify: DiscordアカウントをMinecraftとリンク
+  support: スタッフのサポート用チケットを作成
+  report: プレイヤーをDiscordモデレーターにレポート
+  must-verify: <gradient:#FFAA00:#FF5555>検証が必要!</gradient> &7プレイヤーを報告するにはDiscordアカウントを検証する必要があります。Discordで &e/verify &7を使用してください。
+  discord: Discordサーバー招待リンクを取得
+  embed: Discordにカスタム埋め込みメッセージを送信
+  announce: Discordとゲーム内にお知らせをブロードキャスト
+discord:
+  commands:
+    help:
+      description: すべてのボットコマンドと機能を表示
+    status:
+      description: TPSとプレイヤー数を含むリアルタイムサーバー状態を表示
+    players:
+      description: すべてのオンラインプレイヤーとそのワールドを一覧表示
+    server:
+      description: 詳細なサーバー情報を表示
+    ping:
+      description: ボットのレイテンシと応答時間を確認
+    tps:
+      description: サーバーパフォーマンス表示（TPS/MSPT）
+    verify:
+      description: DiscordアカウントをMinecraftにリンク
+    stats:
+      description: プレイヤーの統計と実績を表示
+      option-player: 検索するプレイヤー名
+    console:
+      description: サーバーでコマンドを実行（管理者のみ）
+      option-command: 実行するコマンド
+    announce:
+      description: すべてのプレイヤーにお知らせをブロードキャスト
+      option-message: お知らせメッセージ
+      option-title: お知らせのオプションタイトル
+    online:
+      description: 誰がオンラインか簡易表示
+    info:
+      description: プラグイン情報とバージョンを表示
+server-control:
+  restart-scheduled: <gradient:#FF5555:#FFAA00>サーバー再起動</gradient> &7&e%time% &7秒後！
+  stopping: <gradient:#FF5555:#AA0000>サーバー停止中...</gradient> &7お会いしましょう！
+info:
+  sending-test-welcome: '&bSending test welcome DM...'
+  reloading-welcome-dm: '&bReloading welcome DM module...'
+  reload-start: '&bReloading configuration...'
+  plugin-info: <gradient:#55FFFF:#5555FF>=== XDiscordUltimate 情報 ===</gradient>
+  plugin-version: '&7バージョン: &e%version%'

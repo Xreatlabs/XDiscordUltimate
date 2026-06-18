@@ -1,6 +1,6 @@
 name: XDiscordUltimate
 main: com.xreatlabs.xdiscordultimate.XDiscordUltimate
-version: 1.1.0
+version: 1.2.0
 api-version: 1.16
 author: XReatLabs
 description: Premium Discord integration for Minecraft servers (1.16.5 - 1.21.x)
@@ -11,44 +11,82 @@ folia-supported: false
 commands:
   verify:
     description: Link your Discord account with Minecraft
-    usage: /<command>
+    usage: /<command> <code>
+    permission: xdiscord.verify
     aliases: [link, discord]
-  
+
+  unlink:
+    description: Unlink your Discord account from Minecraft
+    usage: /<command>
+    permission: xdiscord.unlink
+
   support:
     description: Open a support ticket on Discord
     usage: /<command> <message>
     aliases: [ticket]
-  
+
   help:
     description: Show XDiscordUltimate help GUI
     usage: /<command> [category]
     aliases: [xhelp, xdhelp]
-  
+
   announce:
     description: Broadcast an announcement to Discord and in-game
     usage: /<command> <message>
     permission: xdiscord.announce
-  
+
   discordconsole:
-    description: Execute bot console commands
+    description: Execute commands as the server console
     usage: /<command> <command>
     permission: xdiscord.console
-  
+    aliases: [dconsole]
+
   report:
     description: Report a player to Discord moderators
     usage: /<command> <player> <reason>
     aliases: [reportplayer]
-  
+
   xdiscord:
     description: Main XDiscordUltimate command
-    usage: /<command> [reload|status|help]
+    usage: /<command> [setup|reload|status|modules|debug|admin|export|help]
     permission: xdiscord.admin
     aliases: [xdu, xdiscordultimate]
-  
+
   stats:
     description: View player statistics
     usage: /<command> [player]
     aliases: [playerstats, pstats]
+
+  discord:
+    description: Get the Discord server invite link
+    usage: /<command>
+    aliases: [disc, invite]
+
+  embed:
+    description: Send a custom embed to a Discord channel
+    usage: /<command> <channel> <title> <description>
+    permission: xdiscord.embed
+    aliases: [dembed]
+
+  welcomedm:
+    description: Test and manage the Welcome DM module
+    usage: /<command> <test|reload|help>
+    permission: xdiscord.admin
+
+  ip:
+    description: View the server address (set requires admin)
+    usage: /<command> [set <address>]
+    permission: xdiscord.ip
+
+  whitelist:
+    description: Request whitelist access
+    usage: /<command> <username>
+    permission: xdiscord.whitelist
+
+  language:
+    description: Change your language preference
+    usage: /<command> [locale]
+    aliases: [lang, locale]
 
 permissions:
   xdiscord.*:
@@ -59,39 +97,68 @@ permissions:
       xdiscord.announce: true
       xdiscord.console: true
       xdiscord.verify: true
+      xdiscord.unlink: true
       xdiscord.support: true
       xdiscord.report: true
+      xdiscord.embed: true
+      xdiscord.ip: true
+      xdiscord.ip.admin: true
+      xdiscord.whitelist: true
       xdiscord.bypass.verification: true
       xdiscord.bypass.filter: true
-  
+
   xdiscord.admin:
     description: Administrative permissions
     default: op
-  
+
   xdiscord.announce:
     description: Make announcements
     default: op
-  
+
   xdiscord.console:
     description: Access Discord bot console
     default: false
-  
+
+  xdiscord.embed:
+    description: Send custom embeds to Discord
+    default: op
+
   xdiscord.verify:
     description: Use verification command
     default: true
-  
+
+  xdiscord.unlink:
+    description: Unlink your own Discord account
+    default: true
+
   xdiscord.support:
     description: Create support tickets
     default: true
-  
+
   xdiscord.report:
     description: Report players
     default: true
-  
+
   xdiscord.bypass.verification:
     description: Bypass Discord verification requirement
     default: false
-  
+
+  xdiscord.ip:
+    description: View server address
+    default: true
+
+  xdiscord.ip.admin:
+    description: Set the server address
+    default: op
+
+  xdiscord.whitelist:
+    description: Request whitelist access
+    default: true
+
   xdiscord.bypass.filter:
     description: Bypass chat filter
     default: false
+
+  xdiscord.language:
+    description: Change language preference
+    default: true

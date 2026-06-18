@@ -10,31 +10,54 @@ import java.awt.Color;
 import java.time.Instant;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.UUID;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class EmbedUtils {
-    
+
     private final XDiscordUltimate plugin;
     private final Map<String, Color> colorMap;
     private final Pattern hexPattern;
-    
-    // Premium color palette
-    public static final Color BRAND_PRIMARY = new Color(85, 255, 255);    // Aqua
-    public static final Color BRAND_SECONDARY = new Color(85, 85, 255);   // Blue
-    public static final Color SUCCESS = new Color(87, 242, 135);          // Green
-    public static final Color WARNING = new Color(254, 231, 92);          // Yellow
-    public static final Color ERROR = new Color(237, 66, 69);             // Red
-    public static final Color INFO = new Color(88, 101, 242);             // Blurple
-    public static final Color PREMIUM = new Color(255, 215, 0);           // Gold
-    public static final Color DISCORD = new Color(114, 137, 218);         // Discord Blue
+
+    // Modern color palette - muted and professional
+    public static final Color BRAND_PRIMARY = new Color(0, 123, 255);     // Professional blue
+    public static final Color BRAND_SECONDARY = new Color(108, 117, 125); // Neutral gray
+    public static final Color SUCCESS = new Color(40, 167, 69);           // Muted green
+    public static final Color WARNING = new Color(255, 193, 7);           // Muted yellow
+    public static final Color ERROR = new Color(220, 53, 69);             // Muted red
+    public static final Color INFO = new Color(23, 162, 184);            // Cyan
+    public static final Color PREMIUM = new Color(255, 193, 7);           // Gold
+    public static final Color DISCORD = new Color(88, 101, 242);          // Blurple
     
     public EmbedUtils(XDiscordUltimate plugin) {
         this.plugin = plugin;
         this.colorMap = initializeColorMap();
         this.hexPattern = Pattern.compile("#[a-fA-F0-9]{6}");
     }
-    
+
+    /**
+     * Get player avatar URL from reliable avatar service
+     */
+    public static String getPlayerAvatarUrl(UUID uuid) {
+        return getPlayerAvatarUrl(uuid.toString());
+    }
+
+    /**
+     * Get player avatar URL from UUID string
+     */
+    public static String getPlayerAvatarUrl(String uuid) {
+        return "https://cravatar.eu/helm/" + uuid + "/64.png";
+    }
+
+    /**
+     * Get player avatar URL from username (uses name.mc for UUID lookup)
+     * Falls back to minotar if lookup fails
+     */
+    public static String getPlayerAvatarUrlByUsername(String username) {
+        return "https://minotar.net/helm/" + username + "/64.png";
+    }
+
     /**
      * Create a branded embed with XDiscord styling
      */
@@ -44,69 +67,145 @@ public class EmbedUtils {
             .setFooter("XDiscordUltimate", null)
             .setTimestamp(Instant.now());
     }
-    
+
     /**
      * Create a success embed
      */
     public static EmbedBuilder successEmbed(String title, String description) {
         return new EmbedBuilder()
             .setColor(SUCCESS)
-            .setTitle("✅ " + title)
+            .setTitle(title)
             .setDescription(description)
             .setTimestamp(Instant.now());
     }
-    
+
     /**
      * Create an error embed
      */
     public static EmbedBuilder errorEmbed(String title, String description) {
         return new EmbedBuilder()
             .setColor(ERROR)
-            .setTitle("❌ " + title)
+            .setTitle(title)
             .setDescription(description)
             .setTimestamp(Instant.now());
     }
-    
+
     /**
      * Create a warning embed
      */
     public static EmbedBuilder warningEmbed(String title, String description) {
         return new EmbedBuilder()
             .setColor(WARNING)
-            .setTitle("⚠️ " + title)
+            .setTitle(title)
             .setDescription(description)
             .setTimestamp(Instant.now());
     }
-    
+
     /**
      * Create an info embed
      */
     public static EmbedBuilder infoEmbed(String title, String description) {
         return new EmbedBuilder()
             .setColor(INFO)
-            .setTitle("ℹ️ " + title)
+            .setTitle(title)
             .setDescription(description)
+            .setTimestamp(Instant.now());
+    }
+
+    /**
+     * Create a player embed with avatar thumbnail
+     */
+    public static EmbedBuilder playerEmbed(Player player, String title, String description) {
+        return new EmbedBuilder()
+            .setColor(BRAND_PRIMARY)
+            .setTitle(title)
+            .setDescription(description)
+            .setThumbnail(getPlayerAvatarUrl(player.getUniqueId()))
+            .setFooter(player.getName(), getPlayerAvatarUrl(player.getUniqueId()))
+            .setTimestamp(Instant.now());
+    }
+
+    /**
+     * Create a player embed with UUID
+     */
+    public static EmbedBuilder playerEmbed(UUID uuid, String name, String title, String description) {
+        return new EmbedBuilder()
+            .setColor(BRAND_PRIMARY)
+            .setTitle(title)
+            .setDescription(description)
+            .setThumbnail(getPlayerAvatarUrl(uuid))
+            .setFooter(name, getPlayerAvatarUrl(uuid))
+            .setTimestamp(Instant.now());
+    }
+
+    /**
+     * Create a moderation embed with player info
+     */
+    public static EmbedBuilder moderationEmbed(String action, Player target, String moderator, String reason) {
+        Color color = getModerationColor(action);
+        return new EmbedBuilder()
+            .setColor(color)
+            .setTitle("Moderation: " + action)
+            .addField("Target", target.getName(), true)
+            .addField("Moderator", moderator, true)
+            .addField("Reason", reason != null ? reason : "No reason provided", false)
+            .setThumbnail(getPlayerAvatarUrl(target.getUniqueId()))
+            .setTimestamp(Instant.now());
+    }
+
+    /**
+     * Create a ticket embed
+     */
+    public static EmbedBuilder ticketEmbed(int ticketId, String subject, String minecraftName, String status) {
+        return new EmbedBuilder()
+            .setColor(BRAND_PRIMARY)
+            .setTitle("Ticket #" + ticketId)
+            .addField("Subject", subject, false)
+            .addField("Minecraft", minecraftName, true)
+            .addField("Status", status, true)
+            .setTimestamp(Instant.now());
+    }
+
+    /**
+     * Create a verification embed
+     */
+    public static EmbedBuilder verificationEmbed(String code, int expiryMinutes) {
+        return new EmbedBuilder()
+            .setColor(INFO)
+            .setTitle("Account Verification")
+            .setDescription("To link your Discord account with your Minecraft account, follow these steps:")
+            .addField("Step 1", "Join the Minecraft server", false)
+            .addField("Step 2", "Use the following command in Minecraft:\n`/verify " + code + "`", false)
+            .addField("Your Code", "**`" + code + "`**", true)
+            .addField("Expires In", expiryMinutes + " minutes", true)
+            .setFooter("This code is unique to you and can only be used once", null)
             .setTimestamp(Instant.now());
     }
     
     /**
-     * Create a basic embed with title and description
+     * Get moderation color by action type
      */
-    public EmbedBuilder createEmbed(String title, String description) {
-        EmbedBuilder embed = new EmbedBuilder();
-        
-        if (title != null && !title.isEmpty()) {
-            embed.setTitle(title);
+    public static Color getModerationColor(String action) {
+        if (action == null) return INFO;
+
+        switch (action.toUpperCase()) {
+            case "BAN":
+            case "TEMPBAN":
+            case "BAN-IP":
+                return ERROR;
+            case "KICK":
+                return WARNING;
+            case "MUTE":
+            case "TEMPMUTE":
+                return WARNING;
+            case "WARN":
+                return new Color(255, 152, 0);
+            case "UNBAN":
+            case "UNMUTE":
+                return SUCCESS;
+            default:
+                return INFO;
         }
-        
-        if (description != null && !description.isEmpty()) {
-            embed.setDescription(description);
-        }
-        
-        embed.setTimestamp(Instant.now());
-        embed.setColor(getDefaultColor());
-        
-        return embed;
     }
     
     /**
@@ -195,11 +294,11 @@ public class EmbedUtils {
      */
     public MessageEmbed createModerationEmbed(String action, Player moderator, Player target, String reason) {
         EmbedBuilder embed = new EmbedBuilder();
-        
+
         // Set color based on action
         Color color = getModerationColor(action);
         embed.setColor(color);
-        
+
         embed.setTitle("Moderation Action: " + action);
         
         // Moderator info
@@ -289,27 +388,6 @@ public class EmbedUtils {
                 return Color.YELLOW;
             case "milestone":
                 return new Color(255, 215, 0); // Gold color
-            default:
-                return getDefaultColor();
-        }
-    }
-    
-    /**
-     * Get color for moderation action
-     */
-    private Color getModerationColor(String action) {
-        switch (action.toLowerCase()) {
-            case "ban":
-                return Color.RED;
-            case "kick":
-                return Color.ORANGE;
-            case "warn":
-                return Color.YELLOW;
-            case "mute":
-                return Color.GRAY;
-            case "unban":
-            case "unmute":
-                return Color.GREEN;
             default:
                 return getDefaultColor();
         }

@@ -1,0 +1,156 @@
+general:
+  prefix: <gradient:#55FFFF:#5555FF>XDiscord</gradient> &8» &r
+  reload: <gradient:#55FF55:#00AA00>Yapılandırma başarıyla yeniden yüklendi!</gradient>
+  reload-success: <gradient:#55FF55:#00AA00>Yapılandırma başarıyla yeniden yüklendi!</gradient>
+  reload-failed: <gradient:#FF5555:#AA0000>Yapılandırma yeniden yüklenemedi.</gradient> &7Hatalar için konsolu kontrol edin.
+  no-permission: <gradient:#FF5555:#AA0000>Erişim Reddedildi</gradient> &7İzniniz yok
+  player-only: <gradient:#FFAA00:#FF5555>Bu komut</gradient> &7sadece oyuncular tarafından kullanılabilir.
+  unknown-command: '&7Bilinmeyen komut. Yardım için &e/xdiscord help &7kullanın.'
+errors:
+  no-permission: <gradient:#FF5555:#AA0000>Erişim Reddedildi!</gradient> &7İzniniz yok.
+  player-not-found: <gradient:#FF5555:#FFAA00>Oyuncu Bulunamadı!</gradient> &7'%player%' çevrimiçi değil.
+  invalid-usage: '<gradient:#FFAA00:#FF5555>Geçersiz Kullanım!</gradient> &7Doğrusu: &e%usage%'
+  not-verified: <gradient:#FFAA00:#FF5555>Doğrulama Gerekli!</gradient> &7Hesapları bağlamak için &e/verify &7kullanın.
+  already-verified: <gradient:#55FF55:#55FFFF>Zaten Doğrulandı!</gradient> &7Hesabınız bağlı.
+  verification-failed: <gradient:#FF5555:#AA0000>Doğrulama Başarısız!</gradient> &7Lütfen tekrar deneyin.
+  cooldown: <gradient:#FFAA00:#FF5555>Soğuma Süresi!</gradient> &7Yeniden kullanmadan önce bekleyin.
+  feature-disabled: <gradient:#AAAAAA:#555555>Özellik Devre Dışı!</gradient> &7Bu özellik şu anda kapalı.
+  discord-not-linked: <gradient:#5555FF:#AA00AA>Discord Gerekli!</gradient> &7Önce &e/verify &7ile bağlayın.
+  cannot-report-admin: <gradient:#FF5555:#AA0000>Admin Bildirilemez!</gradient> &7Sunucu yöneticilerini bildiremezsiniz.
+  module-not-available: <gradient:#FF5555:#FFAA00>Modül Kullanılamaz!</gradient> &7Bu özellik şu anda kullanılamıyor.
+  ticket-create-failed: <gradient:#FF5555:#AA0000>Hata!</gradient> &7Bilet oluşturulamadı. Lütfen tekrar deneyin.
+  unknown-subcommand: <gradient:#FF5555:#FFAA00>Bilinmeyen Alt Komut!</gradient> &7'%sub%' geçerli bir alt komut değil.
+  invalid-discord-id: <gradient:#FF5555:#FFAA00>Geçersiz Format!</gradient> &7Discord ID bir sayısal snowflake olmalıdır.
+  whitelist-submission-failed: <gradient:#FF5555:#AA0000>Hata!</gradient> &7Beyaz liste isteği gönderilemedi.
+  chat-filtered: '&cYour message was blocked by the chat filter.'
+  spam: '&cPlease don''t spam the chat!'
+  max-tickets: '&cYou have reached the maximum number of open tickets!'
+success:
+  verified: <gradient:#55FF55:#55FFFF>Başarılı!</gradient> &7Hesabınız artık Discord ile bağlı!
+  ticket-created: <gradient:#55FF55:#55FFFF>Ticket Oluşturuldu!</gradient> &7Güncellemeler için Discord'u kontrol edin.
+  report-sent: <gradient:#55FF55:#00AA00>Bildirim Gönderildi!</gradient> &7Moderatörler bilgilendirildi.
+  announcement-sent: <gradient:#FFAA00:#FF5555>Duyuru Gönderildi!</gradient> &7Yayın tamamlandı.
+  debug-enabled: <gradient:#55FF55:#55FFFF>Hata Ayıklama Modu Etkin!</gradient> &7Detaylı günlükler gösterilecek.
+  debug-disabled: <gradient:#AAAAAA:#555555>Hata Ayıklama Modu Devre Dışı!</gradient> &7Yalnızca önemli mesajlar gösterilecek.
+  language-changed: <gradient:#55FF55:#55FFFF>Dil Değiştirildi!</gradient> &7Diliniz artık &e%language%&7 olarak ayarlandı.
+  announcements-muted: '&aAnnouncements muted!'
+  announcements-unmuted: '&aAnnouncements unmuted!'
+verification:
+  code-generated: <gradient:#55FFFF:#5555FF>Doğrulama Kodu</gradient> &8» &e&l%code%
+  code-expired: <gradient:#FF5555:#AA0000>Kod Süresi Doldu!</gradient> &7Yeni bir kod oluşturun.
+  code-invalid: <gradient:#FF5555:#FFAA00>Geçersiz Kod!</gradient> &7Kontrol edip tekrar deneyin.
+  instructions: '&7Bağlamak için Discord''da &e/verify &7ile bu kodu kullanın.'
+  already-linked: <gradient:#FFAA00:#FF5555>Zaten Bağlı!</gradient> &7Bu Discord başka bir hesaba bağlı.
+  already-verified: <gradient:#55FF55:#55FFFF>Zaten Doğrulandı!</gradient> &7Hesabınız bağlı.
+  success: <gradient:#55FF55:#55FFFF>Doğrulama Tamamlandı!</gradient> &7Hesaplar artık bağlı!
+  required: <gradient:#FFAA00:#FF5555>Doğrulama Gerekli!</gradient> &7Discord hesabınızı bağlayın.
+  kick-message: '<gradient:#FF5555:#AA0000>Doğrulama Gerekli!</gradient>
+
+    &7&e%minutes% &7dakika içinde doğrulamalısınız!'
+tickets:
+  created: '<gradient:#55FFFF:#5555FF>Ticket #%id%</gradient> &7oluşturuldu! Personel yakında yardımcı olacak.'
+  closed: '<gradient:#AAAAAA:#555555>Ticket #%id%</gradient> &7kapatıldı.'
+  not-found: <gradient:#FF5555:#AA0000>Bulunamadı!</gradient> &7Ticket mevcut değil.
+  max-tickets: <gradient:#FFAA00:#FF5555>Limit Reached!</gradient> &7Maksimum açık ticket sayısına ulaşıldı.
+support:
+  no-message: <gradient:#FF5555:#FFAA00>Mesaj Eksik!</gradient> &7Ticketiniz için bir mesaj sağlayın.
+  created: <gradient:#55FF55:#55FFFF>Destek Ticketi Oluşturuldu!</gradient> &7Discord'u kontrol edin.
+  usage: '&eUsage: /support <message>'
+report:
+  must-verify: <gradient:#FFAA00:#FF5555>Doğrulama Gerekli!</gradient> &7Oyuncuları bildirmek için Discord hesabınızı doğrulamanız gerekir. Discord'da &e/verify &7kullanın.
+  success: '<gradient:#55FF55:#00AA00>Bildiri #%id%</gradient> &7&e%player% &7karşı gönderildi!'
+  cooldown: <gradient:#FFAA00:#FF5555>Soğuma Süresi!</gradient> &7Yeniden bildirmeden önce bekleyin.
+  self-report: <gradient:#FF5555:#AA0000>Hata!</gradient> &7Kendinizi bildiremezsiniz!
+  usage: '&eUsage: /report <player> <reason>'
+announcement:
+  no-message: <gradient:#FF5555:#FFAA00>Mesaj Eksik!</gradient> &7Duyuru içeriğini sağlayın.
+  sent: <gradient:#55FF55:#55FFFF>Duyuru Gönderildi!</gradient> &7Tüm platformlara yayınlandı.
+chat:
+  discord-to-minecraft: '&8[<gradient:#5555FF:#7289DA>Discord</gradient>&8] &b%user%&8: &f%message%'
+  minecraft-to-discord: '**%player%**: %message%'
+  filtered: <gradient:#FF5555:#AA0000>Mesaj Engellendi!</gradient> &7Sohbet filtresi etkinleştirildi.
+  spam-warning: <gradient:#FFAA00:#FF5555>Yavaşlayın!</gradient> &7Sohbete spam yapmayın.
+events:
+  player-join: <gradient:#55FF55:#55FFFF>+</gradient> &7%player% katıldı
+  player-leave: <gradient:#FF5555:#FFAA00>-</gradient> &7%player% ayrıldı
+  first-join: <rainbow>Hoş Geldiniz!</rainbow> &e%player% &7ilk kez katıldı!
+stats:
+  header: <gradient:#FFAA00:#FF5555>━━━ %player% İstatistikleri ━━━</gradient>
+  kills: '&8▸ <gradient:#FF5555:#FFAA00>Öldürmeler</gradient>&8: &f%value%'
+  deaths: '&8▸ <gradient:#AAAAAA:#555555>Ölümler</gradient>&8: &f%value%'
+  kd-ratio: '&8▸ <gradient:#55FFFF:#5555FF>K/D Oranı</gradient>&8: &f%value%'
+  mob-kills: '&8▸ <gradient:#55FF55:#00AA00>Canavar Öldürme</gradient>&8: &f%value%'
+  playtime: '&8▸ <gradient:#AA00AA:#FF55FF>Oyun Süresi</gradient>&8: &f%value%'
+  not-found: <gradient:#FF5555:#AA0000>Bulunamadı!</gradient> &7Oyuncu istatistikleri kullanılamıyor.
+moderation:
+  ban-success: <gradient:#FF5555:#AA0000>Yasaklandı!</gradient> &e%player% &7yasaklandı.
+  kick-success: <gradient:#FFAA00:#FF5555>Atıldı!</gradient> &e%player% &7atıldı.
+  mute-success: <gradient:#AAAAAA:#555555>Susturuldu!</gradient> &e%player% &7susturuldu.
+  unmute-success: <gradient:#55FF55:#55FFFF>Susturması Açıldı!</gradient> &e%player% &7tekrar konuşabilir.
+  warn-success: <gradient:#FFAA00:#FF5555>Uyarıldı!</gradient> &e%player% &7uyarıldı.
+help:
+  header:
+  - ''
+  - <gradient:#55FFFF:#5555FF>━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━</gradient>
+  - '       <gradient:#55FFFF:#5555FF>&lXDiscordUltimate</gradient> &8- &7Yardım'
+  - <gradient:#55FFFF:#5555FF>━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━</gradient>
+  - ''
+  footer:
+  - ''
+  - <gradient:#55FFFF:#5555FF>━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━</gradient>
+  - '  &7Komutlar için <gradient:#55FFFF:#5555FF>/xdiscord help</gradient> &7kullanın'
+  - <gradient:#55FFFF:#5555FF>━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━</gradient>
+  - ''
+  verify: '  <gradient:#55FF55:#55FFFF>▸</gradient> &e/verify &8- &7Discord hesabı bağla'
+  support: '  <gradient:#55FF55:#55FFFF>▸</gradient> &e/support <msg> &8- &7Ticket oluştur'
+  stats: '  <gradient:#55FF55:#55FFFF>▸</gradient> &e/stats [player] &8- &7İstatistikleri gör'
+  report: '  <gradient:#55FF55:#55FFFF>▸</gradient> &e/report <player> <reason> &8- &7Oyuncu bildir'
+  must-verify: <gradient:#FFAA00:#FF5555>Doğrulama Gerekli!</gradient> &7Oyuncuları bildirmek için Discord hesabınızı doğrulamanız gerekir. Discord'da &e/verify &7kullanın.
+  help: '  <gradient:#55FF55:#55FFFF>▸</gradient> &e/help &8- &7Bu menüyü göster'
+commands:
+  verify: Discord hesabınızı Minecraft ile bağlayın
+  support: Personel yardımı için destek ticketi oluşturun
+  report: Oyuncuyu Discord moderatörlerine bildirin
+  must-verify: <gradient:#FFAA00:#FF5555>Doğrulama Gerekli!</gradient> &7Oyuncuları bildirmek için Discord hesabınızı doğrulamanız gerekir. Discord'da &e/verify &7kullanın.
+  discord: Discord sunucu davet bağlantısını alın
+  embed: Discord'a özel gömülü mesaj gönderin
+  announce: Discord'a ve oyuna duyuru yayınlayın
+discord:
+  commands:
+    help:
+      description: Tüm bot komutlarını ve özelliklerini göster
+    status:
+      description: TPS ve oyuncu sayısı ile gerçek zamanlı sunucu durumu göster
+    players:
+      description: Dünyalarıyla birlikte tüm çevrimiçi oyuncuları listele
+    server:
+      description: Detaylı sunucu bilgisi göster
+    ping:
+      description: Bot gecikmesini ve yanıt süresini kontrol et
+    tps:
+      description: Sunucu performansını göster (TPS/MSPT)
+    verify:
+      description: Discord hesabınızı Minecraft'a bağlayın
+    stats:
+      description: Oyuncu istatistiklerini ve başarımlarını gör
+      option-player: Aranacak oyuncu adı
+    console:
+      description: Sunucuda komut çalıştır (Yönetici only)
+      option-command: Çalıştırılacak komut
+    announce:
+      description: Tüm oyunculara duyuru yayınla
+      option-message: Duyuru mesajı
+      option-title: Duyuru için isteğe bağlı başlık
+    online:
+      description: Kim online olduğuna hızlı bakış
+    info:
+      description: Eklenti bilgilerini ve sürümünü göster
+server-control:
+  restart-scheduled: <gradient:#FF5555:#FFAA00>Sunucu Yeniden Başlatma</gradient> &7&e%time% &7saniye sonra!
+  stopping: <gradient:#FF5555:#AA0000>Sunucu Durduruluyor...</gradient> &7Görüşürüz!
+info:
+  sending-test-welcome: '&bSending test welcome DM...'
+  reloading-welcome-dm: '&bReloading welcome DM module...'
+  reload-start: '&bReloading configuration...'
+  plugin-info: <gradient:#55FFFF:#5555FF>=== XDiscordUltimate Bilgileri ===</gradient>
+  plugin-version: '&7Sürüm: &e%version%'

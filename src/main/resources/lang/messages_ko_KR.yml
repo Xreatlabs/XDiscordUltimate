@@ -1,0 +1,156 @@
+general:
+  prefix: <gradient:#55FFFF:#5555FF>XDiscord</gradient> &8» &r
+  reload: <gradient:#55FF55:#00AA00>구성이 성공적으로 다시 로드되었습니다!</gradient>
+  reload-success: <gradient:#55FF55:#00AA00>구성이 성공적으로 다시 로드되었습니다!</gradient>
+  reload-failed: <gradient:#FF5555:#AA0000>구성 다시 로드에 실패했습니다.</gradient> &7콘솔에서 오류를 확인하세요.
+  no-permission: <gradient:#FF5555:#AA0000>액세스 거부됨</gradient> &7권한이 없습니다
+  player-only: <gradient:#FFAA00:#FF5555>이 명령어</gradient> &7플레이어만 사용할 수 있습니다.
+  unknown-command: '&7알 수 없는 명령어입니다. 도움말은 &e/xdiscord help &7를 입력하세요.'
+errors:
+  no-permission: <gradient:#FF5555:#AA0000>액세스 거부됨!</gradient> &7권한이 없습니다.
+  player-not-found: <gradient:#FF5555:#FFAA00>플레이어를 찾을 수 없습니다!</gradient> &7'%player%' 님은 온라인이 아닙니다.
+  invalid-usage: '<gradient:#FFAA00:#FF5555>잘못된 사용법!</gradient> &7올바른 사용법: &e%usage%'
+  not-verified: <gradient:#FFAA00:#FF5555>인증 필요!</gradient> &7계정을 연결하려면 &e/verify &7를 사용하세요.
+  already-verified: <gradient:#55FF55:#55FFFF>이미 인증됨!</gradient> &7계정이 이미 연결되어 있습니다.
+  verification-failed: <gradient:#FF5555:#AA0000>인증 실패!</gradient> &7다시 시도해주세요.
+  cooldown: <gradient:#FFAA00:#FF5555>쿨다운!</gradient> &7다시 사용하기 전에 잠시 기다려주세요.
+  feature-disabled: <gradient:#AAAAAA:#555555>기능 비활성화됨!</gradient> &7이 기능은 현재 꺼져 있습니다.
+  discord-not-linked: <gradient:#5555FF:#AA00AA>Discord 필요!</gradient> &7먼저 &e/verify &7로 연결하세요.
+  cannot-report-admin: <gradient:#FF5555:#AA0000>관리자 신고 불가!</gradient> &7서버 관리자를 신고할 수 없습니다.
+  module-not-available: <gradient:#FF5555:#FFAA00>모듈 사용 불가!</gradient> &7이 기능은 현재 사용할 수 없습니다.
+  ticket-create-failed: <gradient:#FF5555:#AA0000>오류!</gradient> &7티켓 생성에 실패했습니다. 다시 시도하세요.
+  unknown-subcommand: <gradient:#FF5555:#FFAA00>알 수 없는 하위 명령!</gradient> &7'%sub%'은(는) 유효한 하위 명령이 아닙니다.
+  invalid-discord-id: <gradient:#FF5555:#FFAA00>잘못된 형식!</gradient> &7Discord ID는 숫자 snowflake여야 합니다.
+  whitelist-submission-failed: <gradient:#FF5555:#AA0000>오류!</gradient> &7화이트리스트 요청 전송에 실패했습니다.
+  chat-filtered: '&cYour message was blocked by the chat filter.'
+  spam: '&cPlease don''t spam the chat!'
+  max-tickets: '&cYou have reached the maximum number of open tickets!'
+success:
+  verified: <gradient:#55FF55:#55FFFF>성공!</gradient> &7계정이 Discord에 연결되었습니다!
+  ticket-created: <gradient:#55FF55:#55FFFF>티켓 생성됨!</gradient> &7업데이트는 Discord를 확인하세요.
+  report-sent: <gradient:#55FF55:#00AA00>신고 전송됨!</gradient> &7관리자에게 알렸습니다.
+  announcement-sent: <gradient:#FFAA00:#FF5555>공지 전송됨!</gradient> &7브로드캐스트 완료.
+  debug-enabled: <gradient:#55FF55:#55FFFF>디버그 모드 활성화!</gradient> &7상세한 로그가 표시됩니다.
+  debug-disabled: <gradient:#AAAAAA:#555555>디버그 모드 비활성화!</gradient> &7중요한 메시지만 표시됩니다.
+  language-changed: <gradient:#55FF55:#55FFFF>언어 변경됨!</gradient> &7언어가 &e%language%&7(으)로 설정되었습니다.
+  announcements-muted: '&aAnnouncements muted!'
+  announcements-unmuted: '&aAnnouncements unmuted!'
+verification:
+  code-generated: <gradient:#55FFFF:#5555FF>인증 코드</gradient> &8» &e&l%code%
+  code-expired: <gradient:#FF5555:#AA0000>코드 만료됨!</gradient> &7새 코드를 생성하세요.
+  code-invalid: <gradient:#FF5555:#FFAA00>잘못된 코드!</gradient> &7확인 후 다시 시도하세요.
+  instructions: '&7Discord에서 &e/verify &7를 사용하여 이 코드로 연결하세요.'
+  already-linked: <gradient:#FFAA00:#FF5555>이미 연결됨!</gradient> &7이 Discord는 다른 계정에 연결되어 있습니다.
+  already-verified: <gradient:#55FF55:#55FFFF>이미 인증됨!</gradient> &7계정이 연결되어 있습니다.
+  success: <gradient:#55FF55:#55FFFF>인증 완료!</gradient> &7계정이 이제 연결되었습니다!
+  required: <gradient:#FFAA00:#FF5555>인증 필요!</gradient> &7Discord 계정을 연결하세요.
+  kick-message: '<gradient:#FF5555:#AA0000>인증 필요!</gradient>
+
+    &7&e%minutes% &7분 내에 인증해야 합니다!'
+tickets:
+  created: '<gradient:#55FFFF:#5555FF>티켓 #%id%</gradient> &7생성됨! 곧 도와드리겠습니다.'
+  closed: '<gradient:#AAAAAA:#555555>티켓 #%id%</gradient> &7가 닫혔습니다.'
+  not-found: <gradient:#FF5555:#AA0000>찾을 수 없음!</gradient> &7티켓이 존재하지 않습니다.
+  max-tickets: <gradient:#FFAA00:#FF5555>최대 한도 도달!</gradient> &7최대 열린 티켓 수에 도달했습니다.
+support:
+  no-message: <gradient:#FF5555:#FFAA00>메시지 누락!</gradient> &7티켓에 대한 메시지를 제공하세요.
+  created: <gradient:#55FF55:#55FFFF>지원 티켓 생성됨!</gradient> &7Discord를 확인하세요.
+  usage: '&eUsage: /support <message>'
+report:
+  must-verify: <gradient:#FFAA00:#FF5555>인증 필요!</gradient> &7플레이어를 신고하려면 Discord 계정을 인증해야 합니다. Discord에서 &e/verify &7를 사용하세요.
+  success: '<gradient:#55FF55:#00AA00>신고 #%id%</gradient> &7&e%player% &7님에 대한 신고가 전송되었습니다!'
+  cooldown: <gradient:#FFAA00:#FF5555>쿨다운!</gradient> &7다시 신고하기 전에 기다려주세요.
+  self-report: <gradient:#FF5555:#AA0000>오류!</gradient> &7자신을 신고할 수 없습니다!
+  usage: '&eUsage: /report <player> <reason>'
+announcement:
+  no-message: <gradient:#FF5555:#FFAA00>메시지 누락!</gradient> &7공지 내용을 제공하세요.
+  sent: <gradient:#55FF55:#55FFFF>공지 전송됨!</gradient> &7모든 플랫폼에 브로드캐스트되었습니다.
+chat:
+  discord-to-minecraft: '&8[<gradient:#5555FF:#7289DA>Discord</gradient>&8] &b%user%&8: &f%message%'
+  minecraft-to-discord: '**%player%**: %message%'
+  filtered: <gradient:#FF5555:#AA0000>메시지 차단됨!</gradient> &7채팅 필터가 활성화되었습니다.
+  spam-warning: <gradient:#FFAA00:#FF5555>천천히!</gradient> &7채팅을 스팸하지 마세요.
+events:
+  player-join: <gradient:#55FF55:#55FFFF>+</gradient> &7%player% 님이 참가했습니다
+  player-leave: <gradient:#FF5555:#FFAA00>-</gradient> &7%player% 님이 퇴장했습니다
+  first-join: <rainbow>환영합니다!</rainbow> &e%player% 님이 처음 참가했습니다!
+stats:
+  header: <gradient:#FFAA00:#FF5555>━━━ %player% 님의 통계 ━━━</gradient>
+  kills: '&8▸ <gradient:#FF5555:#FFAA00>킬</gradient>&8: &f%value%'
+  deaths: '&8▸ <gradient:#AAAAAA:#555555>데스</gradient>&8: &f%value%'
+  kd-ratio: '&8▸ <gradient:#55FFFF:#5555FF>K/D 비율</gradient>&8: &f%value%'
+  mob-kills: '&8▸ <gradient:#55FF55:#00AA00>몹 킬</gradient>&8: &f%value%'
+  playtime: '&8▸ <gradient:#AA00AA:#FF55FF>플레이 시간</gradient>&8: &f%value%'
+  not-found: <gradient:#FF5555:#AA0000>찾을 수 없음!</gradient> &7플레이어 통계를 사용할 수 없습니다.
+moderation:
+  ban-success: <gradient:#FF5555:#AA0000>차단 성공!</gradient> &e%player% 님이 차단되었습니다.
+  kick-success: <gradient:#FFAA00:#FF5555>킥 성공!</gradient> &e%player% 님이 킥되었습니다.
+  mute-success: <gradient:#AAAAAA:#555555>뮤트 성공!</gradient> &e%player% 님이 뮤트되었습니다.
+  unmute-success: <gradient:#55FF55:#55FFFF>뮤트 해제!</gradient> &e%player% 님이 다시 말할 수 있습니다.
+  warn-success: <gradient:#FFAA00:#FF5555>경고 성공!</gradient> &e%player% 님이 경고되었습니다.
+help:
+  header:
+  - ''
+  - <gradient:#55FFFF:#5555FF>━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━</gradient>
+  - '       <gradient:#55FFFF:#5555FF>&lXDiscordUltimate</gradient> &8- &7도움말'
+  - <gradient:#55FFFF:#5555FF>━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━</gradient>
+  - ''
+  footer:
+  - ''
+  - <gradient:#55FFFF:#5555FF>━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━</gradient>
+  - '  &7명령어는 <gradient:#55FFFF:#5555FF>/xdiscord help</gradient> &7로 확인'
+  - <gradient:#55FFFF:#5555FF>━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━</gradient>
+  - ''
+  verify: '  <gradient:#55FF55:#55FFFF>▸</gradient> &e/verify &8- &7Discord 계정 연결'
+  support: '  <gradient:#55FF55:#55FFFF>▸</gradient> &e/support <msg> &8- &7티켓 생성'
+  stats: '  <gradient:#55FF55:#55FFFF>▸</gradient> &e/stats [player] &8- &7통계 보기'
+  report: '  <gradient:#55FF55:#55FFFF>▸</gradient> &e/report <player> <reason> &8- &7플레이어 신고'
+  must-verify: <gradient:#FFAA00:#FF5555>인증 필요!</gradient> &7플레이어를 신고하려면 Discord 계정을 인증해야 합니다. Discord에서 &e/verify &7를 사용하세요.
+  help: '  <gradient:#55FF55:#55FFFF>▸</gradient> &e/help &8- &7이 메뉴 표시'
+commands:
+  verify: Discord 계정을 Minecraft에 연결
+  support: 스태프 도움을 위한 지원 티켓 생성
+  report: 플레이어를 Discord 관리자에게 신고
+  must-verify: <gradient:#FFAA00:#FF5555>인증 필요!</gradient> &7플레이어를 신고하려면 Discord 계정을 인증해야 합니다. Discord에서 &e/verify &7를 사용하세요.
+  discord: Discord 서버 초대 링크 받기
+  embed: Discord에 사용자 정의 임베드 보내기
+  announce: Discord와 게임 내에 공지 브로드캐스트
+discord:
+  commands:
+    help:
+      description: 모든 봇 명령어 및 기능 표시
+    status:
+      description: TPS 및 플레이어 수로 실시간 서버 상태 표시
+    players:
+      description: 모든 온라인 플레이어와 그들의 월드 나열
+    server:
+      description: 자세한 서버 정보 표시
+    ping:
+      description: 봇 대기 시간 및 응답 시간 확인
+    tps:
+      description: 서버 성능 표시(TPS/MSPT)
+    verify:
+      description: Discord 계정을 Minecraft에 연결
+    stats:
+      description: 플레이어 통계 및 업적 보기
+      option-player: 검색할 플레이어 이름
+    console:
+      description: 서버에서 명령어 실행(관리자만)
+      option-command: 실행할 명령어
+    announce:
+      description: 모든 플레이어에게 공지 브로드캐스트
+      option-message: 공지 메시지
+      option-title: 공지의 선택적 제목
+    online:
+      description: 누가 온라인인지 빠른 보기
+    info:
+      description: 플러그인 정보 및 버전 표시
+server-control:
+  restart-scheduled: <gradient:#FF5555:#FFAA00>서버 재시작</gradient> &7&e%time% &7초 후!
+  stopping: <gradient:#FF5555:#AA0000>서버 중지 중...</gradient> &7곧 뵙겠습니다!
+info:
+  sending-test-welcome: '&bSending test welcome DM...'
+  reloading-welcome-dm: '&bReloading welcome DM module...'
+  reload-start: '&bReloading configuration...'
+  plugin-info: <gradient:#55FFFF:#5555FF>=== XDiscordUltimate 정보 ===</gradient>
+  plugin-version: '&7버전: &e%version%'

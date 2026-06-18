@@ -1,0 +1,156 @@
+general:
+  prefix: <gradient:#55FFFF:#5555FF>XDiscord</gradient> &8» &r
+  reload: <gradient:#55FF55:#00AA00>Konfigurationen har laddats om!</gradient>
+  reload-success: <gradient:#55FF55:#00AA00>Konfigurationen har laddats om!</gradient>
+  reload-failed: <gradient:#FF5555:#AA0000>Kunde inte ladda om konfigurationen.</gradient> &7Kontrollera konsolen efter fel.
+  no-permission: <gradient:#FF5555:#AA0000>Åtkomst Nekad</gradient> &7Du har inte behörighet
+  player-only: <gradient:#FFAA00:#FF5555>Detta kommando</gradient> &7kan endast användas av spelare.
+  unknown-command: '&7Okänt kommando. Använd &e/xdiscord help &7för hjälp.'
+errors:
+  no-permission: <gradient:#FF5555:#AA0000>Åtkomst Nekad!</gradient> &7Du har inte behörighet.
+  player-not-found: <gradient:#FF5555:#FFAA00>Spelare Hittades Inte!</gradient> &7'%player%' är inte online.
+  invalid-usage: '<gradient:#FFAA00:#FF5555>Felaktig Användning!</gradient> &7Korrekt: &e%usage%'
+  not-verified: <gradient:#FFAA00:#FF5555>Verifikation Krävs!</gradient> &7Använd &e/verify &7för att länka konton.
+  already-verified: <gradient:#55FF55:#55FFFF>Redan Verifierad!</gradient> &7Ditt konto är länkat.
+  verification-failed: <gradient:#FF5555:#AA0000>Verifikation Misslyckades!</gradient> &7Försök igen.
+  cooldown: <gradient:#FFAA00:#FF5555>Nedkylning!</gradient> &7Vänta innan du använder igen.
+  feature-disabled: <gradient:#AAAAAA:#555555>Funktionen Inaktiverad!</gradient> &7Denna funktion är för närvarande avstängd.
+  discord-not-linked: <gradient:#5555FF:#AA00AA>Discord Krävs!</gradient> &7Länka först med &e/verify &7.
+  cannot-report-admin: <gradient:#FF5555:#AA0000>Kan Inte Rapportera Admins!</gradient> &7Du kan inte rapportera serveradministratörer.
+  module-not-available: <gradient:#FF5555:#FFAA00>Modul Ej Tillgänglig!</gradient> &7Denna funktion är för närvarande inte tillgänglig.
+  ticket-create-failed: <gradient:#FF5555:#AA0000>Fel!</gradient> &7Kunde inte skapa ärende. Försök igen.
+  unknown-subcommand: <gradient:#FF5555:#FFAA00>Okänt Underkommando!</gradient> &7'%sub%' är inte ett giltigt underkommando.
+  invalid-discord-id: <gradient:#FF5555:#FFAA00>Ogiltigt Format!</gradient> &7Discord-ID måste vara en numerisk snowflake.
+  whitelist-submission-failed: <gradient:#FF5555:#AA0000>Fel!</gradient> &7Kunde inte skicka whitelist-förfrågan.
+  chat-filtered: '&cYour message was blocked by the chat filter.'
+  spam: '&cPlease don''t spam the chat!'
+  max-tickets: '&cYou have reached the maximum number of open tickets!'
+success:
+  verified: <gradient:#55FF55:#55FFFF>Lyckades!</gradient> &7Ditt konto är nu länkat till Discord!
+  ticket-created: <gradient:#55FF55:#55FFFF>Ticket Skapad!</gradient> &7Kontrollera Discord för uppdateringar.
+  report-sent: <gradient:#55FF55:#00AA00>Rapport Skickad!</gradient> &7Moderatorer har underrättats.
+  announcement-sent: <gradient:#FFAA00:#FF5555>Annons Skickad!</gradient> &7Sändning slutförd.
+  debug-enabled: <gradient:#55FF55:#55FFFF>Felsökningsläge Aktiverat!</gradient> &7Detaljerade loggar kommer att visas.
+  debug-disabled: <gradient:#AAAAAA:#555555>Felsökningsläge Inaktiverat!</gradient> &7Endast viktiga meddelanden kommer att visas.
+  language-changed: <gradient:#55FF55:#55FFFF>Språk Ändrad!</gradient> &7Ditt språk är nu inställt på &e%language%&7.
+  announcements-muted: '&aAnnouncements muted!'
+  announcements-unmuted: '&aAnnouncements unmuted!'
+verification:
+  code-generated: <gradient:#55FFFF:#5555FF>Verifieringskod</gradient> &8» &e&l%code%
+  code-expired: <gradient:#FF5555:#AA0000>Kod Uppgången!</gradient> &7Generera en ny.
+  code-invalid: <gradient:#FF5555:#FFAA00>Ogiltig Kod!</gradient> &7Kontrollera och försök igen.
+  instructions: '&7Använd denna kod i Discord med &e/verify &7för att länka.'
+  already-linked: <gradient:#FFAA00:#FF5555>Redan Länkad!</gradient> &7Denna Discord är länkad till ett annat konto.
+  already-verified: <gradient:#55FF55:#55FFFF>Redan Verifierad!</gradient> &7Ditt konto är länkat.
+  success: <gradient:#55FF55:#55FFFF>Verifiering Slutförd!</gradient> &7Konton är nu länkade!
+  required: <gradient:#FFAA00:#FF5555>Verifikation Krävs!</gradient> &7Länka ditt Discord-konto.
+  kick-message: '<gradient:#FF5555:#AA0000>Verifikation Krävs!</gradient>
+
+    &7Du måste verifiera inom &e%minutes% &7minuter!'
+tickets:
+  created: '<gradient:#55FFFF:#5555FF>Ticket #%id%</gradient> &7skapad! Personal hjälper snart.'
+  closed: '<gradient:#AAAAAA:#555555>Ticket #%id%</gradient> &7har stängts.'
+  not-found: <gradient:#FF5555:#AA0000>Hittades Inte!</gradient> &7Ticket finns inte.
+  max-tickets: <gradient:#FFAA00:#FF5555>Gräns Nådd!</gradient> &7Maximalt antalet öppna tickets nått.
+support:
+  no-message: <gradient:#FF5555:#FFAA00>Meddelande Saknas!</gradient> &7Ange ett meddelande för din ticket.
+  created: <gradient:#55FF55:#55FFFF>Supportticket Skapad!</gradient> &7Kontrollera Discord.
+  usage: '&eUsage: /support <message>'
+report:
+  must-verify: <gradient:#FFAA00:#FF5555>Verifikation Krävs!</gradient> &7Du måste verifiera ditt Discord-konto för att rapportera spelare. Använd &e/verify &7i Discord.
+  success: '<gradient:#55FF55:#00AA00>Rapport #%id%</gradient> &7mot &e%player% &7skickad!'
+  cooldown: <gradient:#FFAA00:#FF5555>Nedkylning!</gradient> &7Vänta innan du rapporterar igen.
+  self-report: <gradient:#FF5555:#AA0000>Fel!</gradient> &7Du kan inte rapportera dig själv!
+  usage: '&eUsage: /report <player> <reason>'
+announcement:
+  no-message: <gradient:#FF5555:#FFAA00>Meddelande Saknas!</gradient> &7Ange innehållet i annonsen.
+  sent: <gradient:#55FF55:#55FFFF>Annons Skickad!</gradient> &7Sänd till alla plattformar.
+chat:
+  discord-to-minecraft: '&8[<gradient:#5555FF:#7289DA>Discord</gradient>&8] &b%user%&8: &f%message%'
+  minecraft-to-discord: '**%player%**: %message%'
+  filtered: <gradient:#FF5555:#AA0000>Meddelande Blockerat!</gradient> &7Chatfilter aktiverat.
+  spam-warning: <gradient:#FFAA00:#FF5555>SaktaNer!</gradient> &7Spamma inte chatten.
+events:
+  player-join: <gradient:#55FF55:#55FFFF>+</gradient> &7%player% gick med
+  player-leave: <gradient:#FF5555:#FFAA00>-</gradient> &7%player% lämnade
+  first-join: <rainbow>Välkommen!</rainbow> &e%player% &7gick med för första gången!
+stats:
+  header: <gradient:#FFAA00:#FF5555>━━━ %player% Statistik ━━━</gradient>
+  kills: '&8▸ <gradient:#FF5555:#FFAA00>Dödade</gradient>&8: &f%value%'
+  deaths: '&8▸ <gradient:#AAAAAA:#555555>Dödsfall</gradient>&8: &f%value%'
+  kd-ratio: '&8▸ <gradient:#55FFFF:#5555FF>K/D-förhållande</gradient>&8: &f%value%'
+  mob-kills: '&8▸ <gradient:#55FF55:#00AA00>Mob-dödade</gradient>&8: &f%value%'
+  playtime: '&8▸ <gradient:#AA00AA:#FF55FF>Speltid</gradient>&8: &f%value%'
+  not-found: <gradient:#FF5555:#AA0000>Hittades Inte!</gradient> &7Spelarstatistik ej tillgänglig.
+moderation:
+  ban-success: <gradient:#FF5555:#AA0000>Bannlyst!</gradient> &e%player% &7har bannlysts.
+  kick-success: <gradient:#FFAA00:#FF5555>Sparkad!</gradient> &e%player% &7har sparkats.
+  mute-success: <gradient:#AAAAAA:#555555>Tystad!</gradient> &e%player% &7har tystats.
+  unmute-success: <gradient:#55FF55:#55FFFF>Avtystad!</gradient> &e%player% &7kan prata igen.
+  warn-success: <gradient:#FFAA00:#FF5555>Varnad!</gradient> &e%player% &7har varnats.
+help:
+  header:
+  - ''
+  - <gradient:#55FFFF:#5555FF>━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━</gradient>
+  - '       <gradient:#55FFFF:#5555FF>&lXDiscordUltimate</gradient> &8- &7Hjälp'
+  - <gradient:#55FFFF:#5555FF>━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━</gradient>
+  - ''
+  footer:
+  - ''
+  - <gradient:#55FFFF:#5555FF>━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━</gradient>
+  - '  &7Använd <gradient:#55FFFF:#5555FF>/xdiscord help</gradient> &7för kommandon'
+  - <gradient:#55FFFF:#5555FF>━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━</gradient>
+  - ''
+  verify: '  <gradient:#55FF55:#55FFFF>▸</gradient> &e/verify &8- &7Länka Discord-konto'
+  support: '  <gradient:#55FF55:#55FFFF>▸</gradient> &e/support <msg> &8- &7Skapa ticket'
+  stats: '  <gradient:#55FF55:#55FFFF>▸</gradient> &e/stats [player] &8- &7Visa statistik'
+  report: '  <gradient:#55FF55:#55FFFF>▸</gradient> &e/report <player> <reason> &8- &7Rapportera spelare'
+  must-verify: <gradient:#FFAA00:#FF5555>Verifikation Krävs!</gradient> &7Du måste verifiera ditt Discord-konto för att rapportera spelare. Använd &e/verify &7i Discord.
+  help: '  <gradient:#55FF55:#55FFFF>▸</gradient> &e/help &8- &7Visa denna meny'
+commands:
+  verify: Länka ditt Discord-konto med Minecraft
+  support: Skapa en supportticket för personalhjälp
+  report: Rapportera en spelare till Discord-moderatorer
+  must-verify: <gradient:#FFAA00:#FF5555>Verifikation Krävs!</gradient> &7Du måste verifiera ditt Discord-konto för att rapportera spelare. Använd &e/verify &7i Discord.
+  discord: Få Discord-serverns inbjudningslänk
+  embed: Skicka en anpassad inbäddning till Discord
+  announce: Sänd ett meddelande till Discord och i spelet
+discord:
+  commands:
+    help:
+      description: Visa alla bot-kommandon och funktioner
+    status:
+      description: Visa serverstatus i realtid med TPS och antal spelare
+    players:
+      description: Lista alla online-spelare med deras världar
+    server:
+      description: Visa detaljerad serverinformation
+    ping:
+      description: Kontrollera bot-fördröjning och svarstid
+    tps:
+      description: Visa serverprestanda (TPS/MSPT)
+    verify:
+      description: Länka ditt Discord-konto till Minecraft
+    stats:
+      description: Visa spelarstatistik och prestationer
+      option-player: Spelarnamn att söka efter
+    console:
+      description: Kör ett kommando på servern (Endast Admin)
+      option-command: Kommandot att köra
+    announce:
+      description: Sänd ett meddelande till alla spelare
+      option-message: Meddelandetexten
+      option-title: Valfri titel för meddelandet
+    online:
+      description: Snabb översikt av vem som är online
+    info:
+      description: Visa plugin-information och version
+server-control:
+  restart-scheduled: <gradient:#FF5555:#FFAA00>Serveromstart</gradient> &7om &e%time% &7sekunder!
+  stopping: <gradient:#FF5555:#AA0000>Server Stoppas...</gradient> &7Vi ses!
+info:
+  sending-test-welcome: '&bSending test welcome DM...'
+  reloading-welcome-dm: '&bReloading welcome DM module...'
+  reload-start: '&bReloading configuration...'
+  plugin-info: <gradient:#55FFFF:#5555FF>=== XDiscordUltimate Information ===</gradient>
+  plugin-version: '&7Version: &e%version%'

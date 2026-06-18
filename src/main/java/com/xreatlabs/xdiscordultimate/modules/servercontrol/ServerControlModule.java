@@ -38,79 +38,70 @@ public class ServerControlModule extends Module {
     
     @Override
     public void onDiscordReady() {
-        // Register Discord listener
         if (plugin.getDiscordManager() != null && plugin.getDiscordManager().isReady()) {
             listener = new ServerControlListener();
             plugin.getDiscordManager().getJDA().addEventListener(listener);
             info("Server control connected to Discord");
         }
     }
-    
+
     @Override
     protected void onDisable() {
-        // Unregister Discord listener
         if (listener != null && plugin.getDiscordManager() != null && plugin.getDiscordManager().isReady()) {
             plugin.getDiscordManager().getJDA().removeEventListener(listener);
         }
-        
+
         info("Server control module disabled");
     }
-    
+
     private void loadConfiguration() {
         controlChannelName = plugin.getConfigManager().getChannelName("server-control");
         if (controlChannelName == null || controlChannelName.isEmpty()) {
             controlChannelName = "bot-console";
         }
-        
-        // Load allowed commands
+
         allowedCommands = Arrays.asList("restart", "stop", "kick", "tps", "list");
     }
     
     private class ServerControlListener extends ListenerAdapter {
         @Override
         public void onMessageReceived(MessageReceivedEvent event) {
-            // Ignore bot messages
             if (event.getAuthor().isBot()) return;
-            
-            // Check if message is in control channel
+
             if (!event.getChannel().getName().equalsIgnoreCase(controlChannelName)) {
                 return;
             }
-            
-            // Check if user has permission
+
             String userId = event.getAuthor().getId();
             if (!plugin.getAdminUtils().canExecuteServerControl(userId)) {
                 return;
             }
-            
+
             String message = event.getMessage().getContentRaw();
-            
-            // Check for command prefix (! or /)
+
             String commandStr = getCommandFromMessage(message);
             if (commandStr == null) {
                 return;
             }
-            
+
             String command = commandStr.toLowerCase();
             String[] parts = command.split(" ");
             String baseCommand = parts[0];
-            
-            // Check if command is allowed
+
             if (!isCommandAllowed(baseCommand)) {
                 event.getChannel().sendMessage("❌ Command not allowed: " + baseCommand).queue();
                 return;
             }
-            
-            // Execute command
+
             executeCommand(event, baseCommand, parts);
         }
     }
-    
+
     private boolean isCommandAllowed(String command) {
-        return allowedCommands.contains(command) && 
+        return allowedCommands.contains(command) &&
                plugin.getConfig().getBoolean("features.server-control.allowed-commands." + command, false);
     }
-    
+
     private void executeCommand(MessageReceivedEvent event, String command, String[] args) {
         switch (command) {
             case "restart":
@@ -133,26 +124,24 @@ public class ServerControlModule extends Module {
     
     private void handleRestart(MessageReceivedEvent event) {
         event.getChannel().sendMessage("🔄 Server restart initiated by " + event.getAuthor().getAsMention()).queue();
-        
-        // Broadcast restart message
+
         java.util.Map<String, String> placeholders = new java.util.HashMap<>();
         placeholders.put("%time%", "30");
         plugin.getMessageManager().broadcast("server-control.restart-scheduled", placeholders);
-        
-        // Schedule restart
+
         Bukkit.getScheduler().runTaskLater(plugin, () -> {
             Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "restart");
-        }, 20L * 30); // 30 seconds
+        }, 600L);
     }
-    
+
     private void handleStop(MessageReceivedEvent event) {
         event.getChannel().sendMessage("🛑 Server shutdown initiated by " + event.getAuthor().getAsMention()).queue();
-        
+
         plugin.getMessageManager().broadcast("server-control.stopping");
-        
+
         Bukkit.getScheduler().runTaskLater(plugin, () -> {
             Bukkit.shutdown();
-        }, 20L * 5); // 5 seconds
+        }, 100L);
     }
     
     private void handleKick(MessageReceivedEvent event, String[] args) {

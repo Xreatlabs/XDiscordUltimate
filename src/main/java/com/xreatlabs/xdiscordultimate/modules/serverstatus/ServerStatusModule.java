@@ -2,6 +2,7 @@ package com.xreatlabs.xdiscordultimate.modules.serverstatus;
 
 import com.xreatlabs.xdiscordultimate.XDiscordUltimate;
 import com.xreatlabs.xdiscordultimate.modules.Module;
+import com.xreatlabs.xdiscordultimate.utils.EmbedUtils;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.channel.concrete.TextChannel;
@@ -127,22 +128,22 @@ public class ServerStatusModule extends Module {
         String uptimeStr = formatUptime(uptime);
         String playerList = getPlayerList();
 
-        Color statusColor = tps >= 18 ? new Color(0, 255, 0) : tps >= 15 ? new Color(255, 255, 0) : new Color(255, 0, 0);
+        Color statusColor = tps >= 18 ? EmbedUtils.SUCCESS : tps >= 15 ? EmbedUtils.WARNING : EmbedUtils.ERROR;
 
         EmbedBuilder embed = new EmbedBuilder()
-            .setTitle(":video_game: Server Status")
+            .setTitle("Server Status")
             .setColor(statusColor)
-            .addField(":busts_in_silhouette: Players", onlinePlayers + "/" + maxPlayers, true)
-            .addField(":zap: TPS", String.format("%.1f", tps), true)
-            .addField(":floppy_disk: Memory", usedMemory + "/" + maxMemory + " MB", true)
-            .addField(":clock1: Uptime", uptimeStr, true)
-            .addField(":globe_with_meridians: Version", Bukkit.getVersion().split("-")[0], true)
-            .addField(":signal_strength: Status", tps >= 18 ? "Excellent" : tps >= 15 ? "Good" : "Lag", true)
+            .addField("Players", onlinePlayers + "/" + maxPlayers, true)
+            .addField("TPS", String.format("%.1f", tps), true)
+            .addField("Memory", usedMemory + "/" + maxMemory + " MB", true)
+            .addField("Uptime", uptimeStr, true)
+            .addField("Version", Bukkit.getVersion().split("-")[0], true)
+            .addField("Status", tps >= 18 ? "Excellent" : tps >= 15 ? "Good" : "Lag", true)
             .setTimestamp(Instant.now())
             .setFooter("Last updated");
 
         if (!playerList.isEmpty()) {
-            embed.addField(":video_game: Online Players", playerList, false);
+            embed.addField("Online Players", playerList, false);
         }
 
         return embed;

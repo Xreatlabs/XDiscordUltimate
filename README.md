@@ -2,16 +2,24 @@
 
 The most comprehensive Discord integration plugin for Minecraft servers. Features modern slash commands, chat bridge, verification system, tickets, moderation, and much more.
 
-![Version](https://img.shields.io/badge/version-1.0.0-blue)
+![Version](https://img.shields.io/badge/version-1.2.0-blue)
 ![Minecraft](https://img.shields.io/badge/minecraft-1.16.5+-green)
 ![Java](https://img.shields.io/badge/java-17+-orange)
 ![Discord](https://img.shields.io/badge/discord-JDA_5.0-7289da)
 ![License](https://img.shields.io/badge/license-MIT-purple)
 
+## What's New in 1.2.0
+
+- **`/unlink` command** — players can unlink their Discord account; admins can unlink anyone via `/xdiscord unlink <player>` (removes Discord role, LuckPerms group, and DB link).
+- **Hardened verification codes** — `SecureRandom` generation, configurable failed-attempt cooldown + max-attempts lockout, and consistent code expiry (the `code-expiry-minutes` config is now honored exactly).
+- **Fixed config/code default mismatches** — `one-time-only`, `kick-after-minutes`, and `verify-cooldown-seconds` now align with `config.yml`.
+- **Fixed a `ConcurrentModificationException`** in the message/localization system that could throw on a player's first localized message.
+- **Discord nickname re-sync** — linked members' stored Discord name stays fresh when they change their nickname.
+
 ## Features
 
 - **Chat Bridge** - Seamless chat sync between Minecraft and Discord
-- **Verification System** - Secure account linking with verification codes
+- **Verification System** - Secure account linking with verification codes, self/admin unlink, brute-force lockout, and Discord nickname sync
 - **Support Tickets** - Full ticket system with Discord integration
 - **Player Stats** - Track and display player statistics
 - **Server Status** - Auto-updating status embed in Discord
@@ -88,6 +96,7 @@ discord:
 | Command | Description |
 |---------|-------------|
 | `/verify <code>` | Link your Discord account |
+| `/unlink` | Unlink your Discord account |
 | `/support <message>` | Create a support ticket |
 | `/report <player> <reason>` | Report a player |
 | `/stats [player]` | View player statistics |
@@ -99,6 +108,7 @@ discord:
 | `/xdiscord reload` | Reload configuration |
 | `/xdiscord status` | Show plugin status |
 | `/xdiscord modules` | List all modules |
+| `/xdiscord unlink <player>` | Unlink a player from Discord |
 | `/announce <message>` | Make an announcement |
 
 ### Discord Slash Commands
@@ -115,6 +125,7 @@ discord:
 | Permission | Description | Default |
 |------------|-------------|---------|
 | `xdiscord.verify` | Use verification | true |
+| `xdiscord.unlink` | Unlink own account | true |
 | `xdiscord.support` | Create tickets | true |
 | `xdiscord.report` | Report players | true |
 | `xdiscord.admin` | Admin commands | op |
@@ -125,7 +136,7 @@ discord:
 
 ## Requirements
 
-- **Minecraft Server**: Spigot/Paper 1.16.5+
+- **Minecraft Server**: Spigot/Paper 1.16.5 – 1.21.x (latest)
 - **Java**: 17 or higher
 - **Discord Bot**: With MESSAGE_CONTENT intent enabled
 

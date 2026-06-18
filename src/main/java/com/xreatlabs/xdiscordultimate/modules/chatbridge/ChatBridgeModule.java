@@ -97,16 +97,16 @@ public class ChatBridgeModule extends Module implements Listener {
         // Validate webhook URL if enabled
         if (useWebhook && webhookUrl != null && !webhookUrl.isEmpty()) {
             if (webhookManager.isValidWebhookUrl(webhookUrl)) {
-                info("Webhook mode enabled with skin provider: " + skinProvider);
+                debug("Webhook mode enabled with skin provider: " + skinProvider);
             } else {
                 warning("Invalid webhook URL! Falling back to regular messages.");
                 useWebhook = false;
             }
         }
-        
+
         // Register Minecraft events
         Bukkit.getPluginManager().registerEvents(this, plugin);
-        
+
         info("Chat bridge module enabled");
     }
     
@@ -135,7 +135,7 @@ public class ChatBridgeModule extends Module implements Listener {
             discordListener = new ChatBridgeListener();
             plugin.getDiscordManager().getJDA().addEventListener(discordListener);
             info("Discord chat listener registered");
-            
+
             // Setup webhook for DiscordSRV-style player avatars
             setupWebhook();
         }
@@ -150,13 +150,13 @@ public class ChatBridgeModule extends Module implements Listener {
         if (webhookUrl != null && !webhookUrl.isEmpty() && webhookManager.isValidWebhookUrl(webhookUrl)) {
             managedWebhookUrl = webhookUrl;
             useWebhook = true;
-            info("Using manual webhook URL for chat bridge");
+            debug("Using manual webhook URL for chat bridge");
             return;
         }
-        
+
         // Auto-create webhook if enabled
         if (!autoCreateWebhook) {
-            info("Auto-create webhook disabled, using embed mode");
+            debug("Auto-create webhook disabled, using embed mode");
             return;
         }
         
@@ -175,7 +175,7 @@ public class ChatBridgeModule extends Module implements Listener {
                     managedWebhook = webhook;
                     managedWebhookUrl = webhook.getUrl();
                     useWebhook = true;
-                    info("Found existing webhook for chat bridge in #" + chatChannel.getName());
+                    debug("Found existing webhook for chat bridge in #" + chatChannel.getName());
                     return;
                 }
             }
@@ -187,12 +187,12 @@ public class ChatBridgeModule extends Module implements Listener {
                     managedWebhookUrl = webhook.getUrl();
                     useWebhook = true;
                     info("Created webhook for chat bridge in #" + chatChannel.getName());
-                    info("Player skins will now show as message avatars!");
+                    debug("Player skins will now show as message avatars!");
                 },
                 error -> {
                     warning("Failed to create webhook: " + error.getMessage());
                     warning("Bot needs 'Manage Webhooks' permission for player avatar feature");
-                    info("Falling back to embed mode (player avatars in embed)");
+                    debug("Falling back to embed mode (player avatars in embed)");
                 }
             );
         }, error -> {
@@ -273,23 +273,23 @@ public class ChatBridgeModule extends Module implements Listener {
         if (eventsChannelId != null && !eventsChannelId.isEmpty()) {
             info("Events channel configured: " + eventsChannelId);
         }
-        info("Enhanced features: mentions=" + showMentions + ", emojis=" + convertEmojis);
+        debug("Enhanced features: mentions=" + showMentions + ", emojis=" + convertEmojis);
     }
     
     @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
     public void onPlayerChat(AsyncPlayerChatEvent event) {
-        info("Chat event received from: " + event.getPlayer().getName());
-        
+        debug("Chat event received from: " + event.getPlayer().getName());
+
         if (!enableMinecraftToDiscord) {
-            info("Minecraft to Discord is disabled, skipping");
+            debug("Minecraft to Discord is disabled, skipping");
             return;
         }
-        
+
         Player player = event.getPlayer();
         String message = event.getMessage();
-        
-        info("Sending message to Discord: " + message);
-        
+
+        debug("Sending message to Discord: " + message);
+
         // Send to Discord
         sendToDiscord(player, message);
     }
@@ -297,28 +297,27 @@ public class ChatBridgeModule extends Module implements Listener {
     private void sendToDiscord(Player player, String message) {
         // Get the effective webhook URL (auto-managed or manual)
         String effectiveWebhookUrl = managedWebhookUrl != null ? managedWebhookUrl : webhookUrl;
-        
+
         // Get formatted display name with prefix/suffix
         String displayName = getFormattedPlayerName(player);
-        
-        // Get player avatar URL (Minecraft skin face) - use crafthead.net
-        String avatarUrl = "https://crafthead.net/avatar/" + player.getUniqueId().toString().replace("-", "") + "/128";
-        info("[ChatBridge] Avatar URL: " + avatarUrl);
-        info("[ChatBridge] useWebhook=" + useWebhook + ", webhookUrl=" + (effectiveWebhookUrl != null ? "set" : "null"));
-        
-        // Try webhook first - single server webhook with player messages
+
+        // Get player avatar URL (Minecraft skin face)
+        String avatarUrl = WebhookManager.getPlayerAvatarUrl(player.getUniqueId(), player.getName(), skinProvider);
+        debug("[ChatBridge] Avatar URL: " + avatarUrl);
+        debug("[ChatBridge] useWebhook=" + useWebhook + ", webhookUrl=" + (effectiveWebhookUrl != null ? "set" : "null"));
+
+        // Apply configured Minecraft format
+        String formattedMessage = minecraftFormat
+            .replace("%player%", displayName)
+            .replace("%message%", message);
+
+        // Try webhook first so messages appear to come from the player
         if (useWebhook && effectiveWebhookUrl != null && !effectiveWebhookUrl.isEmpty()) {
-            info("[ChatBridge] Using WEBHOOK mode");
-            // Get server name from config (default: "Minecraft Server")
-            String serverName = plugin.getConfig().getString("general.server-name", "Minecraft Server");
-            // Format: PlayerName >> Message (all in message content)
-            String formattedMessage = "**" + displayName + "** >> " + message;
-            // Use server icon instead of player avatar for consistent look
-            String serverIcon = "https://crafthead.net/avatar/MHF_Steve/128";
-            webhookManager.sendMessage(effectiveWebhookUrl, serverName, serverIcon, formattedMessage)
+            debug("[ChatBridge] Using WEBHOOK mode");
+            webhookManager.sendMessage(effectiveWebhookUrl, displayName, avatarUrl, formattedMessage)
                 .thenAccept(success -> {
                     if (success) {
-                        info("[ChatBridge] Webhook SUCCESS - skin should show!");
+                        debug("[ChatBridge] Webhook SUCCESS - skin should show!");
                     } else {
                         warning("[ChatBridge] Webhook FAILED, using fallback");
                         sendToDiscordFallback(player, message, avatarUrl);
@@ -326,9 +325,9 @@ public class ChatBridgeModule extends Module implements Listener {
                 });
             return;
         }
-        
+
         // Fallback to embed mode with avatar
-        info("[ChatBridge] Using EMBED FALLBACK mode");
+        debug("[ChatBridge] Using EMBED FALLBACK mode");
         sendToDiscordFallback(player, message, avatarUrl);
     }
     
@@ -395,25 +394,26 @@ public class ChatBridgeModule extends Module implements Listener {
             debug("Chat channel not found: " + chatChannelName);
             return;
         }
-        
+
         // Get formatted display name with prefix/suffix
         String displayName = getFormattedPlayerName(player);
-        
-        // Send as embed - Format: PlayerName >> Message
-        String serverName = plugin.getConfig().getString("general.server-name", "Minecraft Server");
-        String serverIcon = "https://crafthead.net/avatar/MHF_Steve/128";
-        String formattedMessage = "**" + displayName + "** >> " + message;
-        
+
+        // Apply configured Minecraft format
+        String formattedMessage = minecraftFormat
+            .replace("%player%", displayName)
+            .replace("%message%", message);
+
         EmbedBuilder embed = new EmbedBuilder()
-            .setAuthor(serverName, null, serverIcon)
+            .setAuthor(displayName, null, avatarUrl)
             .setDescription(formattedMessage)
+            .setThumbnail(avatarUrl)
             .setColor(new Color(85, 255, 85))
             .setTimestamp(Instant.now());
-        
-        info("[ChatBridge] Sending embed with avatar: " + avatarUrl);
-        
+
+        debug("[ChatBridge] Sending embed with avatar: " + avatarUrl);
+
         channel.sendMessageEmbeds(embed.build()).queue(
-            success -> info("[ChatBridge] Embed sent successfully with player skin!"),
+            success -> debug("[ChatBridge] Embed sent successfully with player skin!"),
             error -> warning("[ChatBridge] Failed to send embed: " + error.getMessage())
         );
     }
@@ -792,18 +792,19 @@ public class ChatBridgeModule extends Module implements Listener {
     public void sendSystemMessageWithPlayer(String message, Color color, String channelId, Player player) {
         // Get the effective webhook URL (auto-managed or manual)
         String effectiveWebhookUrl = managedWebhookUrl != null ? managedWebhookUrl : webhookUrl;
-        
-        info("[Join/Leave] useWebhook=" + useWebhook + ", webhookUrl=" + (effectiveWebhookUrl != null ? "set" : "null") + ", player=" + (player != null ? player.getName() : "null"));
-        
-        // Try webhook - use server name as webhook username
+
+        String webhookName = player != null ? player.getName() : "Server";
+        String avatarUrl = player != null ? WebhookManager.getPlayerAvatarUrl(player.getUniqueId(), player.getName(), skinProvider) : null;
+
+        debug("[Join/Leave] useWebhook=" + useWebhook + ", webhookUrl=" + (effectiveWebhookUrl != null ? "set" : "null") + ", player=" + (player != null ? player.getName() : "null"));
+
+        // Try webhook - use player name/avatar when available so events look like they come from the player
         if (useWebhook && effectiveWebhookUrl != null && !effectiveWebhookUrl.isEmpty()) {
-            String serverName = plugin.getConfig().getString("general.server-name", "Minecraft Server");
-            String serverIcon = "https://crafthead.net/avatar/MHF_Steve/128";
-            info("[Join/Leave] Sending via webhook");
-            webhookManager.sendMessage(effectiveWebhookUrl, serverName, serverIcon, message)
+            debug("[Join/Leave] Sending via webhook");
+            webhookManager.sendMessage(effectiveWebhookUrl, webhookName, avatarUrl, message)
                 .thenAccept(success -> {
                     if (success) {
-                        info("[Join/Leave] Webhook SUCCESS!");
+                        debug("[Join/Leave] Webhook SUCCESS!");
                     } else {
                         warning("[Join/Leave] Webhook FAILED, using fallback");
                         sendSystemMessageFallbackWithPlayer(message, color, channelId, player);
@@ -811,9 +812,9 @@ public class ChatBridgeModule extends Module implements Listener {
                 });
             return;
         }
-        
+
         // Use embed with player avatar (no webhook)
-        info("[Join/Leave] Using embed fallback");
+        debug("[Join/Leave] Using embed fallback");
         sendSystemMessageFallbackWithPlayer(message, color, channelId, player);
     }
     
@@ -841,7 +842,7 @@ public class ChatBridgeModule extends Module implements Listener {
         
         // Add player avatar if available
         if (player != null) {
-            String avatarUrl = "https://mc-heads.net/avatar/" + player.getUniqueId().toString().replace("-", "") + "/128";
+            String avatarUrl = WebhookManager.getPlayerAvatarUrl(player.getUniqueId(), player.getName(), skinProvider);
             embed.setThumbnail(avatarUrl);
             embed.setAuthor(player.getName(), null, avatarUrl);
         }
@@ -914,7 +915,7 @@ public class ChatBridgeModule extends Module implements Listener {
         if (channel == null) return;
         
         // Get player avatar from crafthead.net
-        String avatarUrl = "https://crafthead.net/avatar/" + player.getUniqueId().toString().replace("-", "") + "/128";
+        String avatarUrl = WebhookManager.getPlayerAvatarUrl(player.getUniqueId(), player.getName(), skinProvider);
         
         EmbedBuilder embed = new EmbedBuilder()
             .setAuthor(player.getName(), null, avatarUrl)
@@ -925,7 +926,7 @@ public class ChatBridgeModule extends Module implements Listener {
             .setTimestamp(Instant.now());
         
         channel.sendMessageEmbeds(embed.build()).queue(
-            success -> info("[Events] Sent " + title + " embed for " + player.getName()),
+            success -> debug("[Events] Sent " + title + " embed for " + player.getName()),
             error -> warning("[Events] Failed to send embed: " + error.getMessage())
         );
     }

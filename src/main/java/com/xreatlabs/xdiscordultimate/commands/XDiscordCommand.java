@@ -9,10 +9,18 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.command.TabCompleter;
 import org.bukkit.entity.Player;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Map;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.time.Instant;
+import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
+import java.util.*;
+import java.util.concurrent.CompletableFuture;
+import java.util.logging.Level;
 import java.util.stream.Collectors;
 
 public class XDiscordCommand implements CommandExecutor, TabCompleter {
@@ -38,14 +46,19 @@ public class XDiscordCommand implements CommandExecutor, TabCompleter {
         String subCommand = args[0].toLowerCase();
         
         switch (subCommand) {
+            case "setup":
+                handleSetup(sender);
+                break;
+
             case "reload":
                 handleReload(sender);
                 break;
-                
+
             case "status":
+            case "info":
                 handleStatus(sender);
                 break;
-                
+
             case "help":
                 if (args.length > 1) {
                     showCommandHelp(sender, args[1]);
@@ -53,19 +66,27 @@ public class XDiscordCommand implements CommandExecutor, TabCompleter {
                     showHelp(sender);
                 }
                 break;
-                
+
             case "modules":
                 handleModules(sender);
                 break;
-                
+
             case "debug":
                 handleDebug(sender, args);
                 break;
-                
+
             case "admin":
                 handleAdmin(sender, args);
                 break;
-                
+
+            case "export":
+                handleExport(sender, args);
+                break;
+
+            case "unlink":
+                handleUnlink(sender, args);
+                break;
+
             default:
                 plugin.getMessageManager().sendError(sender, "Unknown subcommand: " + subCommand);
                 showHelp(sender);
@@ -75,6 +96,10 @@ public class XDiscordCommand implements CommandExecutor, TabCompleter {
         return true;
     }
     
+    private void handleSetup(CommandSender sender) {
+        new XDiscordSetupCommand(plugin).onCommand(sender, null, "setup", new String[0]);
+    }
+
     private void handleReload(CommandSender sender) {
         plugin.getMessageManager().sendInfo(sender, "Reloading configuration...");
         
@@ -83,7 +108,7 @@ public class XDiscordCommand implements CommandExecutor, TabCompleter {
             plugin.getMessageManager().sendMessage(sender, "general.reload-success");
         } catch (Exception e) {
             plugin.getMessageManager().sendMessage(sender, "general.reload-failed");
-            e.printStackTrace();
+            plugin.getLogger().log(Level.SEVERE, "Failed to reload configuration", e);
         }
     }
     
@@ -165,16 +190,16 @@ public class XDiscordCommand implements CommandExecutor, TabCompleter {
             plugin.getMessageManager().sendError(sender, "Usage: /xdiscord admin <add|remove> <discord-id>");
             return;
         }
-        
+
         String action = args[1].toLowerCase();
         String discordId = args[2];
-        
+
         // Validate Discord ID format
         if (!discordId.matches("\\d{17,20}")) {
             plugin.getMessageManager().sendError(sender, "Invalid Discord ID format!");
             return;
         }
-        
+
         if (action.equals("add")) {
             plugin.getAdminUtils().addAdmin(discordId);
             plugin.getMessageManager().sendSuccess(sender, "Added Discord ID " + discordId + " as admin");
@@ -185,22 +210,290 @@ public class XDiscordCommand implements CommandExecutor, TabCompleter {
             plugin.getMessageManager().sendError(sender, "Usage: /xdiscord admin <add|remove> <discord-id>");
         }
     }
+
+    private void handleUnlink(CommandSender sender, String[] args) {
+        if (args.length < 2) {
+            plugin.getMessageManager().sendError(sender, "Usage: /xdiscord unlink <player>");
+            return;
+        }
+        if (!plugin.getConfigManager().isFeatureEnabled("verification")) {
+            plugin.getMessageManager().sendMessage(sender, "errors.feature-disabled");
+            return;
+        }
+        com.xreatlabs.xdiscordultimate.modules.verification.VerificationModule module =
+            plugin.getModuleManager().getModule(com.xreatlabs.xdiscordultimate.modules.verification.VerificationModule.class);
+        if (module == null) {
+            plugin.getMessageManager().sendMessage(sender, "errors.module-not-available");
+            return;
+        }
+
+        String targetName = args[1];
+        org.bukkit.OfflinePlayer target = plugin.getServer().getOfflinePlayer(targetName);
+        boolean removed = module.unlink(target.getUniqueId());
+
+        if (removed) {
+            plugin.getMessageManager().sendSuccess(sender, "Unlinked " + targetName + " from Discord");
+        } else {
+            plugin.getMessageManager().sendError(sender, targetName + " is not linked to Discord (or unlink failed)");
+        }
+    }
+
+    private void handleExport(CommandSender sender, String[] args) {
+        String type = args.length > 1 ? args[1].toLowerCase() : "all";
+
+        sender.sendMessage(color("<gradient:#55FFFF:#5555FF>━━━ Exporting Data ━━━</gradient>"));
+        sender.sendMessage(color("&7Gathering data..."));
+
+        // Run export asynchronously to avoid blocking
+        CompletableFuture.runAsync(() -> {
+            try {
+                File exportDir = new File(plugin.getDataFolder(), "exports");
+                if (!exportDir.exists() && !exportDir.mkdirs()) {
+                    plugin.getMessageManager().sendError(sender, "Failed to create export directory");
+                    return;
+                }
+
+                String timestamp = DateTimeFormatter.ofPattern("yyyyMMdd_HHmmss")
+                    .withZone(ZoneId.systemDefault()).format(Instant.now());
+
+                List<String> exportedFiles = new ArrayList<>();
+
+                if (type.equals("all") || type.equals("verified")) {
+                    File verifiedFile = exportVerifiedUsers(exportDir, timestamp);
+                    if (verifiedFile != null) exportedFiles.add("verified users");
+                }
+
+                if (type.equals("all") || type.equals("stats")) {
+                    File statsFile = exportPlayerStats(exportDir, timestamp);
+                    if (statsFile != null) exportedFiles.add("player stats");
+                }
+
+                if (type.equals("all") || type.equals("tickets")) {
+                    File ticketsFile = exportTickets(exportDir, timestamp);
+                    if (ticketsFile != null) exportedFiles.add("tickets");
+                }
+
+                if (exportedFiles.isEmpty()) {
+                    plugin.getMessageManager().sendError(sender, "No data was exported");
+                } else {
+                    plugin.getServer().getScheduler().runTask(plugin, () -> {
+                        sender.sendMessage(color("<gradient:#55FF55:#00AA00>━━━ Export Complete ━━━</gradient>"));
+                        sender.sendMessage(color("&a✓ Exported: " + String.join(", ", exportedFiles)));
+                        sender.sendMessage(color("&7Files saved to: &fplugins/XDiscordUltimate/exports/"));
+                    });
+                }
+            } catch (Exception e) {
+                plugin.getLogger().log(Level.SEVERE, "Export failed", e);
+                plugin.getServer().getScheduler().runTask(plugin, () ->
+                    plugin.getMessageManager().sendError(sender, "Export failed: " + e.getMessage()));
+            }
+        });
+    }
+
+    private File exportVerifiedUsers(File exportDir, String timestamp) {
+        try {
+            List<Map<String, Object>> verifiedUsers = new ArrayList<>();
+
+            String sql = "SELECT * FROM verified_users ORDER BY verified_at DESC";
+            try (java.sql.Connection conn = plugin.getDatabaseManager().getConnection();
+                 java.sql.Statement stmt = conn.createStatement();
+                 java.sql.ResultSet rs = stmt.executeQuery(sql)) {
+
+                while (rs.next()) {
+                    Map<String, Object> user = new LinkedHashMap<>();
+                    user.put("minecraft_uuid", rs.getString("minecraft_uuid"));
+                    user.put("minecraft_name", rs.getString("minecraft_name"));
+                    user.put("discord_id", rs.getString("discord_id"));
+                    user.put("discord_name", rs.getString("discord_name"));
+                    user.put("verified_at", rs.getString("verified_at"));
+                    verifiedUsers.add(user);
+                }
+            }
+
+            Map<String, Object> data = new LinkedHashMap<>();
+            data.put("export_type", "verified_users");
+            data.put("exported_at", DateTimeFormatter.ISO_INSTANT.withZone(ZoneId.systemDefault()).format(Instant.now()));
+            data.put("total_count", verifiedUsers.size());
+            data.put("users", verifiedUsers);
+
+            File file = new File(exportDir, "verified_users_" + timestamp + ".json");
+            writeJsonFile(file, data);
+            return file;
+        } catch (Exception e) {
+            plugin.getLogger().log(Level.SEVERE, "Failed to export verified users", e);
+            return null;
+        }
+    }
+
+    private File exportPlayerStats(File exportDir, String timestamp) {
+        try {
+            List<Map<String, Object>> playerStats = new ArrayList<>();
+
+            String sql = "SELECT * FROM player_stats ORDER BY playtime_minutes DESC";
+            try (java.sql.Connection conn = plugin.getDatabaseManager().getConnection();
+                 java.sql.Statement stmt = conn.createStatement();
+                 java.sql.ResultSet rs = stmt.executeQuery(sql)) {
+
+                while (rs.next()) {
+                    Map<String, Object> stats = new LinkedHashMap<>();
+                    stats.put("minecraft_uuid", rs.getString("minecraft_uuid"));
+                    stats.put("joins", rs.getInt("joins"));
+                    stats.put("messages_sent", rs.getInt("messages_sent"));
+                    stats.put("deaths", rs.getInt("deaths"));
+                    stats.put("playtime_minutes", rs.getInt("playtime_minutes"));
+                    stats.put("last_seen", rs.getString("last_seen"));
+                    stats.put("first_join", rs.getString("first_join"));
+                    playerStats.add(stats);
+                }
+            }
+
+            Map<String, Object> data = new LinkedHashMap<>();
+            data.put("export_type", "player_stats");
+            data.put("exported_at", DateTimeFormatter.ISO_INSTANT.withZone(ZoneId.systemDefault()).format(Instant.now()));
+            data.put("total_count", playerStats.size());
+            data.put("stats", playerStats);
+
+            File file = new File(exportDir, "player_stats_" + timestamp + ".json");
+            writeJsonFile(file, data);
+            return file;
+        } catch (Exception e) {
+            plugin.getLogger().log(Level.SEVERE, "Failed to export player stats", e);
+            return null;
+        }
+    }
+
+    private File exportTickets(File exportDir, String timestamp) {
+        try {
+            List<Map<String, Object>> tickets = new ArrayList<>();
+
+            String sql = "SELECT * FROM tickets ORDER BY created_at DESC";
+            try (java.sql.Connection conn = plugin.getDatabaseManager().getConnection();
+                 java.sql.Statement stmt = conn.createStatement();
+                 java.sql.ResultSet rs = stmt.executeQuery(sql)) {
+
+                while (rs.next()) {
+                    Map<String, Object> ticket = new LinkedHashMap<>();
+                    ticket.put("id", rs.getInt("id"));
+                    ticket.put("minecraft_uuid", rs.getString("minecraft_uuid"));
+                    ticket.put("discord_channel_id", rs.getString("discord_channel_id"));
+                    ticket.put("status", rs.getString("status"));
+                    ticket.put("subject", rs.getString("subject"));
+                    ticket.put("created_at", rs.getString("created_at"));
+                    ticket.put("closed_at", rs.getString("closed_at"));
+                    tickets.add(ticket);
+                }
+            }
+
+            Map<String, Object> data = new LinkedHashMap<>();
+            data.put("export_type", "tickets");
+            data.put("exported_at", DateTimeFormatter.ISO_INSTANT.withZone(ZoneId.systemDefault()).format(Instant.now()));
+            data.put("total_count", tickets.size());
+            data.put("tickets", tickets);
+
+            File file = new File(exportDir, "tickets_" + timestamp + ".json");
+            writeJsonFile(file, data);
+            return file;
+        } catch (Exception e) {
+            plugin.getLogger().log(Level.SEVERE, "Failed to export tickets", e);
+            return null;
+        }
+    }
+
+    private void writeJsonFile(File file, Map<String, Object> data) throws IOException {
+        try (FileWriter writer = new FileWriter(file)) {
+            writer.write("{\n");
+            boolean first = true;
+            for (Map.Entry<String, Object> entry : data.entrySet()) {
+                if (!first) writer.write(",\n");
+                first = false;
+
+                writer.write("  \"" + entry.getKey() + "\": ");
+                Object value = entry.getValue();
+
+                if (value instanceof String) {
+                    writer.write("\"" + escapeJson((String) value) + "\"");
+                } else if (value instanceof Number || value instanceof Boolean) {
+                    writer.write(String.valueOf(value));
+                } else if (value instanceof List) {
+                    writer.write(jsonArrayToString((List<?>) value));
+                } else {
+                    writer.write("\"" + escapeJson(String.valueOf(value)) + "\"");
+                }
+            }
+            writer.write("\n}\n");
+        }
+    }
+
+    private String jsonArrayToString(List<?> list) {
+        StringBuilder sb = new StringBuilder("[\n");
+        for (int i = 0; i < list.size(); i++) {
+            if (i > 0) sb.append(",\n");
+            Object item = list.get(i);
+            if (item instanceof Map) {
+                @SuppressWarnings("unchecked")
+                Map<String, Object> map = (Map<String, Object>) item;
+                sb.append("    {\n");
+                boolean first = true;
+                for (Map.Entry<String, Object> entry : map.entrySet()) {
+                    if (!first) sb.append(",\n");
+                    first = false;
+                    sb.append("      \"" + entry.getKey() + "\": ");
+                    Object value = entry.getValue();
+                    if (value instanceof String) {
+                        sb.append("\"" + escapeJson((String) value) + "\"");
+                    } else if (value instanceof Number || value instanceof Boolean) {
+                        sb.append(String.valueOf(value));
+                    } else {
+                        sb.append("\"" + escapeJson(String.valueOf(value)) + "\"");
+                    }
+                }
+                sb.append("\n    }");
+            }
+        }
+        sb.append("\n  ]");
+        return sb.toString();
+    }
+
+    private String escapeJson(String s) {
+        if (s == null) return "";
+        return s.replace("\\", "\\\\")
+            .replace("\"", "\\\"")
+            .replace("\n", "\\n")
+            .replace("\r", "\\r")
+            .replace("\t", "\\t");
+    }
     
     private void showHelp(CommandSender sender) {
         plugin.getMessageManager().sendMessageList(sender, "help.header");
-        
+
+        sender.sendMessage(color("  <gradient:#55FF55:#55FFFF>▸</gradient> &e/xdiscord setup &8- &7Interactive setup wizard"));
         sender.sendMessage(color("  <gradient:#55FF55:#55FFFF>▸</gradient> &e/xdiscord reload &8- &7Reload configuration"));
         sender.sendMessage(color("  <gradient:#55FF55:#55FFFF>▸</gradient> &e/xdiscord status &8- &7Show plugin status"));
         sender.sendMessage(color("  <gradient:#55FF55:#55FFFF>▸</gradient> &e/xdiscord modules &8- &7List all modules"));
         sender.sendMessage(color("  <gradient:#55FF55:#55FFFF>▸</gradient> &e/xdiscord debug <on|off> &8- &7Toggle debug"));
         sender.sendMessage(color("  <gradient:#55FF55:#55FFFF>▸</gradient> &e/xdiscord admin <add|remove> <id> &8- &7Manage admins"));
+        sender.sendMessage(color("  <gradient:#55FF55:#55FFFF>▸</gradient> &e/xdiscord export [type] &8- &7Export data to JSON"));
+        sender.sendMessage(color("  <gradient:#55FF55:#55FFFF>▸</gradient> &e/xdiscord unlink <player> &8- &7Unlink a player from Discord"));
         sender.sendMessage(color("  <gradient:#55FF55:#55FFFF>▸</gradient> &e/xdiscord help <cmd> &8- &7Command help"));
-        
+        sender.sendMessage("");
+        sender.sendMessage(color("&6&lOther Plugin Commands:"));
+        sender.sendMessage(color("  <gradient:#FFAA00:#FF5555>▸</gradient> &e/verify &8- &7Link your Minecraft account to Discord"));
+        sender.sendMessage(color("  <gradient:#FFAA00:#FF5555>▸</gradient> &e/support <message> &8- &7Create a support ticket"));
+        sender.sendMessage(color("  <gradient:#FFAA00:#FF5555>▸</gradient> &e/report <player> <reason> &8- &7Report a player to staff"));
+        sender.sendMessage(color("  <gradient:#FFAA00:#FF5555>▸</gradient> &e/stats &8- &7View your player statistics"));
+        sender.sendMessage(color("  <gradient:#FFAA00:#FF5555>▸</gradient> &e/discord &8- &7Get the Discord server invite link"));
+        sender.sendMessage(color("  <gradient:#FFAA00:#FF5555>▸</gradient> &e/embed <channel> <title> <desc> &8- &7Send an embed to Discord"));
+        sender.sendMessage(color("  <gradient:#FFAA00:#FF5555>▸</gradient> &e/announce <message> &8- &7Broadcast a server announcement"));
+        sender.sendMessage(color("  <gradient:#FFAA00:#FF5555>▸</gradient> &e/discordconsole <cmd> &8- &7Execute server commands via Discord"));
+        sender.sendMessage(color("  <gradient:#FFAA00:#FF5555>▸</gradient> &e/welcomedm &8- &7View your welcome DM message"));
+        sender.sendMessage(color("  <gradient:#FFAA00:#FF5555>▸</gradient> &e/ip &8- &7Get the server IP address"));
+        sender.sendMessage(color("  <gradient:#FFAA00:#FF5555>▸</gradient> &e/whitelist &8- &7Manage server whitelist"));
+        sender.sendMessage(color("  <gradient:#FFAA00:#FF5555>▸</gradient> &e/language &8- &7Change your language preference"));
+
         plugin.getMessageManager().sendMessageList(sender, "help.footer");
     }
     
     private void showCommandHelp(CommandSender sender, String command) {
-        // Show detailed help for specific commands
         switch (command.toLowerCase()) {
             case "verify":
                 sender.sendMessage(color("<gradient:#55FFFF:#5555FF>/verify</gradient> &8- &7" + 
@@ -216,14 +509,26 @@ public class XDiscordCommand implements CommandExecutor, TabCompleter {
                 
             case "embed":
                 sender.sendMessage(color("<gradient:#55FFFF:#5555FF>/embed <channel> <title> <desc></gradient>"));
-                sender.sendMessage(color("&8  Sends embed to Discord. Requires: &exdiscord.embed"));
+                sender.sendMessage(color("&8  Sends an embed to Discord. Requires: &exdiscord.embed"));
                 break;
-                
+
+            case "discord":
+                sender.sendMessage(color("<gradient:#55FFFF:#5555FF>/discord</gradient> &8- &7" +
+                    plugin.getMessageManager().getMessage("commands.discord")));
+                sender.sendMessage(color("&8  Shows the Discord server invite link."));
+                break;
+
+            case "report":
+                sender.sendMessage(color("<gradient:#55FFFF:#5555FF>/report <player> <reason></gradient> &8- &7" +
+                    plugin.getMessageManager().getMessage("commands.report")));
+                sender.sendMessage(color("&8  Reports a player to Discord moderators."));
+                break;
+
             case "announce":
                 sender.sendMessage(color("<gradient:#55FFFF:#5555FF>/announce <message></gradient>"));
                 sender.sendMessage(color("&8  Broadcasts to Discord & in-game. Requires: &exdiscord.announce"));
                 break;
-                
+
             default:
                 plugin.getMessageManager().sendError(sender, "No help available for: " + command);
                 break;
@@ -243,7 +548,7 @@ public class XDiscordCommand implements CommandExecutor, TabCompleter {
         List<String> completions = new ArrayList<>();
         
         if (args.length == 1) {
-            completions.addAll(Arrays.asList("reload", "status", "modules", "debug", "admin", "help"));
+            completions.addAll(Arrays.asList("setup", "reload", "status", "modules", "debug", "admin", "export", "unlink", "help"));
         } else if (args.length == 2) {
             switch (args[0].toLowerCase()) {
                 case "debug":
@@ -252,9 +557,15 @@ public class XDiscordCommand implements CommandExecutor, TabCompleter {
                 case "admin":
                     completions.addAll(Arrays.asList("add", "remove"));
                     break;
+                case "export":
+                    completions.addAll(Arrays.asList("all", "verified", "stats", "tickets"));
+                    break;
+                case "unlink":
+                    plugin.getServer().getOnlinePlayers().forEach(p -> completions.add(p.getName()));
+                    break;
                 case "help":
-                    completions.addAll(Arrays.asList("verify", "support", "embed", "announce", 
-                                                    "discordconsole", "report"));
+                    completions.addAll(Arrays.asList("verify", "support", "embed", "announce",
+                                                    "discordconsole", "report", "discord"));
                     break;
             }
         }

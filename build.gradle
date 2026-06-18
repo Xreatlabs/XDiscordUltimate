@@ -15,7 +15,7 @@ if (envFile.exists()) {
 }
 
 group = 'com.xreatlabs.xdiscordultimate'
-version = '1.1.0'
+version = '1.2.0'
 
 // Java 16+ for 1.17+, Java 17+ for 1.18+
 // We compile with Java 16 for maximum compatibility (1.16.5-1.21.x)
@@ -40,10 +40,10 @@ dependencies {
     compileOnly 'net.luckperms:api:5.4'
     compileOnly 'me.clip:placeholderapi:2.11.3'
     compileOnly 'com.github.MilkBowl:VaultAPI:1.7'
-    
+
     // Libby for runtime dependency management
     implementation 'net.byteflux:libby-bukkit:1.3.1'
-    
+
     // All other dependencies as compileOnly for runtime loading
     compileOnly 'net.dv8tion:JDA:5.0.0-beta.18'
     compileOnly 'com.squareup.okhttp3:okhttp:4.10.0'
@@ -53,9 +53,19 @@ dependencies {
     compileOnly 'com.mysql:mysql-connector-j:8.0.33'
     compileOnly 'org.postgresql:postgresql:42.6.0'
     compileOnly 'org.slf4j:slf4j-api:2.0.9'
-    compileOnly 'ch.qos.logback:logback-classic:1.4.11'
-    compileOnly 'org.apache.logging.log4j:log4j-core:2.17.1'
+    // Log4j is provided by the server at runtime. Keep these compile-only for the types we use,
+    // but do NOT load them via Libby to avoid SLF4J binding conflicts.
     compileOnly 'org.apache.logging.log4j:log4j-api:2.17.1'
+    compileOnly 'org.apache.logging.log4j:log4j-core:2.17.1'
+
+    // Testing dependencies
+    testImplementation 'org.junit.jupiter:junit-jupiter:5.10.0'
+    testImplementation 'org.mockito:mockito-core:5.5.0'
+    testImplementation 'org.xerial:sqlite-jdbc:3.42.0.0'
+}
+
+test {
+    useJUnitPlatform()
 }
 
 tasks.withType(JavaCompile) {

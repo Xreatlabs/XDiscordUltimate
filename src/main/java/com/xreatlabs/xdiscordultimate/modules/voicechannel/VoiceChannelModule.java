@@ -2,16 +2,26 @@ package com.xreatlabs.xdiscordultimate.modules.voicechannel;
 
 import com.xreatlabs.xdiscordultimate.XDiscordUltimate;
 import com.xreatlabs.xdiscordultimate.modules.Module;
+import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.channel.concrete.Category;
 import net.dv8tion.jda.api.entities.channel.concrete.VoiceChannel;
 import net.dv8tion.jda.api.events.guild.voice.GuildVoiceUpdateEvent;
+import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
+import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
+import net.dv8tion.jda.api.interactions.commands.OptionType;
+import net.dv8tion.jda.api.interactions.commands.build.Commands;
+import net.dv8tion.jda.api.interactions.commands.build.SlashCommandData;
+import net.dv8tion.jda.api.interactions.commands.build.SubcommandData;
 import org.bukkit.Bukkit;
 import org.bukkit.scheduler.BukkitTask;
 
+import java.awt.*;
 import java.util.*;
+import java.util.Collections;
+import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
 
 public class VoiceChannelModule extends Module {
@@ -79,6 +89,151 @@ public class VoiceChannelModule extends Module {
         }
     }
 
+    @Override
+    public List<SlashCommandData> getSlashCommands() {
+        return Collections.singletonList(
+            Commands.slash("voicechannels", "Voice channel information")
+                .addSubcommands(
+                    new SubcommandData("status", "Show player count and status channel info"),
+                    new SubcommandData("list", "List active dynamic voice channels"),
+                    new SubcommandData("setup", "Show setup instructions for voice channels"),
+                    new SubcommandData("help", "Show detailed help for voice channels")
+                )
+        );
+    }
+
+    @Override
+    public boolean handleSlashCommand(SlashCommandInteractionEvent event) {
+        if (!"voicechannels".equals(event.getName())) {
+            return false;
+        }
+
+        String subcommand = event.getSubcommandName();
+        if ("list".equals(subcommand)) {
+            listDynamicChannels(event);
+            return true;
+        }
+        if ("setup".equals(subcommand)) {
+            event.replyEmbeds(buildSetupEmbed().build()).setEphemeral(true).queue();
+            return true;
+        }
+        if ("help".equals(subcommand)) {
+            event.replyEmbeds(buildHelpEmbed().build()).setEphemeral(true).queue();
+            return true;
+        }
+
+        sendStatusResponse(event);
+        return true;
+    }
+
+    private EmbedBuilder buildSetupEmbed() {
+        return new EmbedBuilder()
+            .setTitle("🎧 Voice Channels — Setup Guide")
+            .setColor(Color.CYAN)
+            .setDescription("Follow these steps to configure the Voice Channels module.")
+            .addField("1. Enable Developer Mode",
+                "Discord → User Settings → Advanced → toggle **Developer Mode** on.", false)
+            .addField("2. Get the Category ID",
+                "Right-click your voice category → **Copy ID**.\nSet `category-id` in config.yml.", false)
+            .addField("3. Create a Status Channel",
+                "Create a voice channel named e.g. `📊 Players: 0/0`.\nRight-click → **Copy ID** → set `status-channel-id`.", false)
+            .addField("4. Create a Hub Channel",
+                "Create a voice channel users join to spawn a private room.\nCopy its ID → set `hub-channel-id`.", false)
+            .addField("5. Bot Permissions",
+                "The bot role needs **Manage Channels**, **Move Members**, and **View Channel** in the category.", false)
+            .addField("6. Reload",
+                "Run `/xdiscord reload` (or restart the server) after editing config.yml.", false)
+            .setFooter("XDiscordUltimate Voice Channels", null);
+    }
+
+    private EmbedBuilder buildHelpEmbed() {
+        return new EmbedBuilder()
+            .setTitle("🎧 Voice Channels — Help")
+            .setColor(Color.CYAN)
+            .addField("Status Channel",
+                "A voice channel whose **name** updates with the current online player count, "
+                    + "e.g. `📊 Players: 7/50`. Controlled by `status-channel-format`.", false)
+            .addField("Hub Channel",
+                "A voice channel users **join** to trigger creation of a new dynamic room. "
+                    + "They are auto-moved into the new channel.", false)
+            .addField("Dynamic Channels",
+                "Auto-created voice channels (named `dynamic-channel-prefix #N`). "
+                    + "Empty rooms are auto-deleted to keep the channel list clean.", false)
+            .addField("Commands",
+                "`/voicechannels status` — current counts\n"
+                    + "`/voicechannels list` — active dynamic rooms\n"
+                    + "`/voicechannels setup` — this guide\n"
+                    + "`/voicechannels help` — this help", false)
+            .setFooter("XDiscordUltimate Voice Channels", null);
+    }
+
+    @Override
+    public boolean handleTextCommand(MessageReceivedEvent event, String command, String args) {
+        if (!"voicechannels".equals(command)) {
+            return false;
+        }
+
+        String subcommand = args.trim().isEmpty() ? "status" : args.trim().toLowerCase();
+        if ("list".equals(subcommand)) {
+            event.getChannel().sendMessageEmbeds(buildDynamicChannelsEmbed().build()).queue();
+        } else {
+            event.getChannel().sendMessageEmbeds(buildStatusResponseEmbed().build()).queue();
+        }
+        return true;
+    }
+
+    private EmbedBuilder buildStatusResponseEmbed() {
+        int online = Bukkit.getOnlinePlayers().size();
+        int max = Bukkit.getMaxPlayers();
+
+        return new EmbedBuilder()
+            .setTitle("Voice Channel Status")
+            .setColor(Color.CYAN)
+            .addField("Server Players", online + "/" + max, true)
+            .addField("Status Channel", enableStatusChannel ? "Enabled" : "Disabled", true)
+            .addField("Dynamic Channels", enableDynamicChannels ? "Enabled" : "Disabled", true)
+            .addField("Active Rooms", String.valueOf(dynamicChannelIds.size()), true)
+            .setFooter("Join a hub channel to create a dynamic room", null);
+    }
+
+    private EmbedBuilder buildDynamicChannelsEmbed() {
+        Guild guild = plugin.getDiscordManager().getMainGuild();
+        StringBuilder description = new StringBuilder();
+
+        if (guild != null) {
+            for (String channelId : dynamicChannelIds) {
+                VoiceChannel channel = guild.getVoiceChannelById(channelId);
+                if (channel != null) {
+                    description.append("• ").append(channel.getName())
+                        .append(" (").append(channel.getMembers().size()).append("/")
+                        .append(userLimitPerChannel > 0 ? userLimitPerChannel : "∞").append(")\n");
+                }
+            }
+        }
+
+        if (description.length() == 0) {
+            return new EmbedBuilder()
+                .setTitle("Dynamic Voice Channels")
+                .setColor(Color.CYAN)
+                .setDescription("No dynamic voice channels are currently active.")
+                .setFooter("Dynamic channels are created when users join the hub", null);
+        }
+
+        return new EmbedBuilder()
+            .setTitle("Dynamic Voice Channels")
+            .setColor(Color.CYAN)
+            .setDescription(description.toString())
+            .setFooter("Dynamic channels are created when users join the hub", null);
+    }
+
+    private void sendStatusResponse(SlashCommandInteractionEvent event) {
+        event.replyEmbeds(buildStatusResponseEmbed().build()).queue();
+    }
+
+    private void listDynamicChannels(SlashCommandInteractionEvent event) {
+        event.replyEmbeds(buildDynamicChannelsEmbed().build()).setEphemeral(true).queue();
+    }
+
     private void loadConfiguration() {
         categoryId = getConfig().getString("category-id", "");
         statusChannelId = getConfig().getString("status-channel-id", "");
@@ -137,7 +292,14 @@ public class VoiceChannelModule extends Module {
         if (!channel.getName().equals(newName)) {
             channel.getManager().setName(newName).queue(
                 success -> debug("Updated status channel: " + newName),
-                error -> warning("Failed to update status channel: " + error.getMessage())
+                error -> {
+                    // Only warn on real failures; rate limits are noisy but expected at high update cadence
+                    if (error.getMessage() != null && error.getMessage().toLowerCase().contains("rate limit")) {
+                        debug("Status channel update rate-limited: " + error.getMessage());
+                    } else {
+                        warning("Failed to update status channel: " + error.getMessage());
+                    }
+                }
             );
         }
     }

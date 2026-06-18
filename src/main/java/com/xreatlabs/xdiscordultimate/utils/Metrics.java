@@ -23,39 +23,25 @@ import java.util.logging.Level;
 import java.util.stream.Collectors;
 import java.util.zip.GZIPOutputStream;
 
-/**
- * bStats Metrics class for Bukkit plugins.
- * This is a simplified version for plugin metrics.
- */
 public class Metrics {
 
     private final Plugin plugin;
     private final MetricsBase metricsBase;
 
-    /**
-     * Creates a new Metrics instance.
-     *
-     * @param plugin Your plugin instance.
-     * @param serviceId The id of the service. It can be found at <a
-     *     href="https://bstats.org/what-is-my-plugin-id">What is my plugin id?</a>
-     */
     public Metrics(JavaPlugin plugin, int serviceId) {
         this.plugin = plugin;
-        
-        // Get the config file
+
         File bStatsFolder = new File(plugin.getDataFolder().getParentFile(), "bStats");
         File configFile = new File(bStatsFolder, "config.yml");
         YamlConfiguration config = YamlConfiguration.loadConfiguration(configFile);
-        
-        // Check if the config file exists
+
         if (!config.isSet("serverUuid")) {
             config.addDefault("enabled", true);
             config.addDefault("serverUuid", UUID.randomUUID().toString());
             config.addDefault("logFailedRequests", false);
             config.addDefault("logSentData", false);
             config.addDefault("logResponseStatusText", false);
-            
-            // Inform the server owners about bStats
+
             config
                 .options()
                 .header(
@@ -70,8 +56,7 @@ public class Metrics {
             } catch (IOException ignored) {
             }
         }
-        
-        // Load the data
+
         boolean enabled = config.getBoolean("enabled", true);
         String serverUUID = config.getString("serverUuid");
         boolean logErrors = config.getBoolean("logFailedRequests", false);
@@ -95,11 +80,6 @@ public class Metrics {
                 logResponseStatusText);
     }
 
-    /**
-     * Adds a custom chart.
-     *
-     * @param chart The chart to add.
-     */
     public void addCustomChart(CustomChart chart) {
         metricsBase.addCustomChart(chart);
     }
@@ -122,13 +102,11 @@ public class Metrics {
 
     private int getPlayerAmount() {
         try {
-            // Paper uses a different method to get the player list
             Method onlinePlayersMethod = Class.forName("org.bukkit.Server").getMethod("getOnlinePlayers");
             return onlinePlayersMethod.getReturnType().equals(Collection.class)
                 ? ((Collection<?>) onlinePlayersMethod.invoke(Bukkit.getServer())).size()
                 : ((Player[]) onlinePlayersMethod.invoke(Bukkit.getServer())).length;
         } catch (Exception e) {
-            // Just use the new method if the reflection failed
             return Bukkit.getOnlinePlayers().size();
         }
     }

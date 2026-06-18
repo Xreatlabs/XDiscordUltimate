@@ -4,3 +4,6 @@ build
 gradlew
 gradlew.bat
 .env
+.omc/
+DROID_ACP_PROJECT_REPORT.md
+PROJECT_EXPLORATION_REPORT.md

@@ -91,7 +91,6 @@ public class PlayerStatsModule extends Module implements Listener {
                 .setColor(Color.RED);
         }
 
-        // Calculate actual K/D ratio
         double kdRatio = stats.deaths > 0 ? (double) stats.kills / stats.deaths : stats.kills;
         String kdFormatted = new DecimalFormat("0.00").format(kdRatio);
 
@@ -112,7 +111,6 @@ public class PlayerStatsModule extends Module implements Listener {
             return ColorUtils.parse("<gradient:#FF5555:#AA0000>Player not found!</gradient>");
         }
 
-        // Calculate actual K/D ratio
         double kdRatio = stats.deaths > 0 ? (double) stats.kills / stats.deaths : stats.kills;
         String kdFormatted = new DecimalFormat("0.00").format(kdRatio);
 

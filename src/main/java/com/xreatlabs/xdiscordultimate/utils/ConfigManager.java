@@ -28,9 +28,6 @@ public class ConfigManager {
         
         // Load main config
         loadConfig("config.yml");
-        
-        // Load additional configs
-        loadConfig("messages.yml");
     }
     
     /**

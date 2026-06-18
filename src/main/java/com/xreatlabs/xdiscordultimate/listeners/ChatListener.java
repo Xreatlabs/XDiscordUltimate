@@ -14,55 +14,68 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.regex.Pattern;
 
 public class ChatListener implements Listener {
-    
+
     private final XDiscordUltimate plugin;
-    private final List<String> filterWords;
+    private List<String> filterWords;
     private final Pattern urlPattern;
-    
+
     // Spam detection
     private final Map<UUID, Long> lastMessageTime = new ConcurrentHashMap<>();
     private final Map<UUID, String> lastMessage = new ConcurrentHashMap<>();
     private final Map<UUID, Integer> messageCount = new ConcurrentHashMap<>();
-    
+
     public ChatListener(XDiscordUltimate plugin) {
         this.plugin = plugin;
-        this.filterWords = plugin.getConfig().getStringList("features.moderation.filter-words");
+        this.filterWords = null; // Lazy load from config
         this.urlPattern = Pattern.compile("https?://\\S+", Pattern.CASE_INSENSITIVE);
+    }
+
+    /**
+     * Lazily load filter words from config to avoid race condition during plugin startup
+     */
+    private void loadFilterWords() {
+        if (filterWords == null) {
+            filterWords = plugin.getConfig().getStringList("features.moderation.filter-words");
+        }
     }
     
     @EventHandler(priority = EventPriority.HIGH, ignoreCancelled = true)
     public void onPlayerChat(AsyncPlayerChatEvent event) {
         Player player = event.getPlayer();
         String message = event.getMessage();
+
+        // Reload filter words from config on each chat event (ensures config is loaded)
+        loadFilterWords();
         
-        // Update message count in stats
-        plugin.getDatabaseManager().updatePlayerStats(player.getUniqueId(), "messages_sent", 1);
-        
+        // Update message count in stats (fire-and-forget, must not block the chat event)
+        plugin.getDatabaseManager().updatePlayerStats(player.getUniqueId(), "messages_sent", 1)
+            .exceptionally(throwable -> {
+                plugin.getLogger().warning("Failed to update message stats for " + player.getName() + ": " + throwable.getMessage());
+                return null;
+            });
+
         // Check for auto-moderation if enabled
         if (plugin.getConfigManager().isSubFeatureEnabled("moderation", "auto-moderate")) {
             if (shouldFilterMessage(message, player)) {
                 event.setCancelled(true);
-                plugin.getMessageManager().sendError(player, "Your message was blocked by the chat filter.");
-                
+                plugin.getMessageManager().sendError(player, "chat.filtered");
+
+                // Debug log: filter blocked a message
+                plugin.getLogger().info("[CHAT FILTER] Blocked message from " + player.getName() + ": " + message);
+
                 // Log the filtered message
                 plugin.getLogger().warning("Filtered message from " + player.getName() + ": " + message);
-                
+
                 // Log to moderation channel if available
                 logModerationAction(player, message, "CHAT_FILTER");
                 return;
             }
         }
-        
-        // Process Discord mentions (convert @username to Discord mention format)
-        if (message.contains("@")) {
-            message = processDiscordMentions(message);
-            event.setMessage(message);
-        }
-        
+
         // Check for spam detection
         if (isSpamMessage(player, message)) {
             event.setCancelled(true);
-            plugin.getMessageManager().sendError(player, "Please don't spam the chat!");
+            plugin.getMessageManager().sendError(player, "chat.spam-warning");
             return;
         }
         
@@ -74,11 +87,9 @@ public class ChatListener implements Listener {
      * Check if a message should be filtered
      */
     private boolean shouldFilterMessage(String message, Player player) {
-        // Bypass filter for players with permission
-        if (player.hasPermission("xdiscord.bypass.filter")) {
-            return false;
-        }
-        
+        // No bypass for players - the filter applies to everyone for consistent moderation
+        // Only console commands bypass the filter
+
         String lowerMessage = message.toLowerCase();
         
         // Check filter words
@@ -144,16 +155,6 @@ public class ChatListener implements Listener {
         
         double capsPercentage = (double) capsCount / letterCount;
         return capsPercentage > 0.7; // More than 70% caps
-    }
-    
-    /**
-     * Process Discord mentions in the message
-     */
-    private String processDiscordMentions(String message) {
-        // This would convert @username to proper Discord mention format
-        // For now, just return the original message
-        // In a full implementation, this would look up Discord IDs from usernames
-        return message;
     }
     
     /**

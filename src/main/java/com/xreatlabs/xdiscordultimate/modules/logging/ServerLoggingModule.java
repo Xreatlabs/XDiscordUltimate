@@ -2,6 +2,7 @@ package com.xreatlabs.xdiscordultimate.modules.logging;
 
 import com.xreatlabs.xdiscordultimate.XDiscordUltimate;
 import com.xreatlabs.xdiscordultimate.modules.Module;
+import com.xreatlabs.xdiscordultimate.utils.EmbedUtils;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.channel.concrete.TextChannel;
 import org.bukkit.Bukkit;
@@ -185,13 +186,9 @@ public class ServerLoggingModule extends Module implements Listener {
     }
     
     private void sendLogBatch(TextChannel channel, String logs) {
-        EmbedBuilder embed = new EmbedBuilder()
-            .setColor(Color.GRAY)
-            .setTitle("📋 Console Logs")
-            .setDescription("```\n" + logs + "```")
-            .setTimestamp(Instant.now())
+        EmbedBuilder embed = EmbedUtils.infoEmbed("Console Logs", "```\n" + logs + "```")
             .setFooter("Server Console", null);
-        
+
         channel.sendMessageEmbeds(embed.build()).queue(
             success -> debug("Sent log batch to Discord"),
             error -> warning("Failed to send logs to Discord: " + error.getMessage())
@@ -226,17 +223,17 @@ public class ServerLoggingModule extends Module implements Listener {
      */
     public void logServerEvent(String title, String description, Color color) {
         if (!enableServerLogs) return;
-        
+
         TextChannel logsChannel = getLogsChannel();
         if (logsChannel == null) return;
-        
+
         EmbedBuilder embed = new EmbedBuilder()
-            .setColor(color != null ? color : Color.BLUE)
-            .setTitle("🖥️ " + title)
+            .setColor(color != null ? color : EmbedUtils.INFO)
+            .setTitle(title)
             .setDescription(description)
             .setTimestamp(Instant.now())
             .setFooter("Server Event", null);
-        
+
         logsChannel.sendMessageEmbeds(embed.build()).queue(
             success -> debug("Logged server event: " + title),
             error -> warning("Failed to log server event: " + error.getMessage())
@@ -247,8 +244,8 @@ public class ServerLoggingModule extends Module implements Listener {
      * Log server startup
      */
     public void logServerStartup() {
-        logServerEvent("Server Started", 
-            "Server has started successfully!\n" +
+        logServerEvent("Server Started",
+            "Server started.\n" +
             "Version: " + Bukkit.getVersion() + "\n" +
             "Players: 0/" + Bukkit.getMaxPlayers(),
             Color.GREEN);

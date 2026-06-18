@@ -1,0 +1,156 @@
+general:
+  prefix: <gradient:#55FFFF:#5555FF>XDiscord</gradient> &8» &r
+  reload: <gradient:#55FF55:#00AA00>Konfigurace úspěšně znovu načtena!</gradient>
+  reload-success: <gradient:#55FF55:#00AA00>Konfigurace úspěšně znovu načtena!</gradient>
+  reload-failed: <gradient:#FF5555:#AA0000>Opětovné načtení konfigurace selhalo.</gradient> &7Zkontrolujte konzoli pro chyby.
+  no-permission: <gradient:#FF5555:#AA0000>Přístup Odepřen</gradient> &7Nemáte oprávnění
+  player-only: <gradient:#FFAA00:#FF5555>Tento příkaz</gradient> &7může použít pouze hráč.
+  unknown-command: '&7Neznámý příkaz. Použijte &e/xdiscord help &7pro nápovědu.'
+errors:
+  no-permission: <gradient:#FF5555:#AA0000>Přístup Odepřen!</gradient> &7Nemáte oprávnění.
+  player-not-found: <gradient:#FF5555:#FFAA00>Hráč Nenalezen!</gradient> &7'%player%' není online.
+  invalid-usage: '<gradient:#FFAA00:#FF5555>Neplatné Použití!</gradient> &7Správně: &e%usage%'
+  not-verified: <gradient:#FFAA00:#FF5555>Vyžaduje Ověření!</gradient> &7Použijte &e/verify &7pro propojení účtů.
+  already-verified: <gradient:#55FF55:#55FFFF>Již Ověřeno!</gradient> &7Váš účet je propojen.
+  verification-failed: <gradient:#FF5555:#AA0000>Ověření Selhalo!</gradient> &7Prosím zkuste to znovu.
+  cooldown: <gradient:#FFAA00:#FF5555>Cooldown!</gradient> &7Počkejte prosím před dalším použitím.
+  feature-disabled: <gradient:#AAAAAA:#555555>Funkce Vypnuta!</gradient> &7Tato funkce je momentálně vypnuta.
+  discord-not-linked: <gradient:#5555FF:#AA00AA>Vyžadován Discord!</gradient> &7Nejprve propojte pomocí &e/verify &7.
+  cannot-report-admin: <gradient:#FF5555:#AA0000>Nelze Nahlásit Adminy!</gradient> &7Nemůžete nahlásit správce serveru.
+  module-not-available: <gradient:#FF5555:#FFAA00>Modul Nedostupný!</gradient> &7Tato funkce momentálně není k dispozici.
+  ticket-create-failed: <gradient:#FF5555:#AA0000>Chyba!</gradient> &7Nepodařilo se vytvořit ticket. Zkuste to znovu.
+  unknown-subcommand: <gradient:#FF5555:#FFAA00>Neznámý Podpříkaz!</gradient> &7'%sub%' není platný podpříkaz.
+  invalid-discord-id: <gradient:#FF5555:#FFAA00>Neplatný Formát!</gradient> &7Discord ID musí být číselný snowflake.
+  whitelist-submission-failed: <gradient:#FF5555:#AA0000>Chyba!</gradient> &7Nepodařilo se odeslat žádost o whitelist.
+  chat-filtered: '&cYour message was blocked by the chat filter.'
+  spam: '&cPlease don''t spam the chat!'
+  max-tickets: '&cYou have reached the maximum number of open tickets!'
+success:
+  verified: <gradient:#55FF55:#55FFFF>Úspěch!</gradient> &7Váš účet je nyní propojen s Discord!
+  ticket-created: <gradient:#55FF55:#55FFFF>Ticket Vytvořen!</gradient> &7Zkontrolujte Discord pro aktualizace.
+  report-sent: <gradient:#55FF55:#00AA00>Oznámení Odesláno!</gradient> &7Moderátoři byli informováni.
+  announcement-sent: <gradient:#FFAA00:#FF5555>Oznámení Odesláno!</gradient> &7Vysílání dokončeno.
+  debug-enabled: <gradient:#55FF55:#55FFFF>Ladící Režim Povolen!</gradient> &7Budou zobrazeny podrobné logy.
+  debug-disabled: <gradient:#AAAAAA:#555555>Ladící Režim Zakázán!</gradient> &7Zobrazí se pouze důležité zprávy.
+  language-changed: <gradient:#55FF55:#55FFFF>Jazyk Změněn!</gradient> &7Váš jazyk je nyní nastaven na &e%language%&7.
+  announcements-muted: '&aAnnouncements muted!'
+  announcements-unmuted: '&aAnnouncements unmuted!'
+verification:
+  code-generated: <gradient:#55FFFF:#5555FF>Ověřovací Kód</gradient> &8» &e&l%code%
+  code-expired: <gradient:#FF5555:#AA0000>Kód Vypršel!</gradient> &7Vygenerujte nový.
+  code-invalid: <gradient:#FF5555:#FFAA00>Neplatný Kód!</gradient> &7Zkontrolujte a zkuste to znovu.
+  instructions: '&7Použijte tento kód na Discord s &e/verify &7pro propojení.'
+  already-linked: <gradient:#FFAA00:#FF5555>Již Propojeno!</gradient> &7Tento Discord je propojen k jinému účtu.
+  already-verified: <gradient:#55FF55:#55FFFF>Již Ověřeno!</gradient> &7Váš účet je propojen.
+  success: <gradient:#55FF55:#55FFFF>Ověření Dokončeno!</gradient> &7Účty jsou nyní propojeny!
+  required: <gradient:#FFAA00:#FF5555>Vyžaduje Ověření!</gradient> &7Propojte svůj Discord účet.
+  kick-message: '<gradient:#FF5555:#AA0000>Vyžaduje Ověření!</gradient>
+
+    &7Musíte ověřit do &e%minutes% &7minut!'
+tickets:
+  created: '<gradient:#55FFFF:#5555FF>Ticket #%id%</gradient> &7vytvořen! Personál brzy pomůže.'
+  closed: '<gradient:#AAAAAA:#555555>Ticket #%id%</gradient> &7byl uzavřen.'
+  not-found: <gradient:#FF5555:#AA0000>Nenalezeno!</gradient> &7Ticket neexistuje.
+  max-tickets: <gradient:#FFAA00:#FF5555>Limit Dosažen!</gradient> &7Maximální počet otevřených ticketů dosažen.
+support:
+  no-message: <gradient:#FF5555:#FFAA00>Chybí Zpráva!</gradient> &7Poskytněte zprávu pro váš ticket.
+  created: <gradient:#55FF55:#55FFFF>Podpůrný Ticket Vytvořen!</gradient> &7Zkontrolujte Discord.
+  usage: '&eUsage: /support <message>'
+report:
+  must-verify: <gradient:#FFAA00:#FF5555>Vyžadována Ověření!</gradient> &7Pro nahlášení hráčů musíte ověřit svůj Discord účet. Použijte &e/verify &7na Discord.
+  success: '<gradient:#55FF55:#00AA00>Oznámení #%id%</gradient> &7proti &e%player% &7odesláno!'
+  cooldown: <gradient:#FFAA00:#FF5555>Cooldown!</gradient> &7Počkejte před dalším ozámením.
+  self-report: <gradient:#FF5555:#AA0000>Chyba!</gradient> &7Nemůžete nahlásit sebe!
+  usage: '&eUsage: /report <player> <reason>'
+announcement:
+  no-message: <gradient:#FF5555:#FFAA00>Chybí Zpráva!</gradient> &7Poskytněte obsah oznámení.
+  sent: <gradient:#55FF55:#55FFFF>Oznámení Odesláno!</gradient> &7Odesláno na všechny platformy.
+chat:
+  discord-to-minecraft: '&8[<gradient:#5555FF:#7289DA>Discord</gradient>&8] &b%user%&8: &f%message%'
+  minecraft-to-discord: '**%player%**: %message%'
+  filtered: <gradient:#FF5555:#AA0000>Zpráva Blokována!</gradient> &7Filtr chatu aktivován.
+  spam-warning: <gradient:#FFAA00:#FF5555>Zpomalte!</gradient> &7Nespamujte chat.
+events:
+  player-join: <gradient:#55FF55:#55FFFF>+</gradient> &7%player% se připojil
+  player-leave: <gradient:#FF5555:#FFAA00>-</gradient> &7%player% se odpojil
+  first-join: <rainbow>Vítejte!</rainbow> &e%player% &7se připojil poprvé!
+stats:
+  header: <gradient:#FFAA00:#FF5555>━━━ Statistiky %player% ━━━</gradient>
+  kills: '&8▸ <gradient:#FF5555:#FFAA00>Zabito</gradient>&8: &f%value%'
+  deaths: '&8▸ <gradient:#AAAAAA:#555555>Úmrtí</gradient>&8: &f%value%'
+  kd-ratio: '&8▸ <gradient:#55FFFF:#5555FF>Poměr K/D</gradient>&8: &f%value%'
+  mob-kills: '&8▸ <gradient:#55FF55:#00AA00>Zabito Mobů</gradient>&8: &f%value%'
+  playtime: '&8▸ <gradient:#AA00AA:#FF55FF>Čas Hraní</gradient>&8: &f%value%'
+  not-found: <gradient:#FF5555:#AA0000>Nenalezeno!</gradient> &7Statistiky hráče nedostupné.
+moderation:
+  ban-success: <gradient:#FF5555:#AA0000>Zabanován!</gradient> &e%player% &7byl zabanován.
+  kick-success: <gradient:#FFAA00:#FF5555>Vykopán!</gradient> &e%player% &7byl vykopán.
+  mute-success: <gradient:#AAAAAA:#555555>Ztišen!</gradient> &e%player% &7byl ztišen.
+  unmute-success: <gradient:#55FF55:#55FFFF>Obnoven Hlas!</gradient> &e%player% &7může znovu mluvit.
+  warn-success: <gradient:#FFAA00:#FF5555>Varován!</gradient> &e%player% &7byl varován.
+help:
+  header:
+  - ''
+  - <gradient:#55FFFF:#5555FF>━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━</gradient>
+  - '       <gradient:#55FFFF:#5555FF>&lXDiscordUltimate</gradient> &8- &7Nápověda'
+  - <gradient:#55FFFF:#5555FF>━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━</gradient>
+  - ''
+  footer:
+  - ''
+  - <gradient:#55FFFF:#5555FF>━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━</gradient>
+  - '  &7Použijte <gradient:#55FFFF:#5555FF>/xdiscord help</gradient> &7pro příkazy'
+  - <gradient:#55FFFF:#5555FF>━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━</gradient>
+  - ''
+  verify: '  <gradient:#55FF55:#55FFFF>▸</gradient> &e/verify &8- &7Propojit Discord účet'
+  support: '  <gradient:#55FF55:#55FFFF>▸</gradient> &e/support <msg> &8- &7Vytvořit ticket'
+  stats: '  <gradient:#55FF55:#55FFFF>▸</gradient> &e/stats [player] &8- &7Zobrazit statistiky'
+  report: '  <gradient:#55FF55:#55FFFF>▸</gradient> &e/report <player> <reason> &8- &7Nahlásit hráče'
+  must-verify: <gradient:#FFAA00:#FF5555>Vyžadována Ověření!</gradient> &7Pro nahlášení hráčů musíte ověřit svůj Discord účet. Použijte &e/verify &7na Discord.
+  help: '  <gradient:#55FF55:#55FFFF>▸</gradient> &e/help &8- &7Zobrazit toto menu'
+commands:
+  verify: Propojte svůj Discord účet s Minecraft
+  support: Vytvořte podpůrný ticket pro pomoc personálu
+  report: Nahlásit hráče moderátorům Discord
+  must-verify: <gradient:#FFAA00:#FF5555>Vyžadována Ověření!</gradient> &7Pro nahlášení hráčů musíte ověřit svůj Discord účet. Použijte &e/verify &7na Discord.
+  discord: Získejte odkaz na pozvání na Discord server
+  embed: Odešle vlastní embed na Discord
+  announce: Odeslat oznámení na Discord a do hry
+discord:
+  commands:
+    help:
+      description: Zobrazit všechny příkazy a funkce bota
+    status:
+      description: Zobrazit stav serveru v reálném čase s TPS a počtem hráčů
+    players:
+      description: Seznam všech online hráčů s jejich světy
+    server:
+      description: Zobrazit detailní informace o serveru
+    ping:
+      description: Zkontrolovat latenci bota a dobu odezvy
+    tps:
+      description: Zobrazit výkon serveru (TPS/MSPT)
+    verify:
+      description: Propojte svůj Discord účet k Minecraft
+    stats:
+      description: Zobrazit statistiky a úspěchy hráčů
+      option-player: Jméno hráče k vyhledání
+    console:
+      description: Vykonat příkaz na serveru (Pouze Admin)
+      option-command: Příkaz k vykonání
+    announce:
+      description: Odeslat oznámení všem hráčům
+      option-message: Zpráva oznámení
+      option-title: Volitelný titulek oznámení
+    online:
+      description: Rychlý přehled kdo je online
+    info:
+      description: Zobrazit informace o pluginu a verzi
+server-control:
+  restart-scheduled: <gradient:#FF5555:#FFAA00>Restart Serveru</gradient> &7za &e%time% &7sekund!
+  stopping: <gradient:#FF5555:#AA0000>Server se Vypíná...</gradient> &7Na shledanou!
+info:
+  sending-test-welcome: '&bSending test welcome DM...'
+  reloading-welcome-dm: '&bReloading welcome DM module...'
+  reload-start: '&bReloading configuration...'
+  plugin-info: <gradient:#55FFFF:#5555FF>=== Informace XDiscordUltimate ===</gradient>
+  plugin-version: '&7Verze: &e%version%'

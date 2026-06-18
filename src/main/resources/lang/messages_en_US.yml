@@ -1,0 +1,171 @@
+general:
+  prefix: <gradient:#55FFFF:#5555FF>XDiscord</gradient> &8» &r
+  reload: <gradient:#55FF55:#00AA00>Configuration reloaded successfully!</gradient>
+  reload-success: <gradient:#55FF55:#00AA00>Configuration reloaded successfully!</gradient>
+  reload-failed: <gradient:#FF5555:#AA0000>Failed to reload configuration.</gradient> &7Check console for errors.
+  no-permission: <gradient:#FF5555:#AA0000>You don't have permission</gradient> &7to use this command.
+  player-only: <gradient:#FFAA00:#FF5555>This command</gradient> &7can only be used by players.
+  unknown-command: '&7Unknown command. Use &e/xdiscord help &7for help.'
+errors:
+  no-permission: '&cYou don''t have permission!'
+  player-not-found: '&cPlayer not found!'
+  invalid-usage: '&cInvalid usage: %usage%'
+  not-verified: <gradient:#FFAA00:#FF5555>Verification Required!</gradient> &7Use &e/verify &7to link accounts.
+  already-verified: <gradient:#55FF55:#55FFFF>Already Verified!</gradient> &7Your account is linked.
+  verification-failed: <gradient:#FF5555:#AA0000>Verification Failed!</gradient> &7Please try again.
+  cooldown: <gradient:#FFAA00:#FF5555>Cooldown!</gradient> &7Please wait before using this again.
+  feature-disabled: <gradient:#AAAAAA:#555555>Feature Disabled!</gradient> &7This feature is currently off.
+  discord-not-linked: '&cYour Discord account is not linked!'
+  cannot-report-admin: '&cYou cannot report an admin!'
+  module-not-available: '&cThis module is not available right now.'
+  max-tickets: '&cYou have reached the maximum number of open tickets!'
+  ticket-create-failed: '&cFailed to create ticket. Please try again.'
+  unknown-subcommand: '&cUnknown subcommand!'
+  invalid-discord-id: '&cInvalid Discord ID format!'
+  whitelist-submission-failed: '&cFailed to submit whitelist request!'
+  chat-filtered: '&cYour message was blocked by the chat filter.'
+  spam: '&cPlease don''t spam the chat!'
+success:
+  verified: <gradient:#55FF55:#55FFFF>Success!</gradient> &7Your account is now linked to Discord!
+  ticket-created: '&aTicket created! Check your DMs on Discord.'
+  report-sent: <gradient:#55FF55:#00AA00>Report Submitted!</gradient> &7Moderators have been notified.
+  announcement-sent: <gradient:#FFAA00:#FF5555>Announcement Sent!</gradient> &7Broadcast complete.
+  debug-enabled: '&aDebug mode enabled!'
+  debug-disabled: '&aDebug mode disabled!'
+  admin-added: <gradient:#55FF55:#55FFFF>Admin Added!</gradient> &7Discord ID &e%id% &7is now an administrator.
+  admin-removed: <gradient:#55FF55:#55FFFF>Admin Removed!</gradient> &7Discord ID &e%id% &7is no longer an administrator.
+  announcements-muted: '&aAnnouncements muted!'
+  announcements-unmuted: '&aAnnouncements unmuted!'
+  embed-sent: <gradient:#55FF55:#55FFFF>Embed Sent!</gradient> &7Sent to channel &e#%channel% &7successfully.
+  welcome-dm-reloaded: <gradient:#55FF55:#55FFFF>Reloaded!</gradient> &7Welcome DM module has been reloaded.
+  config-reloading: <gradient:#55FFFF:#5555FF>Reloading...</gradient> &7Configuration is being reloaded.
+  language-changed: '&aLanguage changed!'
+info:
+  sending-test-welcome: '&bSending test welcome DM...'
+  reloading-welcome-dm: '&bReloading welcome DM module...'
+  reload-start: '&bReloading configuration...'
+  plugin-info: <gradient:#55FFFF:#5555FF>=== XDiscordUltimate Information ===</gradient>
+  plugin-version: '&7Version: &e%version%'
+  plugin-author: '&7Author: &eXreaLabs'
+  plugin-description: '&7Description: &e%description%'
+  plugin-features: '&7Features:'
+  plugin-feature-1: '&7• Discord-Minecraft integration'
+  plugin-feature-2: '&7• Player verification system'
+  plugin-feature-3: '&7• Report and ticket system'
+  plugin-feature-4: '&7• Voice/TTS features'
+  plugin-feature-5: '&7• Admin console access'
+  plugin-help-reminder: '&7Use &b/help &7to open the help GUI again!'
+verification:
+  code-generated: <gradient:#55FFFF:#5555FF>Verification Code</gradient> &8» &e&l%code%
+  code-expired: <gradient:#FF5555:#AA0000>Code Expired!</gradient> &7Generate a new one.
+  code-invalid: <gradient:#FF5555:#FFAA00>Invalid Code!</gradient> &7Check and try again.
+  instructions: '&7Use this code in Discord with &e/verify &7to link.'
+  already-linked: <gradient:#FFAA00:#FF5555>Already Linked!</gradient> &7This Discord is linked to another account.
+  already-verified: <gradient:#55FF55:#55FFFF>Already Verified!</gradient> &7Your account is linked.
+  success: <gradient:#55FF55:#55FFFF>Verification Complete!</gradient> &7Accounts are now linked!
+  required: <gradient:#FFAA00:#FF5555>Verification Required!</gradient> &7Link your Discord account.
+  not-linked: <gradient:#FFAA00:#FF5555>Not Linked!</gradient> &7Your account is not linked to Discord.
+  unlink-success: <gradient:#55FF55:#00AA00>Accounts Unlinked!</gradient> &7Your Discord account has been unlinked.
+  locked-out: <gradient:#FF5555:#AA0000>Too Many Attempts!</gradient> &7Verification locked for &e%seconds%&7s.
+  kick-message: '<gradient:#FF5555:#AA0000>Verification Required!</gradient>
+
+    &7You must verify within &e%minutes% &7minutes!'
+tickets:
+  created: '<gradient:#55FFFF:#5555FF>Ticket #%id%</gradient> &7created! Staff will assist soon.'
+  closed: '<gradient:#AAAAAA:#555555>Ticket #%id%</gradient> &7has been closed.'
+  not-found: <gradient:#FF5555:#AA0000>Not Found!</gradient> &7Ticket does not exist.
+  max-tickets: <gradient:#FFAA00:#FF5555>Limit Reached!</gradient> &7Max open tickets reached.
+support:
+  no-message: <gradient:#FF5555:#FFAA00>Missing Message!</gradient> &7Provide a message for your ticket.
+  created: <gradient:#55FF55:#55FFFF>Support Ticket Created!</gradient> &7Check Discord.
+  usage: '&eUsage: /support <message>'
+report:
+  success: '<gradient:#55FF55:#00AA00>Report #%id%</gradient> &7against &e%player% &7submitted!'
+  cooldown: <gradient:#FFAA00:#FF5555>Cooldown!</gradient> &7Wait before reporting again.
+  self-report: <gradient:#FF5555:#AA0000>Error!</gradient> &7You cannot report yourself!
+  usage: '&eUsage: /report <player> <reason>'
+  must-verify: '&cYou must verify your account before reporting!'
+announcement:
+  no-message: <gradient:#FF5555:#FFAA00>Missing Message!</gradient> &7Provide announcement content.
+  sent: <gradient:#55FF55:#55FFFF>Announcement Sent!</gradient> &7Broadcast to all platforms.
+chat:
+  discord-to-minecraft: '&8[<gradient:#5555FF:#7289DA>Discord</gradient>&8] &b%user%&8: &f%message%'
+  minecraft-to-discord: '**%player%**: %message%'
+  filtered: <gradient:#FF5555:#AA0000>Message Blocked!</gradient> &7Chat filter activated.
+  spam-warning: <gradient:#FFAA00:#FF5555>Slow Down!</gradient> &7Don't spam the chat.
+events:
+  player-join: <gradient:#55FF55:#55FFFF>+</gradient> &7%player% joined
+  player-leave: <gradient:#FF5555:#FFAA00>-</gradient> &7%player% left
+  first-join: <rainbow>Welcome!</rainbow> &e%player% &7joined for the first time!
+stats:
+  header: <gradient:#FFAA00:#FF5555>━━━ %player%'s Stats ━━━</gradient>
+  kills: '&8▸ <gradient:#FF5555:#FFAA00>Kills</gradient>&8: &f%value%'
+  deaths: '&8▸ <gradient:#AAAAAA:#555555>Deaths</gradient>&8: &f%value%'
+  kd-ratio: '&8▸ <gradient:#55FFFF:#5555FF>K/D Ratio</gradient>&8: &f%value%'
+  mob-kills: '&8▸ <gradient:#55FF55:#00AA00>Mob Kills</gradient>&8: &f%value%'
+  playtime: '&8▸ <gradient:#AA00AA:#FF55FF>Playtime</gradient>&8: &f%value%'
+  not-found: <gradient:#FF5555:#AA0000>Not Found!</gradient> &7Player stats unavailable.
+moderation:
+  ban-success: <gradient:#FF5555:#AA0000>Banned!</gradient> &e%player% &7has been banned.
+  kick-success: <gradient:#FFAA00:#FF5555>Kicked!</gradient> &e%player% &7has been kicked.
+  mute-success: <gradient:#AAAAAA:#555555>Muted!</gradient> &e%player% &7has been muted.
+  unmute-success: <gradient:#55FF55:#55FFFF>Unmuted!</gradient> &e%player% &7can speak again.
+  warn-success: <gradient:#FFAA00:#FF5555>Warned!</gradient> &e%player% &7has been warned.
+help:
+  header:
+  - ''
+  - <gradient:#55FFFF:#5555FF>━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━</gradient>
+  - '       <gradient:#55FFFF:#5555FF>&lXDiscordUltimate</gradient> &8- &7Help'
+  - <gradient:#55FFFF:#5555FF>━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━</gradient>
+  - ''
+  footer:
+  - ''
+  - <gradient:#55FFFF:#5555FF>━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━</gradient>
+  - '  &7Use <gradient:#55FFFF:#5555FF>/xdiscord help</gradient> &7for commands'
+  - <gradient:#55FFFF:#5555FF>━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━</gradient>
+  - ''
+  verify: '  <gradient:#55FF55:#55FFFF>▸</gradient> &e/verify &8- &7Link Discord account'
+  support: '  <gradient:#55FF55:#55FFFF>▸</gradient> &e/support <msg> &8- &7Create ticket'
+  stats: '  <gradient:#55FF55:#55FFFF>▸</gradient> &e/stats [player] &8- &7View statistics'
+  report: '  <gradient:#55FF55:#55FFFF>▸</gradient> &e/report <player> <reason> &8- &7Report player'
+  help: '  <gradient:#55FF55:#55FFFF>▸</gradient> &e/help &8- &7Show this menu'
+commands:
+  verify: Link your Discord account with Minecraft
+  support: Create a support ticket for staff assistance
+  report: Report a player to Discord moderators
+  discord: Get the Discord server invite link
+  embed: Send a custom embed message to Discord
+  announce: Broadcast an announcement to Discord and in-game
+discord:
+  commands:
+    help:
+      description: Show all bot commands and features
+    status:
+      description: Show real-time server status with TPS and player count
+    players:
+      description: List all online players with their worlds
+    server:
+      description: Show detailed server information
+    ping:
+      description: Check bot latency and response time
+    tps:
+      description: Show server performance (TPS/MSPT)
+    verify:
+      description: Link your Discord account to Minecraft
+    stats:
+      description: View player statistics and achievements
+      option-player: Player name to lookup
+    console:
+      description: Execute a command on the server (Admin only)
+      option-command: The command to execute
+    announce:
+      description: Broadcast an announcement to all players
+      option-message: The announcement message
+      option-title: Optional title for the announcement
+    online:
+      description: Quick view of who's online
+    info:
+      description: Show plugin info and version
+server-control:
+  restart-scheduled: <gradient:#FF5555:#FFAA00>Server Restart</gradient> &7in &e%time% &7seconds!
+  stopping: <gradient:#FF5555:#AA0000>Server Stopping...</gradient> &7See you soon!

@@ -2,6 +2,7 @@ package com.xreatlabs.xdiscordultimate.modules.adminalerts;
 
 import com.xreatlabs.xdiscordultimate.XDiscordUltimate;
 import com.xreatlabs.xdiscordultimate.modules.Module;
+import com.xreatlabs.xdiscordultimate.utils.EmbedUtils;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.channel.concrete.TextChannel;
 import org.bukkit.Bukkit;
@@ -287,14 +288,14 @@ public class AdminAlertsModule extends Module implements Listener {
     private void sendAlert(String title, String message, Color color) {
         TextChannel channel = getAlertsChannel();
         if (channel == null) return;
-        
+
         EmbedBuilder embed = new EmbedBuilder()
             .setColor(color)
-            .setTitle("🚨 " + title)
+            .setTitle(title)
             .setDescription(message)
             .setTimestamp(Instant.now())
             .setFooter("Admin Alert System", null);
-        
+
         channel.sendMessageEmbeds(embed.build()).queue();
     }
     
